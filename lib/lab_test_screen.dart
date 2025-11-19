@@ -1,0 +1,224 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class LabTestScreen extends StatefulWidget {
+  const LabTestScreen({super.key});
+
+  @override
+  State<LabTestScreen> createState() => _LabTestScreenState();
+}
+
+class _LabTestScreenState extends State<LabTestScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('LabTest'),
+        backgroundColor: Color(0xff00796B),
+        foregroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 22),
+        ),
+      ),
+      body: ListView(
+        children: [
+          SizedBox(height: 25),
+          Row(
+            children: [
+              SizedBox(width: 15),
+              SizedBox(
+                width: 290,
+                child: TextField(
+                  cursorColor: Color(0xff00796B),
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      CupertinoIcons.search,
+                      size: 23,
+                      color: Colors.grey.shade600,
+                    ),
+                    hintText: 'Search for test..',
+                    isDense: true,
+                    filled: true,
+                    fillColor: Color(0x74d5d5d5),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.cart)),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, top: 25, bottom: 15),
+            child: Text(
+              'Top Booked Diagnostic Tests',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: GridView.builder(
+              itemCount: 4,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 15,
+                crossAxisSpacing: 20,
+                mainAxisExtent: 200,
+              ),
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.grey, width: 0.5),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 160,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            topRight: Radius.circular(5),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Liver Functions',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Known as Liver Function Test Blood',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              Text(
+                                'E-reports on same date',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                '₹687',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.mediumImpact();
+                        },
+                        child: Container(
+                          height: 39,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(5),
+                              bottomRight: Radius.circular(5),
+                            ),
+                            border: Border(
+                              top: BorderSide(color: Colors.grey, width: 0.5),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'ADD',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color(0xff00BFA5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        height: 110,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15),
+          child: Column(
+            children: [
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  Text('Total: ', style: TextStyle(fontSize: 18)),
+                  Text(
+                    '₹687',
+                    style: TextStyle(fontSize: 18, color: Color(0xff26A69A)),
+                  ),
+                  Spacer(),
+                  Text('4 Tests', style: TextStyle(fontSize: 18)),
+                ],
+              ),
+              SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF26A69A), Color(0xFF00796B)],
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "View Cart",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
