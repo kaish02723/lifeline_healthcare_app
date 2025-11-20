@@ -33,13 +33,11 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
         children: [
           // ---------------- TOP BOX ----------------
           Container(
-            height: 300,
             width: double.infinity,
             color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // header text and image
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 17),
@@ -48,8 +46,7 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                       const Expanded(
                         child: Text(
                           'Consultation for\nPsychological Counselling',
-                          style: TextStyle(
-                              fontSize: 20, color: Colors.black87),
+                          style: TextStyle(fontSize: 20, color: Colors.black87),
                         ),
                       ),
                       Image.network(
@@ -64,7 +61,11 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 25, left: 17),
-                  child: Container(height: 0.5, width: 325, color: Colors.grey),
+                  child: Container(
+                    height: 0.5,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    color: Colors.grey,
+                  ),
                 ),
 
                 const SizedBox(height: 20),
@@ -73,8 +74,7 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                   padding: EdgeInsets.only(left: 17),
                   child: Text(
                     'WE WILL ASSIGN YOU A TOP DOCTOR FROM BELOW',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500, fontSize: 14),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                   ),
                 ),
                 const SizedBox(height: 3),
@@ -83,8 +83,7 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                   padding: const EdgeInsets.only(left: 17),
                   child: Text(
                     'View our doctors currently online',
-                    style:
-                    TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                   ),
                 ),
 
@@ -93,7 +92,6 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-
                       // Doctor 1
                       Padding(
                         padding: const EdgeInsets.only(top: 30, left: 17),
@@ -114,7 +112,9 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                           Text(
                             'Ms. Bipasha',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           SizedBox(height: 5),
                           Text(
@@ -162,7 +162,9 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                           Text(
                             'Mr. Ramesh',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           SizedBox(height: 5),
                           Text(
@@ -184,6 +186,7 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                     ],
                   ),
                 ),
+                SizedBox(height: 15,)
               ],
             ),
           ),
@@ -199,14 +202,12 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               children: [
                 const Text(
                   'Choose your preferred language',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   'We will try to find doctors who can speak the language.',
-                  style:
-                  TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                 ),
 
                 const SizedBox(height: 15),
@@ -223,7 +224,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                       backgroundColor: Colors.white,
                       showCheckmark: false,
                       labelStyle: TextStyle(
-                        color: selectedLanguage == "English"
+                        color:
+                        selectedLanguage == "English"
                             ? Color(0xFF21887D)
                             : Colors.grey,
                       ),
@@ -235,7 +237,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                         side: BorderSide(
-                          color: selectedLanguage == "English"
+                          color:
+                          selectedLanguage == "English"
                               ? const Color(0xFF21887D)
                               : Colors.grey.shade400,
                         ),
@@ -250,7 +253,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                       backgroundColor: Colors.white,
                       showCheckmark: false,
                       labelStyle: TextStyle(
-                        color: selectedLanguage == "हिन्दी"
+                        color:
+                        selectedLanguage == "हिन्दी"
                             ? Color(0xFF21887D)
                             : Colors.grey,
                       ),
@@ -262,13 +266,13 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                         side: BorderSide(
-                          color: selectedLanguage == "हिन्दी"
+                          color:
+                          selectedLanguage == "हिन्दी"
                               ? const Color(0xFF21887D)
                               : Colors.grey.shade400,
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ],
