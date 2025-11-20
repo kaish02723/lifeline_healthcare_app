@@ -37,6 +37,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -148,7 +152,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
                 child: Container(
-                  width: 160,
+                  width: screenWidth * 0.45,
                   height: 120,
                   decoration: BoxDecoration(
                     color: const Color(0xffF5F7FA),
@@ -181,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       Positioned(
-                        left: 40,
+                        right: 0,
                         top: 35,
                         child: SizedBox(
                           width: 100,
@@ -207,7 +211,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
                 child: Container(
-                  width: 160,
+                  width: screenWidth * 0.45,
                   height: 120,
                   decoration: BoxDecoration(
                     color: const Color(0xffF5F7FA),
@@ -240,7 +244,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       Positioned(
-                        left: 35,
+                        right: 0,
                         top: 35,
                         child: SizedBox(
                           width: 120,
@@ -319,7 +323,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: SizedBox(
-                      height: 150,
+                      height: 170,
+                      width: double.infinity,
                       child: PageView(
                         controller: _offerController,
                         onPageChanged: (index) {
@@ -408,7 +413,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 30),
 
           Container(
-            height: 280,
             width: double.infinity,
             color: Color(0xfff5fafa),
             child: Column(
@@ -468,7 +472,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       },
       child: Container(
-        width: 90,
+        width: MediaQuery.of(context).size.width * 0.24,
         height: 110,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -486,7 +490,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Stack(
           children: [
             Positioned(
-              left: 16,
+              left: 20,
               top: 15,
               child: SizedBox(
                 width: 55,
@@ -533,7 +537,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return Container(
-              height: 330,
+              height: 300,
               padding: const EdgeInsets.all(18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -579,17 +583,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   RadioListTile(
                     title: Text("Hindi"),
                     value: "Hindi",
-                    groupValue: tempSelected,
-                    activeColor: Color(0xff00796B),
-                    onChanged: (value) {
-                      setSheetState(() => tempSelected = value.toString());
-                    },
-                  ),
-
-                  /// BENGALI
-                  RadioListTile(
-                    title: Text("Bengali"),
-                    value: "Bengali",
                     groupValue: tempSelected,
                     activeColor: Color(0xff00796B),
                     onChanged: (value) {
