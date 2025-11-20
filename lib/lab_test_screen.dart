@@ -33,7 +33,7 @@ class _LabTestScreenState extends State<LabTestScreen> {
             children: [
               SizedBox(width: 15),
               SizedBox(
-                width: 290,
+                width: MediaQuery.of(context).size.width*0.83,
                 child: TextField(
                   cursorColor: Color(0xff00796B),
                   decoration: InputDecoration(
@@ -73,7 +73,7 @@ class _LabTestScreenState extends State<LabTestScreen> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 20,
-                mainAxisExtent: 200,
+                mainAxisExtent: 210,
               ),
               itemBuilder: (context, index) {
                 return Container(
@@ -95,7 +95,7 @@ class _LabTestScreenState extends State<LabTestScreen> {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.only(left: 12,right: 12,top: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -123,7 +123,7 @@ class _LabTestScreenState extends State<LabTestScreen> {
                                   color: Colors.black87,
                                 ),
                               ),
-                              SizedBox(height: 20),
+                              SizedBox(height: 10,),
                               Text(
                                 '₹687',
                                 style: TextStyle(
@@ -140,7 +140,7 @@ class _LabTestScreenState extends State<LabTestScreen> {
                           HapticFeedback.mediumImpact();
                         },
                         child: Container(
-                          height: 39,
+                          height: 35,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(5),
