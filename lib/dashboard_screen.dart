@@ -68,21 +68,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           'Md kaish',
                           style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                         ),
                         Text(
                           'View and edit profile',
-                          style: TextStyle(fontSize: 16, color: Colors.black45),
+                          style: TextStyle(fontSize: 14, color: Colors.black45),
                         ),
                       ],
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.navigate_next, color: Colors.black),
-                  ),
+                  Icon(Icons.navigate_next, color: Colors.black),
                 ],
               ),
             ),
@@ -91,9 +88,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leading: Icon(Icons.light_mode),
               title: Text('Theme'),
             ),
-            const ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingScreen()),
+                );
+              },
+              child: const ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Settings'),
+              ),
             ),
           ],
         ),
