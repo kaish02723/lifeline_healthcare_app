@@ -1,0 +1,23 @@
+[33m19f33a5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m merged amrit with master
+[33mf748a21[m add dependency
+[33m9d7f98b[m[33m ([m[1;31morigin/jahir[m[33m, [m[1;32mjahir[m[33m)[m Merge branch 'master' of https://github.com/kaish02723/lifeline_healthcare_app into jahir
+[33m32fbafa[m physical_summary_screen making responsive
+[33m9792c05[m lab test screen making responsive
+[33m35dab26[m Merge remote-tracking branch 'origin/jahir' into jahir
+[33m1cbe03d[m making dashboard responsive
+[33m87f4ae1[m making dashboard responsive
+[33m8187030[m making dashboard responsive
+[33m5e1665b[m add dependency
+[33m00e6f63[m[33m ([m[1;31morigin/arbind[m[33m, [m[1;32marbind[m[33m)[m Merge pull request #2 from kaish02723/arbind
+[33m0ad61b2[m update pubspec
+[33m8c31a76[m[33m ([m[1;31morigin/amrit[m[33m, [m[1;32mamrit[m[33m)[m amrita ui task completed
+[33m5af74a6[m Merge branch 'aditya'
+[33m8f01215[m Merge remote-tracking branch 'origin/master'
+[33m4bd9e88[m Merge pull request #1 from kaish02723/jahir
+[33ma1035ba[m Jahir branch: updated screens/code
+[33m6bbf262[m[33m ([m[1;31morigin/kaish[m[33m, [m[1;32mkaish[m[33m)[m Added UI screens and images
+[33mafcf17c[m i create 3 screen
+[33md94df83[m add splash_screen email_auth_screen register_screen forgot_password_screen verify_otp_screen dashboard_screen physical_appointment_screen physical_summary_screen instant_video_screen and some dependency
+[33m8db820f[m add screens like find_doctors, medicine_cart, test_booking find_doctors -screen
+[33m815734d[m[33m ([m[1;31morigin/aditya[m[33m, [m[1;32maditya[m[33m)[m Add ambulance booking screen Add books diagnostic screen add notifaction screen
+[33m21b68c5[m[33m ([m[1;32mmain[m[33m)[m Initial commit
