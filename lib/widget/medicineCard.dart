@@ -21,7 +21,7 @@ class MedicineCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: isDark ? Colors.grey[900] : Colors.grey[200],
+          color: isDark ? Colors.grey[200] : Colors.grey[900],
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
             BoxShadow(
@@ -52,7 +52,9 @@ class MedicineCard extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12),bottomRight: Radius.circular(12))
                 ),
+                clipBehavior: Clip.antiAlias,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Column(
@@ -90,11 +92,11 @@ class MedicineCard extends StatelessWidget {
                height: 38,
                width: 38,
                alignment: Alignment.center,
-               decoration: BoxDecoration(shape: BoxShape.circle,color: isDark?Color(0xFFDDDDDD):Colors.white),
+               decoration: BoxDecoration(shape: BoxShape.circle,color: isDark?Colors.white:Color(0xFFDDDDDD)),
                child: Icon(
                  icon,
                  size:22,
-                 color: isDark ? Colors.white : Colors.black87,
+                 color: isDark ? Colors.black87 : Colors.white,
                ),
              ),
            ),

@@ -4,6 +4,8 @@ import 'package:lifeline_healthcare/screen/theme/color.dart';
 import 'package:lifeline_healthcare/screen/theme/text_styles.dart';
 import 'package:lifeline_healthcare/widget/medicine_listCard.dart';
 
+import 'edit_profile.dart';
+
 class AllMedicinesScreen extends StatefulWidget {
   const AllMedicinesScreen({super.key});
 
@@ -16,6 +18,7 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: AppBar(
           backgroundColor: AppColors.white,
           leading: Icon(
@@ -24,8 +27,8 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
             size: 30,
           ),
           actions: [
-            Icon(CupertinoIcons.search, color: AppColors.black, size: 30),
-            const SizedBox(width: 5),
+            Icon(CupertinoIcons.search, color: AppColors.black, size: 25),
+            const SizedBox(width: 8),
             Icon(
               CupertinoIcons.shopping_cart,
               color: AppColors.black,
@@ -42,7 +45,9 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
               Row(
                 children: [
                   const SizedBox(height: 16),
-                  Text("Deliver to -", style: AppTextStyle.titleLarge),
+                  Text("Deliver to -", style: AppTextStyle.titleLarge.copyWith(
+                    color: AppColors.greyText
+                  )),
                   const SizedBox(width: 5),
                   Text(
                     "Saran",
@@ -60,7 +65,9 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
                 ],
               ),
               const SizedBox(height: 12),
-              Text("All Products", style: AppTextStyle.h3),
+              Text("All Products", style: AppTextStyle.h3.copyWith(
+                color:AppColors.greyText
+              )),
               const SizedBox(height: 12),
               Expanded(
                 child: ListView.separated(
@@ -68,7 +75,9 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
                   separatorBuilder: (context, index) => const SizedBox(height: 10),
                   itemBuilder: (context, index) {
                     return MedicineListCard(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile(),));
+                      },
                       image: Image.asset("asset/images/img.png"),
                       title: "Centrum Multivitamin Tablets",
                       subtitle: "Haleon India Ltd.",
@@ -79,6 +88,7 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
+                          border: Border.all(width: 0.4),
                           borderRadius: BorderRadius.circular(6),
                           color: Colors.grey.shade200,
                         ),
@@ -87,7 +97,11 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
                           children: const [
                             Icon(Icons.remove, size: 20),
                             SizedBox(width: 6),
-                            Text("1"),
+                            Text("1",style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 18,
+                              color:AppColors.black
+                            )),
                             SizedBox(width: 6),
                             Icon(Icons.add, size: 20),
                           ],

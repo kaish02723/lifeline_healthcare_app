@@ -13,7 +13,7 @@ class MedicineHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -42,7 +42,9 @@ class MedicineHomeScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text("Deliver to -",
-                              style: AppTextStyle.titleLarge
+                              style: AppTextStyle.titleLarge.copyWith(
+                                color: AppColors.text
+                              )
                           ),
                           const SizedBox(width: 5,),
                           Text("Saran",
@@ -67,7 +69,7 @@ class MedicineHomeScreen extends StatelessWidget {
                             border: InputBorder.none,
                             hintText: "Search Medicines",
                             hintStyle: AppTextStyle.titleLarge.copyWith(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w400,
                               color: AppColors.greyText
                             ),
                             icon: Icon(Icons.search,
@@ -81,7 +83,10 @@ class MedicineHomeScreen extends StatelessWidget {
 
                       Text(
                         "Shop Health Products By Categories",
-                        style: AppTextStyle.h3,
+                        style: AppTextStyle.h3.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.greyText
+                        ),
                       ),
 
                       const SizedBox(height: 12),

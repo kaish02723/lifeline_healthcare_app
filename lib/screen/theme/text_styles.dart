@@ -34,14 +34,15 @@ class AppTextStyle{
 
   //for title
   static const titleLarge=TextStyle(
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.bold,
     fontSize: 15,
     fontFamily: "Inter"
   );
 
   static const titleMedium=TextStyle(
     fontSize: 15,
-    fontFamily: "Inter"
+    fontFamily: "Inter",
+      fontWeight: FontWeight.w400
   );
 
   //body Text

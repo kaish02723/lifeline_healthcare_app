@@ -21,8 +21,9 @@ class MedicineListCard extends StatelessWidget{
        width: double.infinity,
        padding: const EdgeInsets.all(12),
        decoration: BoxDecoration(
+         border: Border.all(width: 0.3),
          borderRadius: BorderRadius.circular(16),
-           color: isDark ? Colors.grey[900] : Colors.grey[200],
+           color: isDark ? Colors.grey[200] : Colors.grey[700],
            boxShadow: [
            BoxShadow(
              color: Colors.black12,
@@ -42,6 +43,7 @@ class MedicineListCard extends StatelessWidget{
                width: 80,
                height: 80,
                fit: BoxFit.cover,
+               alignment:Alignment(10, 10) ,
              ),
            ),
            Expanded(
@@ -50,7 +52,7 @@ class MedicineListCard extends StatelessWidget{
                children: [
                   Text(
                     title,
-                    style: AppTextStyle.h2.copyWith(
+                    style: AppTextStyle.titleLarge.copyWith(
                       color: AppColors.black,
                     ),
                     maxLines: 1,
@@ -58,23 +60,29 @@ class MedicineListCard extends StatelessWidget{
                   ),
                  Text(
                     subtitle,
-                    style: AppTextStyle.h3.copyWith(
+                    style: AppTextStyle.titleMedium.copyWith(
                       color: AppColors.greyText,
+
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                  ),
                  const SizedBox(height: 5),
-                 Text(
-                   mrp,
-                   style: AppTextStyle.titleLarge.copyWith(
-                     color: AppColors.black,
-                   ),
-                   maxLines: 1,
-                   overflow: TextOverflow.ellipsis,
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text(
+                       mrp,
+                       style: AppTextStyle.h3.copyWith(
+                         color: AppColors.black,
+                       ),
+                       maxLines: 1,
+                       overflow: TextOverflow.ellipsis,
+                     ),
+                     quantityBox,
+                   ],
                  ),
                  const SizedBox(height: 10),
-                 quantityBox,
                ],
              ),
            )

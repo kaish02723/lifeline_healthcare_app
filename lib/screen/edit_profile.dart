@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare/screen/theme/color.dart';
 import 'package:lifeline_healthcare/screen/theme/text_styles.dart';
@@ -46,11 +48,15 @@ class _EditProfileState extends State<EditProfile> {
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
                       ),
-                      child: Image.asset(
-                        "asset/images/img_3.png",
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
+                      child: ImageFiltered(
+                        imageFilter:ImageFilter.blur(sigmaX: 50,sigmaY: 50),
+                        child: Image.asset(
+                          "asset/images/img_3.png",
+                          colorBlendMode: BlendMode.darken,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
