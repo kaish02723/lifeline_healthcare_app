@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
@@ -98,10 +99,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
             ),
-            const ListTile(leading: Icon(Icons.person), title: Text('Profile')),
             const ListTile(
-              leading: Icon(Icons.light_mode),
-              title: Text('Theme'),
+              leading: Icon(Icons.credit_card),
+              title: Text('Appointments'),
+            ),
+            const ListTile(
+              leading: Icon(CupertinoIcons.lab_flask),
+              title: Text('TestBooking'),
+            ),
+            const ListTile(
+              leading: Icon(CupertinoIcons.cube_box),
+              title: Text('My Orders'),
+            ),
+            const ListTile(
+              leading: Icon(CupertinoIcons.chat_bubble_2),
+              title: Text('ChatBot'),
             ),
             GestureDetector(
               onTap: () {
@@ -534,7 +546,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   'Our vision is to help mankind live healthier,  longer lives by making quality healthcare,    accessible, affordable and convenient.',
                   style: TextStyle(color: Colors.grey),
                 ),
-                SizedBox(height: 15,)
+                SizedBox(height: 15),
               ],
             ),
           ),
