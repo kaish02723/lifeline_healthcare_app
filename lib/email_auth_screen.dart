@@ -12,16 +12,12 @@ class EmailAuthScreen extends StatefulWidget {
 }
 
 class _EmailAuthScreenState extends State<EmailAuthScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  bool _passwordVisible = false;
 
   final _formKey = GlobalKey<FormState>();
 
-  final RegExp emailRegex = RegExp(
-    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-  );
+  final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +50,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: const EdgeInsets.only(top: 300),
+                padding: const EdgeInsets.only(top: 350),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -71,7 +67,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                       const SizedBox(height: 6),
 
                       Text(
-                        "Login with Email & Password",
+                        "Add your phone number to get loggedIn",
                         style: GoogleFonts.poppins(
                           fontSize: 15,
                           color: Colors.black54,
@@ -81,27 +77,27 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
 
                       const SizedBox(height: 25),
 
-                      // ---------------- EMAIL FIELD ----------------
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
-                          controller: _emailController,
+                          controller: _phoneController,
                           cursorColor: const Color(0xFF00695C),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Email is required*';
-                            } else if (!emailRegex.hasMatch(value)) {
-                              return 'Enter a valid email address';
+                              return 'Phone number is required*';
+                            } else if (!phoneRegex.hasMatch(value)) {
+                              return 'Enter a valid 10-digit phone number';
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.phone,
+                          maxLength: 10,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(
                               Icons.email_rounded,
                               color: Color(0xFF00695C),
                             ),
-                            hintText: 'Email',
+                            hintText: 'Phone number',
                             filled: true,
                             fillColor: const Color(0xfff1f1f1),
                             border: OutlineInputBorder(
@@ -114,75 +110,6 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                                 width: 2,
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // ---------------- PASSWORD FIELD ----------------
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: TextFormField(
-                          controller: _passwordController,
-                          cursorColor: const Color(0xFF00695C),
-                          obscureText: !_passwordVisible,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Password is required*';
-                            } else if (value.length < 6) {
-                              return 'Password must be at least 6 characters';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.lock,
-                              color: Color(0xFF00695C),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _passwordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: const Color(0xFFA1A1A1),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _passwordVisible = !_passwordVisible;
-                                });
-                              },
-                            ),
-                            hintText: 'Password',
-                            filled: true,
-                            fillColor: const Color(0xfff1f1f1),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(9),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(9),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF00695C),
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 210, top: 7),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ForgotPasswordScreen(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Forgot password?',
-                            style: TextStyle(color: Colors.red.shade800),
                           ),
                         ),
                       ),
@@ -197,13 +124,15 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterScreen(),
-                              ),
-                            );
                             if (_formKey.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OtpVerifyScreen(
+                                    phone: _phoneController.text,
+                                  ),
+                                ),
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Login Successful "),
@@ -227,7 +156,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "Login",
+                                "Send OTP",
                                 style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -241,7 +170,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
 
                       const SizedBox(height: 10),
                       const Text(
-                        'Use your registered email & password to continue',
+                        'We will send an OTP of 6-digits to your phone number.',
                         style: TextStyle(
                           color: Color(0xff979797),
                           fontSize: 13,

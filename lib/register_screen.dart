@@ -2,63 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/dashboard_screen.dart';
+import 'package:pinput/pinput.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class OtpVerifyScreen extends StatefulWidget {
+  final String phone;
+
+  const OtpVerifyScreen({super.key, required this.phone});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<OtpVerifyScreen> createState() => _OtpVerifyScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _name = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
-  final TextEditingController _confirmPassword = TextEditingController();
-
-  bool _hidePassword = true;
-  bool _hideConfirmPassword = true;
+  final TextEditingController _otp = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
         child: Column(
           children: [
             Stack(
               children: [
-                ///  Light Green Lower Wave
+                /// BOTTOM CURVE
                 ClipPath(
                   clipper: LowerWaveClipper(),
-                  child: Container(height: 300, color: const Color(0xFF26A69A)),
+                  child: Container(height: 300, color: const Color(0xFF009688)),
                 ),
 
-                ///  Dark Green Upper Wave
+                /// TOP CURVE (reverse)
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(3.1416),
                   child: ClipPath(
                     clipper: UpperWaveClipper(),
-                    child: Container(height: 300, color: const Color(0xff00796B)),
+                    child: Container(
+                      height: 300,
+                      color: const Color(0xFF00796B),
+                    ),
                   ),
                 ),
 
-                /// FORM
+                /// CONTENT
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 300),
+                    padding: const EdgeInsets.only(top: 350),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
                           Text(
-                            "Create Account",
+                            "OTP Verification",
                             style: GoogleFonts.montserrat(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -69,75 +67,78 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 6),
 
                           Text(
-                            "Register to continue",
+                            "Code sent to +91 ${widget.phone}",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
                               color: Colors.black54,
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
 
-                          const SizedBox(height: 25),
+                          const SizedBox(height: 30),
 
-                          /// NAME FIELD
-                          _buildInputField(
-                            controller: _name,
-                            hint: "Full Name",
-                            icon: Icons.person,
-                            validator: (val) =>
-                            val!.isEmpty ? "Name is required*" : null,
-                          ),
-
-                          /// EMAIL FIELD
-                          _buildInputField(
-                            controller: _email,
-                            hint: "Email Address",
-                            icon: Icons.email_outlined,
-                            keyboard: TextInputType.emailAddress,
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "Email is required*";
+                          /// PINPUT FIELD
+                          Pinput(
+                            length: 6,
+                            controller: _otp,
+                            keyboardType: TextInputType.number,
+                            defaultPinTheme: PinTheme(
+                              height: 60,
+                              width: 50,
+                              textStyle: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF00796B),
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xfff1f1f1),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                            ),
+                            focusedPinTheme: PinTheme(
+                              height: 55,
+                              width: 55,
+                              textStyle: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF00796B),
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: const Color(0xFF00796B),
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            validator: (v) {
+                              if (v == null || v.isEmpty) {
+                                return "Enter OTP";
                               }
-                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$')
-                                  .hasMatch(val)) {
-                                return "Enter a valid email!";
+                              if (v.length != 6) {
+                                return "Enter 6-digit OTP";
                               }
                               return null;
                             },
                           ),
 
-                          /// PASSWORD FIELD
-                          _buildInputField(
-                            controller: _password,
-                            hint: "Password",
-                            icon: Icons.lock_outline,
-                            obscure: _hidePassword,
-                            toggleVisibility: () {
-                              setState(() => _hidePassword = !_hidePassword);
-                            },
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "Password is required*";
-                              }
-                              if (val.length < 6) {
-                                return "Password must be 6+ characters";
-                              }
-                              return null;
-                            },
-                          ),
+                          const SizedBox(height: 30),
 
-                          /// SIGNUP BUTTON
+                          /// VERIFY BUTTON
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 20),
+                              horizontal: 15,
+                              vertical: 15,
+                            ),
                             child: GestureDetector(
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
-                                  HapticFeedback.lightImpact();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Account Created Successfully"),
+                                  HapticFeedback.heavyImpact();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DashboardScreen(),
                                     ),
                                   );
                                 }
@@ -149,14 +150,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(9),
                                   gradient: const LinearGradient(
-                                    colors: [ Color(0xFF26A69A),Color(0xFF00796B),],
+                                    colors: [
+                                      Color(0xFF009688),
+                                      Color(0xFF00796B),
+                                    ],
                                     begin: Alignment.centerLeft,
                                     end: Alignment.centerRight,
                                   ),
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "Sign Up",
+                                    "Verify OTP",
                                     style: GoogleFonts.poppins(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -165,6 +169,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                               ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'We have sent an OTP to your phone number.\nPlease enter it to verify.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xff979797),
+                              fontSize: 13,
                             ),
                           ),
 
@@ -181,72 +194,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-
-  /// ------------- INPUT FIELD BUILDER --------------
-  Widget _buildInputField({
-    required TextEditingController controller,
-    required String hint,
-    required IconData icon,
-    TextInputType keyboard = TextInputType.text,
-    bool obscure = false,
-    Function()? toggleVisibility,
-    String? Function(String?)? validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboard,
-        obscureText: obscure,
-        validator: validator,
-        cursorColor: const Color(0xFF00695C),
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: const Color(0xFF00695C)),
-          suffixIcon: toggleVisibility != null
-              ? IconButton(
-            icon: Icon(
-              obscure ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey,
-            ),
-            onPressed: toggleVisibility,
-          )
-              : null,
-          hintText: hint,
-          filled: true,
-          fillColor: const Color(0xfff1f1f1),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(9),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(9),
-            borderSide: const BorderSide(
-              color: Color(0xFF00695C),
-              width: 2,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
 
-/// ------------------- CURVE CLIPPERS -------------------
-
+/// SAME CLIPPERS YOU USED
 class UpperWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(0, size.height - 100);
-    path.quadraticBezierTo(size.width * 0.25, size.height - 180,
-        size.width * 0.55, size.height - 120);
     path.quadraticBezierTo(
-        size.width * 0.85, size.height - 45, size.width, size.height - 40);
+      size.width * 0.25,
+      size.height - 180,
+      size.width * 0.55,
+      size.height - 120,
+    );
+    path.quadraticBezierTo(
+      size.width * 0.85,
+      size.height - 45,
+      size.width,
+      size.height - 40,
+    );
     path.lineTo(size.width, 0);
     return path..close();
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  bool shouldReclip(_) => false;
 }
 
 class LowerWaveClipper extends CustomClipper<Path> {
@@ -255,13 +228,21 @@ class LowerWaveClipper extends CustomClipper<Path> {
     Path path = Path();
     path.lineTo(0, size.height - 100);
     path.quadraticBezierTo(
-        size.width * 0.25, size.height - 47, size.width * 0.5, size.height - 80);
+      size.width * 0.25,
+      size.height - 47,
+      size.width * 0.5,
+      size.height - 80,
+    );
     path.quadraticBezierTo(
-        size.width * 0.8, size.height - 109, size.width, size.height - 45);
+      size.width * 0.8,
+      size.height - 109,
+      size.width,
+      size.height - 45,
+    );
     path.lineTo(size.width, 0);
     return path..close();
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  bool shouldReclip(_) => false;
 }
