@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lifeline_healthcare_app/forgot_password_screen.dart';
-import 'package:lifeline_healthcare_app/register_screen.dart';
+import 'package:lifeline_healthcare_app/verify_otp_screen.dart';
 
 class EmailAuthScreen extends StatefulWidget {
   const EmailAuthScreen({super.key});
@@ -90,6 +89,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                             }
                             return null;
                           },
+
                           keyboardType: TextInputType.phone,
                           maxLength: 10,
                           decoration: InputDecoration(
