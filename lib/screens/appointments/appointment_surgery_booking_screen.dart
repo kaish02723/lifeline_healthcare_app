@@ -351,7 +351,7 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                 title: "Call Now",
                 icon: Icons.call,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsScreen(),));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetailsScreen(),));
                 },
               ),
             ],

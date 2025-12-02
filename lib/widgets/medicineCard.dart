@@ -21,53 +21,58 @@ class MedicineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final width = MediaQuery.of(context).size.width;
 
     return InkWell(
-      borderRadius: BorderRadius.circular(22),
+      borderRadius: BorderRadius.circular(16),
       onTap: onTap,
       child: Container(
-        width: double.infinity,
+        margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade200,width: 0.5),
-          color: isDark ? Colors.grey[900] : Colors.grey[200],
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(16),
+          color: isDark ? Colors.grey[900] : Colors.white,
+          border: Border.all(color: Colors.grey.shade300, width: 0.6),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.07),
-              blurRadius: 6,
-              offset: const Offset(0, 3),
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 8,
+              offset: const Offset(3, 3),
             ),
           ],
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // IMAGE SECTION
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: Stack(
                 children: [
                   Image.network(
                     imagePath,
                     width: double.infinity,
-                    height: width * 0.32, // responsive height
-                    fit: BoxFit.cover,
+                    height: 140,
+                    fit: BoxFit.contain,
                   ),
 
-                  // ICON - Positioned Automatically Based On Width
                   Positioned(
-                    top: 10,
-                    right: 10,
+                    top: 12,
+                    right: 12,
                     child: Container(
-                      height: 40,
-                      width: 40,
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isDark ? Colors.white10 : Colors.white,
+                        color: isDark ? Colors.white12 : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                          ),
+                        ],
                       ),
                       child: Icon(
                         icon,
-                        size: 24,
+                        size: 22,
                         color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
@@ -76,24 +81,17 @@ class MedicineCard extends StatelessWidget {
               ),
             ),
 
-            // TEXT SECTION
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              decoration: BoxDecoration(
-                color: isDark ? Colors.grey[850] : Colors.white,
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(22),
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
                     style: AppTextStyle.titleMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
                       color: isDark ? Colors.white : AppColors.black,
-                      fontWeight: FontWeight.w600,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -103,11 +101,11 @@ class MedicineCard extends StatelessWidget {
 
                   Text(
                     subtitle,
-                    style: AppTextStyle.titleMedium.copyWith(
+                    style: TextStyle(
+                      fontSize: 13.5,
                       color: isDark ? Colors.white70 : AppColors.colorText,
-                      fontWeight: FontWeight.w500,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

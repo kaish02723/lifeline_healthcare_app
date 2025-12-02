@@ -220,7 +220,7 @@ class _AllMedicinesScreenState extends State<AllMedicinesScreen> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsScreen(),));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetailsScreen(),));
                     },
                     child: Container(
                       padding: EdgeInsets.all(width * 0.03),

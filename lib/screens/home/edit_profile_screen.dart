@@ -48,7 +48,7 @@ class _EditProfileState extends State<EditProfile> {
                         bottomRight: Radius.circular(30),
                       ),
                       child: Image.network(
-                        "https://t4.ftcdn.net/jpg/04/31/64/75/360_F_431647519_usrbQ8Z983hTYe8zgA7t1XVc5fEtqcpa.jpg",
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s",
                         width: double.infinity,
                         height: double.infinity,
                         fit: BoxFit.cover,
@@ -62,7 +62,7 @@ class _EditProfileState extends State<EditProfile> {
                     child: CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
-                        "https://t4.ftcdn.net/jpg/04/31/64/75/360_F_431647519_usrbQ8Z983hTYe8zgA7t1XVc5fEtqcpa.jpg",
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s",
                       ),
                     ),
                   ),

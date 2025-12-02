@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
@@ -99,21 +100,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
             ),
-            const ListTile(
-              leading: Icon(Icons.credit_card),
-              title: Text('Appointments'),
+            ListTile(
+              leading: const Icon(Icons.credit_card),
+              title: const Text('Appointments'),
+              onTap: () {
+                HapticFeedback.selectionClick();
+              },
             ),
-            const ListTile(
-              leading: Icon(CupertinoIcons.lab_flask),
+            ListTile(
+              leading: Icon(CupertinoIcons.lab_flask_solid),
               title: Text('TestBooking'),
+              onTap: () {
+                HapticFeedback.selectionClick();
+              },
             ),
-            const ListTile(
+            ListTile(
               leading: Icon(CupertinoIcons.cube_box),
               title: Text('My Orders'),
+              onTap: () {
+                HapticFeedback.selectionClick();
+              },
             ),
-            const ListTile(
+            ListTile(
               leading: Icon(CupertinoIcons.chat_bubble_2),
               title: Text('ChatBot'),
+              onTap: () {
+                HapticFeedback.selectionClick();
+              },
             ),
             GestureDetector(
               onTap: () {
@@ -122,9 +135,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   MaterialPageRoute(builder: (context) => SettingScreen()),
                 );
               },
-              child: const ListTile(
+              child: ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Settings'),
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingScreen()),
+                  );
+                },
               ),
             ),
           ],
@@ -147,7 +167,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: const CircleAvatar(
               backgroundColor: Colors.white,
               backgroundImage: NetworkImage(
-                'https://i.pinimg.com/736x/62/01/0d/62010d848b790a2336d1542fcda51789.jpg',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
               ),
             ),
           ),
