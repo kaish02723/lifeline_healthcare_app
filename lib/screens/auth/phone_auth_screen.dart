@@ -13,15 +13,9 @@ class PhoneAuthScreen extends StatefulWidget {
 }
 
 class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
-  final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
-
   @override
   Widget build(BuildContext context) {
-    var provider=Provider.of<AuthProvider>(context);
+    var provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -53,7 +47,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 350),
                 child: Form(
-                  key: _formKey,
+                  key: provider.formKey,
                   child: Column(
                     children: [
                       Text(
@@ -81,27 +75,51 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
-                          controller: _phoneController,
+                          controller: provider.phoneController,
                           cursorColor: const Color(0xFF00695C),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Phone number is required*';
-                            } else if (!phoneRegex.hasMatch(value)) {
+                            } else if (!provider.phoneRegex.hasMatch(value)) {
                               return 'Enter a valid 10-digit phone number';
                             }
                             return null;
                           },
-
                           keyboardType: TextInputType.phone,
                           maxLength: 10,
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.email_rounded,
-                              color: Color(0xFF00695C),
+                            prefixIcon: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(width: 10),
+                                SizedBox(
+                                  width: 25,
+                                  child: Image.network(
+                                    'https://img.freepik.com/premium-photo/india-national-fabric-flag_113767-1933.jpg?semt=ais_hybrid&w=740&q=80',
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Text(
+                                  '+91',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Container(
+                                  height: 35,
+                                  width: 1,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 8),
+                              ],
                             ),
+
                             hintText: 'Phone number',
                             filled: true,
                             fillColor: const Color(0xfff1f1f1),
+
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(9),
                             ),
@@ -112,6 +130,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                 width: 2,
                               ),
                             ),
+                            counterText: "",
                           ),
                         ),
                       ),
@@ -126,24 +145,11 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            var data={
-                              'phone_no':'+91${_phoneController.text}'
+                            var data = {
+                              'phone': '+91${provider.phoneController.text}',
                             };
-                            if (_formKey.currentState!.validate()) {
-                              provider.sendOtp(data);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => OtpVerifyScreen(
-                                    phone: '+91${_phoneController.text}',
-                                  ),
-                                ),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Login Successful "),
-                                ),
-                              );
+                            if (provider.formKey.currentState!.validate()) {
+                              provider.sendOtp(data, context);
                             } else {
                               HapticFeedback.mediumImpact();
                             }

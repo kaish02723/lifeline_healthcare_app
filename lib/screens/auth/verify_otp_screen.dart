@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 
 import '../home/dashboard_screen.dart';
 
@@ -13,12 +15,11 @@ class OtpVerifyScreen extends StatefulWidget {
   @override
   State<OtpVerifyScreen> createState() => _OtpVerifyScreenState();
 }
-class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _otp = TextEditingController();
 
+class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
@@ -52,7 +53,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 350),
                     child: Form(
-                      key: _formKey,
+                      key: provider.otpFormKey,
                       child: Column(
                         children: [
                           Text(
@@ -79,7 +80,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           /// PINPUT FIELD
                           Pinput(
                             length: 6,
-                            controller: _otp,
+                            controller: provider.otp,
                             keyboardType: TextInputType.number,
                             defaultPinTheme: PinTheme(
                               height: 60,
@@ -133,14 +134,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                if (_formKey.currentState!.validate()) {
+                                if (provider.otpFormKey.currentState!
+                                    .validate()) {
+                                  var value = {
+                                    'phone':
+                                        '+91${provider.phoneController.text}',
+                                    'otp': provider.otp.text,
+                                  };
+                                  provider.verifyOtp(value,context);
                                   HapticFeedback.heavyImpact();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DashboardScreen(),
-                                    ),
-                                  );
                                 }
                               },
                               child: AnimatedContainer(
