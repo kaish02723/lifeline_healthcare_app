@@ -243,7 +243,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           width: 100,
                           height: 100,
                           child: Image.network(
-                            'https://www.dotcominfoway.com/wp-content/uploads/2020/05/online-consultation-apps-development-services-img1.png',
+                            'https://static.vecteezy.com/system/resources/thumbnails/048/740/103/small/doctor-writing-on-a-clipboard-isolated-against-a-transparent-background-png.png',
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -297,12 +297,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       Positioned(
                         right: 0,
-                        top: 35,
+                        top: 25,
                         child: SizedBox(
-                          width: 120,
-                          height: 100,
+                          width: 130,
+                          height: 110,
                           child: Image.network(
-                            'https://static.vecteezy.com/system/resources/thumbnails/019/994/556/small/doctor-and-patient-graphic-clipart-design-free-png.png',
+                            'https://static.vecteezy.com/system/resources/thumbnails/050/817/819/small/happy-smiling-male-doctor-with-hand-present-something-empty-space-standing-isolate-on-transparent-background-png.png',
                             fit: BoxFit.contain,
                           ),
                         ),

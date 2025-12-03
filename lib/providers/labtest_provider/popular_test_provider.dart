@@ -21,7 +21,7 @@ class PopularTestProvider with ChangeNotifier {
 
   Future<void> getPopularLabTest() async {
     var response = await http.get(Uri.parse('$baseUrl/get-popular'));
-    print(response.body);
+    // print(response.body);
 
     if (response.statusCode == 200) {
       var jsonBody = jsonDecode(response.body);
