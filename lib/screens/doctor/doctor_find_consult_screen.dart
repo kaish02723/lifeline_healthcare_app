@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../patient/patient_medicine_cart_screen.dart';
@@ -18,6 +19,9 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: () {
+          Navigator.pop(context);
+        }, icon: Icon(CupertinoIcons.back)),
         backgroundColor: const Color(0xFF00796B),
         title: const Text("Find Doctors", style: TextStyle(color: Colors.white)),
         actions: [
@@ -111,10 +115,10 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                     (index) => MaterialButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MedicineCart()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => MedicineCart()),
+                    // );
                   },
                   child: _doctorCard(context),
                 ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
-import '../home/dashboard_screen.dart';
+import '../../providers/auth_provider.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String phone;
@@ -18,23 +17,31 @@ class OtpVerifyScreen extends StatefulWidget {
 
 class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<AuthProvider>(context, listen: false).startTimer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var provider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Column(
           children: [
+            /// ====================== WAVE BACKGROUND ======================
             Stack(
               children: [
-                /// BOTTOM CURVE
+                /// Bottom Wave
                 ClipPath(
                   clipper: LowerWaveClipper(),
                   child: Container(height: 300, color: const Color(0xFF009688)),
                 ),
 
-                /// TOP CURVE (reverse)
+                /// Top Curve (Mirrored)
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(3.1416),
@@ -47,145 +54,172 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   ),
                 ),
 
-                /// CONTENT
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 350),
-                    child: Form(
-                      key: provider.otpFormKey,
-                      child: Column(
-                        children: [
-                          Text(
-                            "OTP Verification",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 22,
+                /// ====================== MAIN CONTENT ======================
+                Padding(
+                  padding: const EdgeInsets.only(top: 330),
+                  child: Form(
+                    key: provider.otpFormKey,
+                    child: Column(
+                      children: [
+                        Text(
+                          "OTP Verification",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF00695C),
+                          ),
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        Text(
+                          "Code sent to +91 ${widget.phone}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            color: Colors.black54,
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        /// ====================== PIN INPUT ======================
+                        Pinput(
+                          length: 6,
+                          controller: provider.otp,
+                          keyboardType: TextInputType.number,
+                          defaultPinTheme: PinTheme(
+                            height: 60,
+                            width: 52,
+                            textStyle: const TextStyle(
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF00695C),
+                              color: Color(0xFF00796B),
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xfff1f1f1),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.grey.shade300),
                             ),
                           ),
-
-                          const SizedBox(height: 6),
-
-                          Text(
-                            "Code sent to +91 ${widget.phone}",
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              color: Colors.black54,
+                          focusedPinTheme: PinTheme(
+                            height: 60,
+                            width: 52,
+                            textStyle: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF00796B),
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: const Color(0xFF00796B),
+                                width: 2,
+                              ),
                             ),
                           ),
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
+                              return "Enter OTP";
+                            }
+                            if (v.length != 6) {
+                              return "Enter 6-digit OTP";
+                            }
+                            return null;
+                          },
+                        ),
 
-                          const SizedBox(height: 30),
+                        const SizedBox(height: 18),
 
-                          /// PINPUT FIELD
-                          Pinput(
-                            length: 6,
-                            controller: provider.otp,
-                            keyboardType: TextInputType.number,
-                            defaultPinTheme: PinTheme(
-                              height: 60,
-                              width: 50,
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF00796B),
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xfff1f1f1),
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.grey.shade300),
-                              ),
-                            ),
-                            focusedPinTheme: PinTheme(
-                              height: 55,
-                              width: 55,
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF00796B),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: const Color(0xFF00796B),
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return "Enter OTP";
-                              }
-                              if (v.length != 6) {
-                                return "Enter 6-digit OTP";
-                              }
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 30),
-
-                          /// VERIFY BUTTON
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 15,
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                if (provider.otpFormKey.currentState!
-                                    .validate()) {
-                                  var value = {
-                                    'phone':
-                                        '+91${provider.phoneController.text}',
-                                    'otp': provider.otp.text,
-                                  };
-                                  provider.verifyOtp(value,context);
-                                  HapticFeedback.heavyImpact();
-                                }
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
-                                height: 50,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(9),
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFF009688),
-                                      Color(0xFF00796B),
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
+                        /// ====================== TIMER + RESEND ======================
+                        ValueListenableBuilder(
+                          valueListenable: provider.timerValue,
+                          builder: (context, value, _) {
+                            return Column(
+                              children: [
+                                Text(
+                                  value > 0
+                                      ? "Resend OTP in 00:${value.toString().padLeft(2, '0')}"
+                                      : "Didn’t receive the OTP?",
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
                                   ),
                                 ),
-                                child: Center(
+                                const SizedBox(height: 4),
+                                GestureDetector(
+                                  onTap: value == 0
+                                      ? () {
+                                          provider.resendOtp(widget.phone);
+                                          HapticFeedback.mediumImpact();
+                                        }
+                                      : null,
                                   child: Text(
-                                    "Verify OTP",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                    "Resend OTP",
+                                    style: TextStyle(
+                                      color: value == 0
+                                          ? Colors.teal.shade700
+                                          : Colors.grey,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
+                              ],
+                            );
+                          },
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        /// ====================== VERIFY BUTTON ======================
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 15,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (provider.otpFormKey.currentState!
+                                  .validate()) {
+                                var data = {
+                                  'phone': '+91${widget.phone}',
+                                  'otp': provider.otp.text,
+                                };
+                                provider.verifyOtp(data, context);
+                                HapticFeedback.heavyImpact();
+                              }
+                            },
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(9),
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF009688),
+                                    Color(0xFF00796B),
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Verify OTP",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'We have sent an OTP to your phone number.\nPlease enter it to verify.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xff979797),
-                              fontSize: 13,
-                            ),
-                          ),
+                        ),
 
-                          const SizedBox(height: 15),
-                        ],
-                      ),
+                        const SizedBox(height: 15),
+                      ],
                     ),
                   ),
                 ),
@@ -198,7 +232,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   }
 }
 
-/// SAME CLIPPERS YOU USED
+/// ====================== SAME CLIPPERS YOU USED ======================
 class UpperWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
