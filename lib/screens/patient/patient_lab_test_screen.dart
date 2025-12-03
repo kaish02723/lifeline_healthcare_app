@@ -48,6 +48,10 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.82,
                 child: TextField(
+                  controller: provider.searchLabTestController,
+                  onChanged: (value) {
+                    provider.filterSearch(value);
+                  },
                   cursorColor: Color(0xff00796B),
                   decoration: InputDecoration(
                     prefixIcon: Icon(
@@ -55,6 +59,14 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                       size: 23,
                       color: Colors.grey.shade600,
                     ),
+                    suffixIcon: provider.isSearchedLabTest
+                        ? IconButton(
+                            onPressed: () {
+                              provider.clearSearch();
+                            },
+                            icon: Icon(CupertinoIcons.multiply),
+                          )
+                        : null,
                     hintText: 'Search for test..',
                     isDense: true,
                     filled: true,
@@ -153,7 +165,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black87,
-                                  overflow: TextOverflow.ellipsis
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Text(
@@ -184,7 +196,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              'ADD',
+                              'Book Test',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
