@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_test_booking_screen.dart';
+import 'package:provider/provider.dart';
 
 class PatientLabTestScreen extends StatefulWidget {
   const PatientLabTestScreen({super.key});
@@ -13,7 +15,17 @@ class PatientLabTestScreen extends StatefulWidget {
 
 class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<PopularTestProvider>(
+      context,
+      listen: false,
+    ).getPopularLabTest();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<PopularTestProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -75,7 +87,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: GridView.builder(
-              itemCount: 4,
+              itemCount: provider.popularDataList.length,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -85,6 +97,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                 mainAxisExtent: 210,
               ),
               itemBuilder: (context, index) {
+                var listData = provider.popularDataList[index];
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -114,30 +127,37 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                'Liver Functions',
+                                listData.name ?? '',
+                                maxLines: 2,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               SizedBox(height: 10),
                               Text(
-                                'Known as Liver Function Test Blood',
-                                style: TextStyle(
+                                listData.description ?? '',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.black87,
                                 ),
                               ),
+
                               SizedBox(height: 15),
                               Text(
-                                'E-reports on same date',
+                                listData.category ?? '',
+                                maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black87,
+                                  overflow: TextOverflow.ellipsis
                                 ),
                               ),
                               Text(
-                                '₹687',
+                                '₹${listData.price}',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -180,6 +200,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
               },
             ),
           ),
+          const SizedBox(height: 20),
         ],
       ),
       bottomNavigationBar: Container(

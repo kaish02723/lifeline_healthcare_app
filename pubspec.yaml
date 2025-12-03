@@ -39,6 +39,7 @@ dependencies:
   pinput: ^6.0.1
   flutter_screenutil: ^5.9.3
   provider: ^6.1.5+1
+  shimmer_animation: ^2.2.2+1
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/screens/auth/verify_otp_screen.dart';
+import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:provider/provider.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
@@ -187,6 +188,17 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           color: Color(0xff979797),
                           fontSize: 13,
                         ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DashboardScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text('Skip'),
                       ),
                     ],
                   ),
