@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class UsersDetails extends StatefulWidget {
   const UsersDetails({super.key});
@@ -13,7 +16,6 @@ class UsersDetails extends StatefulWidget {
 
 class _UsersDetailsState extends State<UsersDetails> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController dateController = TextEditingController();
 
   XFile? profileImage;
 
@@ -21,32 +23,44 @@ class _UsersDetailsState extends State<UsersDetails> {
 
   /// PICK FROM GALLERY
   Future<void> pickFromGallery() async {
-    final galleryPermission = Permission.photos;
-    if (await galleryPermission.isDenied) {
-      galleryPermission.request();
-    }
-    if (await galleryPermission.isGranted) {
-      final image = await picker.pickImage(
-        source: ImageSource.gallery,
-      );
-      if (image != null) {
-        setState(() {
-          profileImage = image;
-        });
+    // ANDROID 13+ ke liye specific permission
+    if (Platform.isAndroid) {
+      final androidGallery = Permission.storage;
+
+      if (await androidGallery.isDenied) {
+        await androidGallery.request();
       }
-    } else {
-      // galleryPermission.request();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Permission denied!',
-            style: TextStyle(color: Colors.black),
-          ),
-          showCloseIcon: true,
-          backgroundColor: Color(0x5a65b9ac),
-          closeIconColor: Colors.black,
-        ),
-      );
+
+      if (!await androidGallery.isGranted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Gallery permission denied")));
+        return;
+      }
+    }
+
+    // iOS ke liye photos permission
+    if (Platform.isIOS) {
+      final iosGallery = Permission.photos;
+
+      if (await iosGallery.isDenied) {
+        await iosGallery.request();
+      }
+
+      if (!await iosGallery.isGranted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Gallery permission denied")));
+        return;
+      }
+    }
+
+    // Finally pick the image
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        profileImage = image;
+      });
     }
   }
 
@@ -57,9 +71,7 @@ class _UsersDetailsState extends State<UsersDetails> {
       await permission.request();
     }
     if (await permission.isGranted) {
-      final image = await picker.pickImage(
-        source: ImageSource.camera,
-      );
+      final image = await picker.pickImage(source: ImageSource.camera);
 
       if (image != null) {
         setState(() {
@@ -67,14 +79,16 @@ class _UsersDetailsState extends State<UsersDetails> {
         });
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Camera permission denied')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Camera permission denied')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<UserDetailProvider>(context);
+    var authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -127,11 +141,15 @@ class _UsersDetailsState extends State<UsersDetails> {
                     ),
                     child: CircleAvatar(
                       backgroundColor: Colors.grey.shade100,
-                      backgroundImage:
-                      profileImage != null ? FileImage(File(profileImage!.path)) : null,
+                      backgroundImage: profileImage != null
+                          ? FileImage(File(profileImage!.path))
+                          : null,
                       child: profileImage == null
-                          ? Icon(Icons.person,
-                          size: 70, color: Colors.grey.shade400)
+                          ? Icon(
+                              Icons.person,
+                              size: 70,
+                              color: Colors.grey.shade400,
+                            )
                           : null,
                     ),
                   ),
@@ -180,14 +198,14 @@ class _UsersDetailsState extends State<UsersDetails> {
 
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Column(
                                           children: [
                                             CircleAvatar(
                                               radius: 30,
                                               backgroundColor:
-                                              Colors.grey.shade200,
+                                                  Colors.grey.shade200,
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
@@ -208,7 +226,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                                             CircleAvatar(
                                               radius: 30,
                                               backgroundColor:
-                                              Colors.grey.shade200,
+                                                  Colors.grey.shade200,
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
@@ -249,6 +267,7 @@ class _UsersDetailsState extends State<UsersDetails> {
               child: Column(
                 children: [
                   _buildInputField(
+                    controller: provider.nameController,
                     label: "Full Name",
                     hint: "Enter your full name",
                     icon: Icons.person_outline,
@@ -256,6 +275,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                   const SizedBox(height: 18),
 
                   _buildInputField(
+                    controller: provider.emailController,
                     label: "Email Address",
                     hint: "example@gmail.com",
                     icon: Icons.email_outlined,
@@ -264,6 +284,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                   const SizedBox(height: 18),
 
                   _buildInputField(
+                    controller: provider.genderController,
                     label: "Gender",
                     hint: "Male / Female / Other",
                     icon: Icons.wc,
@@ -272,7 +293,7 @@ class _UsersDetailsState extends State<UsersDetails> {
 
                   // Date Picker
                   TextFormField(
-                    controller: dateController,
+                    controller: provider.dateController,
                     readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Date of Birth",
@@ -294,8 +315,8 @@ class _UsersDetailsState extends State<UsersDetails> {
                             lastDate: DateTime.now(),
                           );
                           if (picked != null) {
-                            dateController.text =
-                            "${picked.day}/${picked.month}/${picked.year}";
+                            provider.dateController.text =
+                                "${picked.day}/${picked.month}/${picked.year}";
                           }
                         },
                       ),
@@ -314,8 +335,10 @@ class _UsersDetailsState extends State<UsersDetails> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                        const BorderSide(color: Colors.teal, width: 2),
+                        borderSide: const BorderSide(
+                          color: Colors.teal,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
@@ -334,7 +357,18 @@ class _UsersDetailsState extends State<UsersDetails> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        var data = {
+                          "name": provider.nameController.text,
+                          "email": provider.emailController.text,
+                          "gender": provider.genderController.text,
+                          "date_of_birth": provider.dateController.text,
+                          "address": "anywhere",
+                          "picture": profileImage?.path,
+                        };
+                        String? userId = authProvider.userId;
+                        provider.addUserDetails(userId!, data, context);
+                      },
                       child: const Text(
                         "Submit",
                         style: TextStyle(
@@ -358,9 +392,11 @@ class _UsersDetailsState extends State<UsersDetails> {
     required String label,
     required String hint,
     required IconData icon,
+    required TextEditingController controller,
     TextInputType keyboard = TextInputType.text,
   }) {
     return TextFormField(
+      controller: controller,
       keyboardType: keyboard,
       decoration: InputDecoration(
         labelText: label,
