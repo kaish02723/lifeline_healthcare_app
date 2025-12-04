@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
 
 import '../screens/auth/verify_otp_screen.dart';
 import '../screens/home/dashboard_screen.dart';
@@ -104,7 +105,7 @@ class AuthProvider with ChangeNotifier {
       if (body["message"] == "OTP verified successfully") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => DashboardScreen()),
+          MaterialPageRoute(builder: (context) => UsersDetails()),
         );
       } else {
         ScaffoldMessenger.of(
