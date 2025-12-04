@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UsersDetails extends StatefulWidget {
   const UsersDetails({super.key});
@@ -14,29 +15,61 @@ class _UsersDetailsState extends State<UsersDetails> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController dateController = TextEditingController();
 
-  File? profileImage;
+  XFile? profileImage;
 
   final ImagePicker picker = ImagePicker();
 
   /// PICK FROM GALLERY
   Future<void> pickFromGallery() async {
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      setState(() {
-        profileImage = File(image.path);
-      });
+    final galleryPermission = Permission.photos;
+    if (await galleryPermission.isDenied) {
+      galleryPermission.request();
+    }
+    if (await galleryPermission.isGranted) {
+      final image = await picker.pickImage(
+        source: ImageSource.gallery,
+      );
+      if (image != null) {
+        setState(() {
+          profileImage = image;
+        });
+      }
+    } else {
+      // galleryPermission.request();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Permission denied!',
+            style: TextStyle(color: Colors.black),
+          ),
+          showCloseIcon: true,
+          backgroundColor: Color(0x5a65b9ac),
+          closeIconColor: Colors.black,
+        ),
+      );
     }
   }
 
   /// PICK FROM CAMERA
   Future<void> pickFromCamera() async {
-    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+    final permission = Permission.camera;
+    if (await permission.isDenied) {
+      await permission.request();
+    }
+    if (await permission.isGranted) {
+      final image = await picker.pickImage(
+        source: ImageSource.camera,
+      );
 
-    if (image != null) {
-      setState(() {
-        profileImage = File(image.path);
-      });
+      if (image != null) {
+        setState(() {
+          profileImage = image;
+        });
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Camera permission denied')),
+      );
     }
   }
 
@@ -95,7 +128,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                     child: CircleAvatar(
                       backgroundColor: Colors.grey.shade100,
                       backgroundImage:
-                      profileImage != null ? FileImage(profileImage!) : null,
+                      profileImage != null ? FileImage(File(profileImage!.path)) : null,
                       child: profileImage == null
                           ? Icon(Icons.person,
                           size: 70, color: Colors.grey.shade400)
