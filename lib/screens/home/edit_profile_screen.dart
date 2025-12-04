@@ -10,11 +10,12 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final TextEditingController dateController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    TextEditingController dateController = TextEditingController();
 
     return SafeArea(
       child: Scaffold(
@@ -25,11 +26,12 @@ class _EditProfileState extends State<EditProfile> {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
+                  /// HEADER IMAGE
                   Container(
                     height: height * 0.30,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
                       ),
@@ -43,7 +45,7 @@ class _EditProfileState extends State<EditProfile> {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
                       ),
@@ -56,32 +58,92 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
 
+                  /// PROFILE AVATAR
                   Positioned(
-                    bottom: -50,
-                    left: width / 2 - 50,
+                    bottom: -55,
+                    left: width / 2 - 55,
                     child: CircleAvatar(
-                      radius: 50,
+                      radius: 55,
                       backgroundImage: NetworkImage(
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s",
                       ),
                     ),
                   ),
+
+                  /// EDIT BUTTON
                   Positioned(
-                    bottom: -45,
-                    right: width / 2 - 45,
+                    bottom: -25, // FIXED POSITION
+                    right: width / 2 - 25,
                     child: CircleAvatar(
-                      radius: 15,
+                      radius: 18,
                       backgroundColor: AppColors.white,
-                      child: Icon(
-                        Icons.mode_edit_sharp,
-                        color: AppColors.colorText,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.35,
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 4,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    Text(
+                                      "Choose Option",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 25),
+                                    ListTile(
+                                      leading: Icon(Icons.camera_alt),
+                                      title: Text("Camera"),
+                                      onTap: () {},
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.photo),
+                                      title: Text("Gallery"),
+                                      onTap: () {},
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(
+                          Icons.mode_edit_sharp,
+                          color: AppColors.colorText,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: 60), //my card
+              SizedBox(height: 85),
+
+              /// PROFILE FORM CARD
               Container(
                 width: width,
                 margin: EdgeInsets.symmetric(horizontal: 16),
@@ -105,147 +167,39 @@ class _EditProfileState extends State<EditProfile> {
                       style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
 
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30),
 
-                    // Name Field
-                    TextField(
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-
-                      decoration: InputDecoration(
-                        labelText: "Full Name ",
-                        hintText: "Enter your name",
-                        prefixIcon: const Icon(
-                          Icons.person_outline,
-                          color: Colors.teal,
-                        ),
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        hintStyle: const TextStyle(color: Colors.black45),
-                        floatingLabelStyle: const TextStyle(
-                          color: Colors.teal,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 18,
-                        ),
-                        // thoda bada feel
-                        filled: true,
-                        fillColor: Colors.grey[50],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
-                            width: 1.5,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Colors.teal,
-                            width: 2,
-                          ),
-                        ),
-                      ),
+                    /// NAME
+                    _inputField(
+                      label: "Full Name",
+                      hint: "Enter your name",
+                      icon: Icons.person_outline,
                     ),
 
-                    const SizedBox(height: 18),
+                    SizedBox(height: 18),
 
-                    // Gender Field
-                    TextField(
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-
-                      decoration: InputDecoration(
-                        labelText: "Gender",
-                        hintText: "Male / Female / Other",
-                        prefixIcon: const Icon(
-                          Icons.male_outlined,
-                          color: Colors.teal,
-                        ),
-
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        hintStyle: const TextStyle(color: Colors.black45),
-                        floatingLabelStyle: const TextStyle(
-                          color: Colors.teal,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 18,
-                        ),
-                        // thoda bada feel
-                        filled: true,
-                        fillColor: Colors.grey[50],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1.5,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.teal, width: 2),
-                        ),
-                      ),
+                    /// GENDER
+                    _inputField(
+                      label: "Gender",
+                      hint: "Male / Female / Other",
+                      icon: Icons.male_outlined,
                     ),
 
-                    const SizedBox(height: 18),
+                    SizedBox(height: 18),
 
-                    // Date of Birth with Calendar Icon
+                    /// DOB
                     TextField(
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
                       controller: dateController,
                       readOnly: true,
                       decoration: InputDecoration(
                         labelText: "Date of Birth",
                         hintText: "dd/mm/yyyy",
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        hintStyle: const TextStyle(color: Colors.black45),
-                        floatingLabelStyle: const TextStyle(
-                          color: Colors.teal,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 18,
-                        ),
-
-                        // thoda bada feel
+                        prefixIcon: Icon(Icons.date_range, color: Colors.teal),
                         suffixIcon: IconButton(
                           icon: Icon(
                             Icons.calendar_today_rounded,
                             color: Colors.teal,
                           ),
-
                           onPressed: () async {
                             DateTime? picked = await showDatePicker(
                               context: context,
@@ -263,24 +217,17 @@ class _EditProfileState extends State<EditProfile> {
                         fillColor: Colors.grey[50],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1.5,
-                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.teal, width: 2),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 35),
 
-                    //Save Button (aur bhi mast bana diya)
+                    SizedBox(height: 35),
+
+                    /// SAVE BUTTON
                     SizedBox(
                       width: double.infinity,
                       height: 56,
@@ -293,10 +240,8 @@ class _EditProfileState extends State<EditProfile> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        onPressed: () {
-                          // Save logic yahan
-                        },
-                        child: const Text(
+                        onPressed: () {},
+                        child: Text(
                           "Save Changes",
                           style: TextStyle(
                             fontSize: 18,
@@ -315,25 +260,24 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget inputBox(String text, IconData icon) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: AppColors.secondaryDark, size: 30),
-          SizedBox(width: 12),
-          Text(
-            text,
-            style: AppTextStyle.titleLarge.copyWith(
-              color: AppColors.greyText,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-        ],
+  /// CUSTOM INPUT FIELD
+  Widget _inputField({
+    required String label,
+    required String hint,
+    required IconData icon,
+  }) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: Icon(icon, color: Colors.teal),
+        filled: true,
+        fillColor: Colors.grey[50],
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.teal, width: 2),
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
     );
   }
