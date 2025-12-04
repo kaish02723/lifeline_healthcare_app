@@ -346,6 +346,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                   const SizedBox(height: 35),
 
                   // Submit Button
+                  // Submit Button
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -358,16 +359,33 @@ class _UsersDetailsState extends State<UsersDetails> {
                         ),
                       ),
                       onPressed: () {
-                        var data = {
-                          "name": provider.nameController.text,
-                          "email": provider.emailController.text,
-                          "gender": provider.genderController.text,
-                          "date_of_birth": provider.dateController.text,
-                          "address": "anywhere",
-                          "picture": profileImage?.path,
-                        };
-                        String? userId = authProvider.userId;
-                        provider.addUserDetails(userId!, data, context);
+                        if (_formKey.currentState!.validate()) {
+                          // Additional DOB validation
+                          if (provider.dateController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Please select your Date of Birth",
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+
+                          // All Valid → Submit Data
+                          var data = {
+                            "name": provider.nameController.text.trim(),
+                            "email": provider.emailController.text.trim(),
+                            "gender": provider.genderController.text.trim(),
+                            "date_of_birth": provider.dateController.text
+                                .trim(),
+                            "address": "anywhere",
+                            "picture": profileImage?.path,
+                          };
+
+                          String? userId = authProvider.userId;
+                          provider.addUserDetails(userId!, data, context);
+                        }
                       },
                       child: const Text(
                         "Submit",
@@ -398,6 +416,34 @@ class _UsersDetailsState extends State<UsersDetails> {
     return TextFormField(
       controller: controller,
       keyboardType: keyboard,
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return "$label is required";
+        }
+
+        if (label == "Full Name") {
+          if (value.trim().length < 3) {
+            return "Name must be at least 3 characters";
+          }
+        }
+
+        if (label == "Email Address") {
+          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+          if (!emailRegex.hasMatch(value.trim())) {
+            return "Enter a valid email";
+          }
+        }
+
+        if (label == "Gender") {
+          final allowedGender = ["male", "female", "other"];
+          if (!allowedGender.contains(value.trim().toLowerCase())) {
+            return "Enter Male, Female or Other";
+          }
+        }
+
+        return null;
+      },
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
