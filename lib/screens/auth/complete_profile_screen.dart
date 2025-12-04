@@ -287,7 +287,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                     controller: provider.genderController,
                     label: "Gender",
                     hint: "Male / Female / Other",
-                    icon: Icons.wc,
+                    icon: Icons.male,
                   ),
                   const SizedBox(height: 18),
 
@@ -445,7 +445,6 @@ class _UsersDetailsState extends State<UsersDetails> {
         return null;
       },
       decoration: InputDecoration(
-        labelText: label,
         hintText: hint,
         prefixIcon: Icon(icon, color: Colors.teal),
         filled: true,
@@ -456,7 +455,7 @@ class _UsersDetailsState extends State<UsersDetails> {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.teal, width: 0.5),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
 import '../screens/auth/verify_otp_screen.dart';
 
@@ -19,13 +20,24 @@ class AuthProvider with ChangeNotifier {
   Timer? _timer;
 
   String? userId;
+  String? token;
 
-  void setUserId(String id) {
-    userId = id;
+  /// ---------------- SAVE TOKEN (in SharedPrefs) ----------------
+  Future<void> saveToken(String t) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("token", t);
+    token = t;
     notifyListeners();
   }
 
-  /// TIMER
+  /// ---------------- GET TOKEN (when needed) ----------------
+  Future<String?> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString("token");
+    return token;
+  }
+
+  /// ---------------- START TIMER ----------------
   void startTimer() {
     timerValue.value = 30;
     _timer?.cancel();
@@ -36,10 +48,14 @@ class AuthProvider with ChangeNotifier {
         timerValue.value--;
       }
     });
+  }
+
+  void setUserId(String id) {
+    userId = id;
     notifyListeners();
   }
 
-  /// SEND OTP
+  /// ---------------- SEND OTP ----------------
   Future<void> sendOtp(Map<String, dynamic> data, BuildContext context) async {
     try {
       final res = await http.post(
@@ -65,17 +81,15 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       print("SEND OTP ERROR: $e");
     }
-    notifyListeners();
   }
 
-  /// RESEND OTP
+  /// ---------------- RESEND OTP ----------------
   Future<void> resendOtp(String phone) async {
-    var payload = {"phone": "+91$phone"};
     try {
       await http.post(
         Uri.parse('$authUrl/send-otp'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(payload),
+        body: jsonEncode({"phone": "+91$phone"}),
       );
       startTimer();
     } catch (e) {
@@ -83,7 +97,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  /// VERIFY OTP
+  /// ---------------- VERIFY OTP ----------------
   Future<void> verifyOtp(Map<String, dynamic> data, BuildContext context) async {
     try {
       final response = await http.post(
@@ -94,24 +108,30 @@ class AuthProvider with ChangeNotifier {
 
       final body = jsonDecode(response.body);
 
+      print("VERIFY RESPONSE: $body");
+
       if (body["message"] == "OTP verified successfully") {
-        if (body["user"] != null && body["user"]["id"] != null) {
-          String id = body["user"]["id"].toString();
 
-          setUserId(id);
-          print("Stored User ID: $userId");
+        String id = body["user"]["id"].toString();
+        String jwt = body["token"]; // JWT TOKEN
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => UsersDetails()),
-          );
-        } else {
-          print(" ERROR: user.id not found in response");
-        }
+        /// SAVE TOKEN locally
+        await saveToken(jwt);
+
+        /// SET USER ID
+        setUserId(id);
+
+        print("Saved User ID: $id");
+        print("Saved Token: $jwt");
+
+        /// MOVE TO COMPLETE PROFILE SCREEN
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UsersDetails()),
+        );
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Invalid OTP")));
-        print("OTP FAILED: ${response.body}");
       }
     } catch (e) {
       print("VERIFY OTP ERROR: $e");
