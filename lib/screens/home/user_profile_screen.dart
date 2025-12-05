@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
 import 'package:provider/provider.dart';
-import '../../providers/get_userdetail_provider.dart';
+import '../../providers/user_detail/get_userdetail_provider.dart';
 import 'edit_profile_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -44,9 +45,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               if (user != null) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => EditProfile()),
+                  MaterialPageRoute(builder: (_) => EditProfileScreen()),
                 );
               }
+              // else {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => UsersDetails()),
+              //   );
+              // }
             },
             icon: const Icon(Icons.edit, color: Colors.white),
           ),

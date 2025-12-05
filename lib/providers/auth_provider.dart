@@ -2,17 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
 import '../screens/auth/verify_otp_screen.dart';
 
 class AuthProvider with ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
-
-  final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
   final TextEditingController otp = TextEditingController();
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
+
+  final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
 
   final String authUrl = 'https://phone-auth-with-jwt-4.onrender.com/auth';
 
@@ -22,7 +24,19 @@ class AuthProvider with ChangeNotifier {
   String? userId;
   String? token;
 
-  /// ---------------- SAVE TOKEN (in SharedPrefs) ----------------
+  // ---------------------------------------------------------
+  // SAVE USER ID
+  // ---------------------------------------------------------
+  Future<void> saveUserId(String id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("userId", id);
+    userId = id;
+    notifyListeners();
+  }
+
+  // ---------------------------------------------------------
+  // SAVE TOKEN
+  // ---------------------------------------------------------
   Future<void> saveToken(String t) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("token", t);
@@ -30,14 +44,18 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// ---------------- GET TOKEN (when needed) ----------------
+  // ---------------------------------------------------------
+  // GET TOKEN
+  // ---------------------------------------------------------
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
     return token;
   }
 
-  /// ---------------- START TIMER ----------------
+  // ---------------------------------------------------------
+  // START OTP TIMER
+  // ---------------------------------------------------------
   void startTimer() {
     timerValue.value = 30;
     _timer?.cancel();
@@ -50,12 +68,9 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
-  void setUserId(String id) {
-    userId = id;
-    notifyListeners();
-  }
-
-  /// ---------------- SEND OTP ----------------
+  // ---------------------------------------------------------
+  // SEND OTP
+  // ---------------------------------------------------------
   Future<void> sendOtp(Map<String, dynamic> data, BuildContext context) async {
     try {
       final res = await http.post(
@@ -70,7 +85,8 @@ class AuthProvider with ChangeNotifier {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OtpVerifyScreen(phone: phoneController.text),
+            builder: (context) =>
+                OtpVerifyScreen(phone: phoneController.text),
           ),
         );
       } else {
@@ -83,7 +99,9 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  /// ---------------- RESEND OTP ----------------
+  // ---------------------------------------------------------
+  // RESEND OTP
+  // ---------------------------------------------------------
   Future<void> resendOtp(String phone) async {
     try {
       await http.post(
@@ -97,8 +115,11 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  /// ---------------- VERIFY OTP ----------------
-  Future<void> verifyOtp(Map<String, dynamic> data, BuildContext context) async {
+  // ---------------------------------------------------------
+  // VERIFY OTP
+  // ---------------------------------------------------------
+  Future<void> verifyOtp(
+      Map<String, dynamic> data, BuildContext context) async {
     try {
       final response = await http.post(
         Uri.parse('$authUrl/verify-otp'),
@@ -111,20 +132,16 @@ class AuthProvider with ChangeNotifier {
       print("VERIFY RESPONSE: $body");
 
       if (body["message"] == "OTP verified successfully") {
-
         String id = body["user"]["id"].toString();
-        String jwt = body["token"]; // JWT TOKEN
+        String jwt = body["token"];
 
-        /// SAVE TOKEN locally
+        // SAVE TOKEN + USER ID (VERY IMPORTANT)
         await saveToken(jwt);
-
-        /// SET USER ID
-        setUserId(id);
+        await saveUserId(id);
 
         print("Saved User ID: $id");
         print("Saved Token: $jwt");
 
-        /// MOVE TO COMPLETE PROFILE SCREEN
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => UsersDetails()),
@@ -136,5 +153,41 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       print("VERIFY OTP ERROR: $e");
     }
+  }
+
+  // ---------------------------------------------------------
+  // CHECK LOGIN STATUS
+  // ---------------------------------------------------------
+  Future<bool> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    token = prefs.getString("token");
+    userId = prefs.getString("userId"); // RESTORE USER ID
+
+    if (token != null && token!.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // ---------------------------------------------------------
+  // LOGOUT
+  // ---------------------------------------------------------
+  Future<void> logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.remove("token");
+    await prefs.remove("userId");
+
+    token = null;
+    userId = null;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PhoneAuthScreen()),
+    );
+
+    notifyListeners();
   }
 }

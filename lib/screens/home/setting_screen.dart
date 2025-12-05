@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'edit_profile_screen.dart';
 import 'notification_screen.dart';
@@ -15,6 +17,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -54,7 +57,7 @@ class _SettingScreenState extends State<SettingScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EditProfile()),
+                MaterialPageRoute(builder: (context) => EditProfileScreen()),
               );
             },
           ),
@@ -95,7 +98,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          provider.logout(context);
+                        },
                         child: Text(
                           'Logout',
                           style: TextStyle(color: Colors.red.shade700),

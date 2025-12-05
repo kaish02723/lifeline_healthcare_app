@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';

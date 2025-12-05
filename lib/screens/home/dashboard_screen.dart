@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
