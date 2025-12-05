@@ -76,8 +76,13 @@ class AuthProvider with ChangeNotifier {
       final res = await http.post(
         Uri.parse('$authUrl/send-otp'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(data),
+        body: jsonEncode({
+          "phone": "+91${phoneController.text}"
+        }),
       );
+
+      print(res.body);
+      print(res.request?.headers);
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         startTimer();
@@ -85,8 +90,7 @@ class AuthProvider with ChangeNotifier {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                OtpVerifyScreen(phone: phoneController.text),
+            builder: (context) => OtpVerifyScreen(phone: phoneController.text),
           ),
         );
       } else {
@@ -183,7 +187,7 @@ class AuthProvider with ChangeNotifier {
     token = null;
     userId = null;
 
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => PhoneAuthScreen()),
     );

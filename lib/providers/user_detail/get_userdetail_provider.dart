@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:lifeline_healthcare_app/models/get_user_detail_model.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:provider/provider.dart';
 
 class GetUserDetailProvider with ChangeNotifier {
@@ -56,6 +57,19 @@ class GetUserDetailProvider with ChangeNotifier {
     }
   }
 
+  Future<void> selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(2000),
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      updateDobController.text = "${picked.day}/${picked.month}/${picked.year}";
+    }
+  }
+
   Future<void> updateUserProfile(
     BuildContext context,
     Map<String, dynamic> data,
@@ -92,13 +106,14 @@ class GetUserDetailProvider with ChangeNotifier {
 
         /// Refresh user data
         await getUserDetail(context);
+        Navigator.pop(context);
 
         notifyListeners();
       } else {
         /// INVALID DATA OR ERROR
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Update failed: ${response.body}")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("updated")));
       }
     } catch (e) {
       print("UPDATE EXCEPTION: $e");

@@ -24,21 +24,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  Future<void> selectDate() async {
-    var provider = Provider.of<GetUserDetailProvider>(context);
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime(2000),
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
-    );
-
-    if (picked != null) {
-      provider.updateDobController.text =
-          "${picked.day}/${picked.month}/${picked.year}";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<GetUserDetailProvider>(context);
@@ -127,7 +112,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 border: OutlineInputBorder(),
                 suffixIcon: Icon(Icons.calendar_month),
               ),
-              onTap: selectDate,
+              onTap: () {
+                provider.selectDate(context);
+              },
             ),
 
             SizedBox(height: 15),
