@@ -13,6 +13,7 @@ import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../providers/user_detail/get_userdetail_provider.dart';
 import '../../widgets/dashboard_find_doctor_card.dart';
 import '../patient/patient_physical_screen.dart';
 import 'edit_profile_screen.dart';
@@ -52,6 +53,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     var userDetailProvider = Provider.of<UserDetailProvider>(context);
+    var provider = Provider.of<GetUserDetailProvider>(context);
+    var userData = provider.user;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -90,13 +93,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       );
                     },
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.only(left: 13, top: 45),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Md kaish',
+                            userData?.name??'',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
