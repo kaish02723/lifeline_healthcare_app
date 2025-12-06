@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
@@ -12,6 +13,7 @@ import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../widgets/dashboard_find_doctor_card.dart';
 import '../patient/patient_physical_screen.dart';
 import 'edit_profile_screen.dart';
 import 'notification_screen.dart';
@@ -178,7 +180,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ),
-        title: const Text('UserName', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        title: Text(
+          'Lifeline HealthCare',
+          style: GoogleFonts.nunito(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 25,
+            shadows: [
+              Shadow(color: Colors.red, blurRadius: 3, offset: Offset(1, 1)),
+            ],
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -501,31 +514,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 mainAxisSpacing: 8,
               ),
               itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        color: Color(0xffF5F7FA),
-                        borderRadius: BorderRadius.circular(7),
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: Colors.grey.withOpacity(0.15),
-                        //     offset: Offset(2, 0),
-                        //     blurRadius: 4,
-                        //     spreadRadius: 3,
-                        //   ),
-                        // ],
-                        border: Border.all(
-                          color: Color(0xffd1d1d1),
-                          width: 0.5,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text('Skin & Hair', style: TextStyle(fontSize: 12)),
-                  ],
+                return HealthCategoryItem(
+                  title: healthCategories[index]['title']!,
+                  imagePath: healthCategories[index]['image']!,
                 );
               },
             ),
