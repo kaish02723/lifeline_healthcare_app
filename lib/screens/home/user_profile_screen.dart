@@ -35,7 +35,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: const Text("Profile", style: TextStyle(fontSize: 24)),
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -43,17 +43,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           IconButton(
             onPressed: () {
               if (user != null) {
+                final provider = Provider.of<GetUserDetailProvider>(
+                  context,
+                  listen: false,
+                );
+
+                provider.fillUserData();
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => EditProfileScreen()),
                 );
               }
-              // else {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => UsersDetails()),
-              //   );
-              // }
             },
             icon: const Icon(Icons.edit, color: Colors.white),
           ),
@@ -63,12 +64,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       backgroundColor: Colors.white,
 
       body: user == null
-          ? const Center(child: Text("No user data found"))
+          ? const Center(child: CircularProgressIndicator(color: Colors.teal,))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  // Profile Image
+                  SizedBox(height: 20),
                   Center(
                     child: CircleAvatar(
                       radius: 60,
@@ -87,11 +88,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           : null,
                     ),
                   ),
+                  SizedBox(height: 10),
+
+                  Text(
+                    user.name.toString() ?? "Not set",
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
 
                   const SizedBox(height: 20),
 
                   // Profile Card
                   Card(
+                    color: Colors.white,
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -101,7 +112,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          profileField("Full Name", user.name),
                           profileField("Email", user.email),
                           profileField("Gender", user.gender),
                           profileField("Date of Birth", user.dateOfBirth ?? ''),

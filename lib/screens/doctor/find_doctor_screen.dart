@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lifeline_healthcare_app/screens/doctor/doctor_find_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/physical_summary_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 
 class FindDoctor extends StatefulWidget {
   const FindDoctor({super.key});
@@ -101,49 +103,59 @@ class _FindDoctorState extends State<FindDoctor> {
               ),
             ),
             SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Color(0xFFE0F2F1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 44,
-                    width: 44,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.home_filled,
-                      color: Colors.teal,
-                      size: 26,
-                    ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DoctorFindConsultScreen(),
                   ),
-                  SizedBox(width: 15),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Book In-clinic Appointment",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17,
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF2EFE0),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 44,
+                      width: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.home_filled,
+                        color: Color(0xF2E3AB10),
+                        size: 26,
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Book In-clinic Appointment",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          "Book an appointment with a top physician in Bangalore",
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
+                          const SizedBox(height: 5),
+                          Text(
+                            "Book an appointment with a top physician in Bangalore",
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

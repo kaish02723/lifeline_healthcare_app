@@ -35,9 +35,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      languageBottomSheet();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   languageBottomSheet();
+    // });
   }
 
   @override
@@ -65,10 +65,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               decoration: const BoxDecoration(color: Colors.white),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 35,
-                    backgroundImage: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserProfileScreen(),
+                        ),
+                      );
+                    },
+                    child: const CircleAvatar(
+                      radius: 35,
+                      backgroundImage: NetworkImage(
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
+                      ),
                     ),
                   ),
                   GestureDetector(
@@ -514,9 +524,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 mainAxisSpacing: 8,
               ),
               itemBuilder: (context, index) {
-                return HealthCategoryItem(
-                  title: healthCategories[index]['title']!,
-                  imagePath: healthCategories[index]['image']!,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FindDoctor()),
+                    );
+                  },
+                  child: HealthCategoryItem(
+                    title: healthCategories[index]['title']!,
+                    imagePath: healthCategories[index]['image']!,
+                  ),
                 );
               },
             ),

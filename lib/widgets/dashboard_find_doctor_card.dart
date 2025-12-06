@@ -25,15 +25,9 @@ class HealthCategoryItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(7),
-            border: Border.all(
-              color: borderColor,
-              width: 0.5,
-            ),
+            border: Border.all(color: borderColor, width: 0.5),
           ),
-          child: Image.asset(
-            imagePath,
-            fit: BoxFit.contain,
-          ),
+          child: Image.network(imagePath, fit: BoxFit.contain),
         ),
         const SizedBox(height: 4),
         Text(
@@ -49,35 +43,35 @@ class HealthCategoryItem extends StatelessWidget {
 final List<Map<String, String>> healthCategories = [
   {
     'title': 'Skin & Hair',
-    'image': 'https://static.vecteezy.com/system/resources/thumbnails/039/855/432/small/ai-generated-business-woman-portrait-png.png',
+    'image': 'https://cdn-icons-png.flaticon.com/512/4615/4615577.png',
   },
   {
     'title': 'Heart',
-    'image': 'assets/icons/heart.png',
+    'image': 'https://cdn-icons-png.flaticon.com/512/3843/3843010.png',
   },
   {
     'title': 'Dental',
-    'image': 'assets/icons/dental.png',
+    'image':
+        'https://img.pikbest.com/png-images/20241204/minimalist-tooth-logo-design-for-dental-clinics_11170365.png!sw800',
   },
   {
     'title': 'Eye Care',
-    'image': 'assets/icons/eye.png',
+    'image': 'https://cdn-icons-png.flaticon.com/512/2824/2824810.png',
   },
   {
     'title': 'ENT',
-    'image': 'assets/icons/ent.png',
+    'image': 'https://cdn-icons-png.flaticon.com/512/3974/3974908.png',
   },
   {
     'title': 'Bone & Joint',
-    'image': 'assets/icons/bone.png',
+    'image': 'https://cdn-icons-png.flaticon.com/512/10368/10368848.png',
   },
   {
     'title': 'Diabetes',
-    'image': 'assets/icons/diabetes.png',
+    'image': 'https://cdn-icons-png.flaticon.com/512/4349/4349215.png',
   },
   {
     'title': 'Kidney',
-    'image': 'assets/icons/kidney.png',
+    'image': 'https://cdn-icons-png.flaticon.com/512/2044/2044562.png',
   },
 ];
-

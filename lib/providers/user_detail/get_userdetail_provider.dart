@@ -38,8 +38,8 @@ class GetUserDetailProvider with ChangeNotifier {
         },
       );
 
-      print("RESPONSE BODY: ${response.body}");
-      print("HEADERS USED: ${response.request?.headers}");
+      // print("RESPONSE BODY: ${response.body}");
+      // print("HEADERS USED: ${response.request?.headers}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -98,7 +98,7 @@ class GetUserDetailProvider with ChangeNotifier {
 
       print("UPDATE RESPONSE: ${response.body}");
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         /// UPDATE SUCCESS
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Profile updated successfully!")),
@@ -106,14 +106,14 @@ class GetUserDetailProvider with ChangeNotifier {
 
         /// Refresh user data
         await getUserDetail(context);
-        Navigator.pop(context);
+        Navigator.pop(context, true);
 
         notifyListeners();
       } else {
         /// INVALID DATA OR ERROR
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text("updated")));
+        ).showSnackBar(SnackBar(content: Text("update failed")));
       }
     } catch (e) {
       print("UPDATE EXCEPTION: $e");
@@ -121,5 +121,26 @@ class GetUserDetailProvider with ChangeNotifier {
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong!")));
     }
+  }
+
+  void fillUserData() {
+    if (user != null) {
+      updateNameController.text = user!.name ?? "";
+      updateEmailController.text = user!.email ?? "";
+      updateDobController.text = user!.dateOfBirth ?? "";
+      updateAddressController.text = user!.address ?? "";
+
+      // FIX CASE ISSUE
+      if (user!.gender != null) {
+        updateGender = _capitalizeGender(user!.gender!);
+      }
+    }
+  }
+
+  String _capitalizeGender(String g) {
+    g = g.trim().toLowerCase();
+    if (g == "male") return "Male";
+    if (g == "female") return "Female";
+    return "Other";
   }
 }

@@ -209,7 +209,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Add',
+                                    'Add to cart',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16,
