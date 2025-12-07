@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,6 +40,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   languageBottomSheet();
     // });
+    Provider.of<GetUserDetailProvider>(
+      context,
+      listen: false,
+    ).getUserDetail(context);
   }
 
   @override
@@ -52,20 +57,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var screenSize = MediaQuery.of(context).size;
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-    var userDetailProvider = Provider.of<UserDetailProvider>(context);
     var provider = Provider.of<GetUserDetailProvider>(context);
     var userData = provider.user;
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white,
       drawer: Drawer(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.white),
               child: Row(
                 children: [
                   GestureDetector(
@@ -99,25 +101,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userData?.name??'',
+                            userData?.name ?? '',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black,
                             ),
                           ),
                           Text(
                             'View and edit profile',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black45,
-                            ),
+                            style: TextStyle(fontSize: 14),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Icon(Icons.navigate_next, color: Colors.black),
+                  Icon(Icons.navigate_next),
                 ],
               ),
             ),
@@ -213,7 +211,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 MaterialPageRoute(builder: (context) => NotifactionScreen()),
               );
             },
-            icon: const Icon(Icons.notifications, color: Colors.white),
+            icon: const Badge(
+              label: Text('2'),
+              child: Icon(Icons.notifications, color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -222,7 +223,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           const SizedBox(height: 20),
 
-          /// Appointment cards row
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -239,7 +239,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   width: screenWidth * 0.45,
                   height: 120,
                   decoration: BoxDecoration(
-                    color: const Color(0xffF5F7FA),
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(
                       color: const Color(0xffD2D2D2),
@@ -274,9 +274,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: SizedBox(
                           width: 100,
                           height: 100,
-                          child: Image.network(
-                            'https://static.vecteezy.com/system/resources/thumbnails/048/740/103/small/doctor-writing-on-a-clipboard-isolated-against-a-transparent-background-png.png',
+                          child: CachedNetworkImage(
                             fit: BoxFit.contain,
+                            imageUrl:
+                                'https://static.vecteezy.com/system/resources/thumbnails/048/740/103/small/doctor-writing-on-a-clipboard-isolated-against-a-transparent-background-png.png',
                           ),
                         ),
                       ),
@@ -298,7 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   width: screenWidth * 0.45,
                   height: 120,
                   decoration: BoxDecoration(
-                    color: const Color(0xffF5F7FA),
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(
                       color: const Color(0xffD2D2D2),
@@ -333,9 +334,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: SizedBox(
                           width: 130,
                           height: 110,
-                          child: Image.network(
-                            'https://static.vecteezy.com/system/resources/thumbnails/050/817/819/small/happy-smiling-male-doctor-with-hand-present-something-empty-space-standing-isolate-on-transparent-background-png.png',
+                          child: CachedNetworkImage(
                             fit: BoxFit.contain,
+                            imageUrl:
+                                'https://static.vecteezy.com/system/resources/thumbnails/050/817/819/small/happy-smiling-male-doctor-with-hand-present-something-empty-space-standing-isolate-on-transparent-background-png.png',
                           ),
                         ),
                       ),
@@ -431,6 +433,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                 ),
+                SizedBox(width: 15),
               ],
             ),
           ),
@@ -537,6 +540,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: HealthCategoryItem(
                     title: healthCategories[index]['title']!,
                     imagePath: healthCategories[index]['image']!,
+                    backgroundColor: Theme.of(context).cardColor,
                   ),
                 );
               },
@@ -546,7 +550,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           Container(
             width: double.infinity,
-            color: Color(0xfff5fafa),
+            color: Theme.of(context).canvasColor,
             child: Column(
               children: [
                 const SizedBox(height: 15),
@@ -599,7 +603,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       width: MediaQuery.of(context).size.width * 0.25,
       height: 110,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color(0xffBEBEBE), width: 0.5),
         boxShadow: [
@@ -619,7 +623,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: SizedBox(
               width: 55,
               height: 55,
-              child: Image.network(imageUrl, fit: BoxFit.contain),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           Positioned(
@@ -639,7 +646,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   /// Offer Banner helper
   Widget _buildOfferBanner(String url) {
-    return Image.network(url, fit: BoxFit.cover);
+    return CachedNetworkImage(imageUrl: url, fit: BoxFit.cover);
   }
 
   void languageBottomSheet() {

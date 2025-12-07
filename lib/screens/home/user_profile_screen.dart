@@ -64,7 +64,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       backgroundColor: Colors.white,
 
       body: user == null
-          ? const Center(child: CircularProgressIndicator(color: Colors.teal,))
+          ? const Center(child: CircularProgressIndicator(color: Colors.teal))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -74,20 +74,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     child: CircleAvatar(
                       radius: 60,
                       backgroundColor: Colors.teal.shade100,
-                      backgroundImage:
-                          user.picture != null &&
-                              user.picture.toString().isNotEmpty
-                          ? NetworkImage(user.picture ?? '')
-                          : null,
-                      child: user.picture == null
-                          ? const Icon(
+                      child: user.picture != null && user.picture!.isNotEmpty
+                          ? ClipOval(
+                              child: Image.network(
+                                user.picture!,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  // Agar image load na ho → default icon
+                                  return const Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: Colors.grey,
+                                  );
+                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.teal,
+                                        ),
+                                      );
+                                    },
+                              ),
+                            )
+                          : const Icon(
                               Icons.person,
                               size: 60,
                               color: Colors.grey,
-                            )
-                          : null,
+                            ),
                     ),
                   ),
+
                   SizedBox(height: 10),
 
                   Text(

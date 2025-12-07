@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/physical_summary_screen.dart';
@@ -184,12 +185,16 @@ Widget _gridSection(List<Map<String, dynamic>> list) {
             child: Container(
               height: 60,
               width: 60,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFE0F2F1),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(9),
+                border: Border.all(width: 0.5, color: Colors.grey),
               ),
               child: ClipOval(
-                child: Image.network(item['img'], fit: BoxFit.cover),
+                child: CachedNetworkImage(
+                  imageUrl: item['img'],
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
@@ -209,11 +214,11 @@ Widget _gridSection(List<Map<String, dynamic>> list) {
 final List<Map<String, dynamic>> _topList1 = [
   {
     "title": "Stomach pain",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706195.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/5730/5730048.png",
   },
   {
     "title": "Vertigo",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706164.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/2727/2727743.png",
   },
   {
     "title": "Acne",

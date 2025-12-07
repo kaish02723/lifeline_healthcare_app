@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class HealthCategoryItem extends StatelessWidget {
@@ -10,7 +11,7 @@ class HealthCategoryItem extends StatelessWidget {
     super.key,
     required this.title,
     required this.imagePath,
-    this.backgroundColor = const Color(0xffF5F7FA),
+    required this.backgroundColor ,
     this.borderColor = const Color(0xffd1d1d1),
   });
 
@@ -27,7 +28,7 @@ class HealthCategoryItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(7),
             border: Border.all(color: borderColor, width: 0.5),
           ),
-          child: Image.network(imagePath, fit: BoxFit.contain),
+          child: CachedNetworkImage(imageUrl: imagePath,fit: BoxFit.contain),
         ),
         const SizedBox(height: 4),
         Text(

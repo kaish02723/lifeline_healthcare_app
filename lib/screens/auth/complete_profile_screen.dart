@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:lifeline_healthcare_app/providers/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -15,80 +17,12 @@ class UsersDetails extends StatefulWidget {
 }
 
 class _UsersDetailsState extends State<UsersDetails> {
-  final _formKey = GlobalKey<FormState>();
-
-  XFile? profileImage;
-
-  final ImagePicker picker = ImagePicker();
-
-  /// PICK FROM GALLERY
-  Future<void> pickFromGallery() async {
-    // ANDROID 13+ ke liye specific permission
-    if (Platform.isAndroid) {
-      final androidGallery = Permission.storage;
-
-      if (await androidGallery.isDenied) {
-        await androidGallery.request();
-      }
-
-      if (!await androidGallery.isGranted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Gallery permission denied")));
-        return;
-      }
-    }
-
-    // iOS ke liye photos permission
-    if (Platform.isIOS) {
-      final iosGallery = Permission.photos;
-
-      if (await iosGallery.isDenied) {
-        await iosGallery.request();
-      }
-
-      if (!await iosGallery.isGranted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Gallery permission denied")));
-        return;
-      }
-    }
-
-    // Finally pick the image
-    final image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        profileImage = image;
-      });
-    }
-  }
-
-  /// PICK FROM CAMERA
-  Future<void> pickFromCamera() async {
-    final permission = Permission.camera;
-    if (await permission.isDenied) {
-      await permission.request();
-    }
-    if (await permission.isGranted) {
-      final image = await picker.pickImage(source: ImageSource.camera);
-
-      if (image != null) {
-        setState(() {
-          profileImage = image;
-        });
-      }
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Camera permission denied')));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<UserDetailProvider>(context);
-    var authProvider = Provider.of<AuthProvider>(context);
+    var provider = Provider.of<UserDetailProvider>(context, listen: false);
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var mediaProvider = Provider.of<MediaPickerProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -120,9 +54,7 @@ class _UsersDetailsState extends State<UsersDetails> {
           child: Container(height: 0.3, color: Colors.grey.shade400),
         ),
       ),
-
       backgroundColor: Colors.white,
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
         child: Column(
@@ -141,15 +73,21 @@ class _UsersDetailsState extends State<UsersDetails> {
                     ),
                     child: CircleAvatar(
                       backgroundColor: Colors.grey.shade100,
-                      backgroundImage: profileImage != null
-                          ? FileImage(File(profileImage!.path))
+                      backgroundImage: mediaProvider.profileImage != null
+                          ? FileImage(File(mediaProvider.profileImage!.path))
+                      as ImageProvider
+                          : mediaProvider.profileImage != null
+                          ? CachedNetworkImageProvider(
+                        mediaProvider.profileImage!.path,
+                      )
                           : null,
-                      child: profileImage == null
+                      child: mediaProvider.profileImage == null &&
+                          mediaProvider.profileImage == null
                           ? Icon(
-                              Icons.person,
-                              size: 70,
-                              color: Colors.grey.shade400,
-                            )
+                        Icons.person,
+                        size: 70,
+                        color: Colors.grey.shade400,
+                      )
                           : null,
                     ),
                   ),
@@ -185,7 +123,6 @@ class _UsersDetailsState extends State<UsersDetails> {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
-
                                     const Text(
                                       "Upload Profile Photo",
                                       style: TextStyle(
@@ -193,23 +130,22 @@ class _UsersDetailsState extends State<UsersDetails> {
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-
                                     const SizedBox(height: 25),
-
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Column(
                                           children: [
                                             CircleAvatar(
                                               radius: 30,
                                               backgroundColor:
-                                                  Colors.grey.shade200,
+                                              Colors.grey.shade200,
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  pickFromCamera();
+                                                  mediaProvider.pickFromCamera(
+                                                      context);
                                                 },
                                                 icon: const Icon(
                                                   Icons.camera_alt,
@@ -226,11 +162,12 @@ class _UsersDetailsState extends State<UsersDetails> {
                                             CircleAvatar(
                                               radius: 30,
                                               backgroundColor:
-                                                  Colors.grey.shade200,
+                                              Colors.grey.shade200,
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  pickFromGallery();
+                                                  mediaProvider.pickFromGallery(
+                                                      context);
                                                 },
                                                 icon: const Icon(
                                                   Icons.image,
@@ -258,12 +195,11 @@ class _UsersDetailsState extends State<UsersDetails> {
                 ],
               ),
             ),
-
             const SizedBox(height: 35),
 
             /// FORM
             Form(
-              key: _formKey,
+              key: mediaProvider.formKey,
               child: Column(
                 children: [
                   _buildInputField(
@@ -273,7 +209,6 @@ class _UsersDetailsState extends State<UsersDetails> {
                     icon: Icons.person_outline,
                   ),
                   const SizedBox(height: 18),
-
                   _buildInputField(
                     controller: provider.emailController,
                     label: "Email Address",
@@ -282,7 +217,6 @@ class _UsersDetailsState extends State<UsersDetails> {
                     keyboard: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 18),
-
                   _buildInputField(
                     controller: provider.genderController,
                     label: "Gender",
@@ -290,7 +224,6 @@ class _UsersDetailsState extends State<UsersDetails> {
                     icon: Icons.male,
                   ),
                   const SizedBox(height: 18),
-
                   // Date Picker
                   TextFormField(
                     controller: provider.dateController,
@@ -316,7 +249,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                           );
                           if (picked != null) {
                             provider.dateController.text =
-                                "${picked.day}/${picked.month}/${picked.year}";
+                            "${picked.day}/${picked.month}/${picked.year}";
                           }
                         },
                       ),
@@ -342,10 +275,8 @@ class _UsersDetailsState extends State<UsersDetails> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 35),
 
-                  // Submit Button
                   // Submit Button
                   SizedBox(
                     width: double.infinity,
@@ -358,29 +289,34 @@ class _UsersDetailsState extends State<UsersDetails> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Additional DOB validation
+                      onPressed: () async {
+                        if (mediaProvider.formKey.currentState!.validate()) {
                           if (provider.dateController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Please select your Date of Birth",
-                                ),
+                              const SnackBar(
+                                content:
+                                Text("Please select your Date of Birth"),
                               ),
                             );
                             return;
                           }
 
-                          // All Valid → Submit Data
+                          String? imageUrl;
+                          if (mediaProvider.profileImage != null) {
+                            imageUrl = await mediaProvider.uploadImage(
+                              mediaProvider.profileImage!,
+                              context,
+                            );
+                          }
+
                           var data = {
                             "name": provider.nameController.text.trim(),
                             "email": provider.emailController.text.trim(),
                             "gender": provider.genderController.text.trim(),
-                            "date_of_birth": provider.dateController.text
-                                .trim(),
+                            "date_of_birth":
+                            provider.dateController.text.trim(),
                             "address": "anywhere",
-                            "picture": profileImage?.path,
+                            "picture": imageUrl,
                           };
 
                           String? userId = authProvider.userId;
@@ -421,15 +357,13 @@ class _UsersDetailsState extends State<UsersDetails> {
           return "$label is required";
         }
 
-        if (label == "Full Name") {
-          if (value.trim().length < 3) {
-            return "Name must be at least 3 characters";
-          }
+        if (label == "Full Name" && value.trim().length < 3) {
+          return "Name must be at least 3 characters";
         }
 
         if (label == "Email Address") {
-          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-
+          final emailRegex =
+          RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
           if (!emailRegex.hasMatch(value.trim())) {
             return "Enter a valid email";
           }
@@ -449,10 +383,7 @@ class _UsersDetailsState extends State<UsersDetails> {
         prefixIcon: Icon(icon, color: Colors.teal),
         filled: true,
         fillColor: Colors.grey[50],
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 18,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.teal, width: 0.5),

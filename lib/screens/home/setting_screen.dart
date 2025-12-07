@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/config/app_theme.dart';
+import 'package:lifeline_healthcare_app/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 
@@ -20,13 +22,11 @@ class _SettingScreenState extends State<SettingScreen> {
     var provider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text("Settings", style: TextStyle(color: Colors.black)),
+        title: const Text("Settings"),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(CupertinoIcons.back, color: Colors.black87),
+          icon: const Icon(CupertinoIcons.back),
         ),
       ),
 
@@ -34,13 +34,12 @@ class _SettingScreenState extends State<SettingScreen> {
         children: [
           const SizedBox(height: 10),
 
-          // 🔔 Notification Toggle
           ListTile(
             leading: Icon(
-              Icons.notifications,
+              notificationOn ? Icons.notifications_active : Icons.notifications,
               color: notificationOn
                   ? Theme.of(context).primaryColor
-                  : Colors.grey,
+                  : Colors.grey.shade700,
             ),
             title: const Text("Notifications", style: TextStyle(fontSize: 18)),
             trailing: Row(
@@ -66,33 +65,42 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           ),
 
-          ListTile(
-            leading: Icon(
-              isDarkMode ? Icons.dark_mode : Icons.sunny,
-              color: isDarkMode ? Theme.of(context).primaryColor : Colors.grey,
-            ),
-            title: const Text("Dark Theme", style: TextStyle(fontSize: 18)),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  isDarkMode ? "Dark" : "Light",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: isDarkMode
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
-                  ),
+          Consumer<ThemeProvider>(
+            builder: (BuildContext context, provider, Widget? child) {
+              return ListTile(
+                leading: Icon(
+                  provider.isDark ? Icons.dark_mode : Icons.sunny,
+                  color: provider.isDark
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey.shade700,
                 ),
-                Switch(
-                  value: isDarkMode,
-                  activeColor: Theme.of(context).primaryColor,
-                  onChanged: (value) {
-                    setState(() => isDarkMode = value);
-                  },
+                title: const Text("Theme Mode", style: TextStyle(fontSize: 18)),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      provider.isDark ? "Dark" : "Light",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: provider.isDark
+                            ? Theme.of(context).primaryColor
+                            : Colors.black54,
+                      ),
+                    ),
+                    Switch(
+                      value: provider.isDark,
+                      activeColor: Theme.of(context).primaryColor,
+                      onChanged: (val) {
+                        provider.toggleTheme(); // <-- THEME SWITCH HERE
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+                onTap: () {
+                  provider.toggleTheme();
+                },
+              );
+            },
           ),
 
           // 👤 Edit Profile

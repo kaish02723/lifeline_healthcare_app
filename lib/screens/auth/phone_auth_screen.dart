@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +18,8 @@ class PhoneAuthScreen extends StatefulWidget {
 class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<AuthProvider>(context);
+    var provider = Provider.of<AuthProvider>(context, listen: false);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -25,13 +27,11 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         scrollDirection: Axis.vertical,
         child: Stack(
           children: [
-            /// LIGHT GREEN LOWER CURVE
             ClipPath(
               clipper: LowerWaveClipper(),
               child: Container(height: 300, color: const Color(0xFF26A69A)),
             ),
 
-            /// DARK GREEN UPPER CURVE
             Transform(
               alignment: Alignment.center,
               transform: Matrix4.rotationY(3.1416),
@@ -96,8 +96,9 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                 const SizedBox(width: 10),
                                 SizedBox(
                                   width: 25,
-                                  child: Image.network(
-                                    'https://img.freepik.com/premium-photo/india-national-fabric-flag_113767-1933.jpg?semt=ais_hybrid&w=740&q=80',
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://img.freepik.com/premium-photo/india-national-fabric-flag_113767-1933.jpg?semt=ais_hybrid&w=740&q=80',
                                   ),
                                 ),
                                 const SizedBox(width: 6),

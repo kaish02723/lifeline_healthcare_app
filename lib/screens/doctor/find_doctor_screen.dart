@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/doctor_find_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/physical_summary_screen.dart';
@@ -15,11 +16,10 @@ class _FindDoctorState extends State<FindDoctor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFF00796B),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(CupertinoIcons.back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },

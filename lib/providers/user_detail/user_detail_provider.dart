@@ -55,4 +55,6 @@ class UserDetailProvider with ChangeNotifier {
       return false;
     }
   }
+
+
 }
