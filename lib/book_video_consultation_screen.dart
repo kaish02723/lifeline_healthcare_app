@@ -256,6 +256,7 @@ class _BookVideoConsultationState extends State<BookVideoConsultation> {
                                 letterSpacing: 0.5,
                               ),
                             ),
+
                             SizedBox(height: 3),
                             Text(
                               "24-Nov-2026 04:00 PM",

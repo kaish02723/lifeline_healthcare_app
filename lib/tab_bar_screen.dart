@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'book_in-clinic_appointment.dart';
-import 'book_video_consultation.dart';
+
+import 'book_in_clinic_appointment.dart';
+
+import 'book_video_consultation_screen.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({super.key});
