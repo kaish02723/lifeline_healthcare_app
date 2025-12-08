@@ -26,7 +26,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => GetUserDetailProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => MediaPickerProvider()),
-        ChangeNotifierProvider(create: (context) => BookTestProvider(),)
+        ChangeNotifierProvider(create: (context) => BookTestProvider()),
       ],
       child: MyApp(),
     ),
@@ -52,13 +52,12 @@ class MyApp extends StatelessWidget {
               themeMode: themeProvider.isDark
                   ? ThemeMode.dark
                   : ThemeMode.light,
-              initialRoute: '/splash_screen',
               routes: {
                 '/phone_auth_screen': (context) => const PhoneAuthScreen(),
                 '/dashboard': (context) => const DashboardScreen(),
                 '/splash_screen': (context) => const SplashScreen(),
               },
-              home: NetworkWrapper(child: SplashScreen()),
+              home: SplashScreen(),
             );
           },
         );

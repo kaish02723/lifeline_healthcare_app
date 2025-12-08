@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_book_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_test_booking_cart_screen.dart';
+import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
 
 class PatientLabTestScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
             children: [
               SizedBox(width: 15),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.82,
+                width: MediaQuery.of(context).size.width * 0.91,
                 child: TextField(
                   controller: provider.searchLabTestController,
                   onChanged: (value) {
@@ -79,15 +80,15 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                   ),
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TestBookingCart()),
-                  );
-                },
-                icon: Icon(CupertinoIcons.cart),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => TestBookingCart()),
+              //     );
+              //   },
+              //   icon: Icon(CupertinoIcons.cart),
+              // ),
             ],
           ),
           Padding(
@@ -103,9 +104,9 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                 ? Center(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 200),
-                      child: CircularProgressIndicator(
-                        color: Colors.teal,
-                        strokeWidth: 3,
+                      child: MedicalHeartECGLoader(
+                        width: double.infinity,
+                        color: Colors.redAccent,
                       ),
                     ),
                   )
@@ -193,7 +194,15 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                             GestureDetector(
                               onTap: () {
                                 HapticFeedback.mediumImpact();
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => BookTestFormScreen(testName: 'testName', category: 'category'),));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BookTestFormScreen(
+                                      testName: listData.name.toString(),
+                                      category: listData.category.toString(),
+                                    ),
+                                  ),
+                                );
                               },
                               child: Container(
                                 height: 35,
@@ -230,60 +239,60 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
           const SizedBox(height: 20),
         ],
       ),
-      bottomNavigationBar: Container(
-        height: 110,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
-          child: Column(
-            children: [
-              SizedBox(height: 15),
-              Row(
-                children: [
-                  Text('Total: ', style: TextStyle(fontSize: 18)),
-                  Text(
-                    '₹687',
-                    style: TextStyle(fontSize: 18, color: Color(0xff26A69A)),
-                  ),
-                  Spacer(),
-                  Text('4 Tests', style: TextStyle(fontSize: 18)),
-                ],
-              ),
-              SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TestBookingCart()),
-                  );
-                },
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF26A69A), Color(0xFF00796B)],
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "View Cart",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   height: 110,
+      //   decoration: BoxDecoration(
+      //     color: Colors.white,
+      //     border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
+      //   ),
+      //   child: Padding(
+      //     padding: const EdgeInsets.only(left: 15, right: 15),
+      //     child: Column(
+      //       children: [
+      //         SizedBox(height: 15),
+      //         Row(
+      //           children: [
+      //             Text('Total: ', style: TextStyle(fontSize: 18)),
+      //             Text(
+      //               '₹687',
+      //               style: TextStyle(fontSize: 18, color: Color(0xff26A69A)),
+      //             ),
+      //             Spacer(),
+      //             Text('4 Tests', style: TextStyle(fontSize: 18)),
+      //           ],
+      //         ),
+      //         SizedBox(height: 10),
+      //         GestureDetector(
+      //           // onTap: () {
+      //           //   Navigator.push(
+      //           //     context,
+      //           //     MaterialPageRoute(builder: (context) => TestBookingCart()),
+      //           //   );
+      //           // },
+      //           child: Container(
+      //             height: 45,
+      //             decoration: BoxDecoration(
+      //               borderRadius: BorderRadius.circular(7),
+      //               gradient: const LinearGradient(
+      //                 colors: [Color(0xFF26A69A), Color(0xFF00796B)],
+      //               ),
+      //             ),
+      //             child: Center(
+      //               child: Text(
+      //                 "View Cart",
+      //                 style: GoogleFonts.poppins(
+      //                   color: Colors.white,
+      //                   fontSize: 16,
+      //                   fontWeight: FontWeight.w600,
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

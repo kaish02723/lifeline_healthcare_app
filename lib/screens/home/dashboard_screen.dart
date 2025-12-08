@@ -11,6 +11,7 @@ import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -131,6 +132,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: Text('TestBooking'),
               onTap: () {
                 HapticFeedback.selectionClick();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyTestScreen()),
+                );
               },
             ),
             ListTile(
