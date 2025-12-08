@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
 import '../screens/auth/verify_otp_screen.dart';
@@ -93,6 +95,7 @@ class AuthProvider with ChangeNotifier {
             builder: (context) => OtpVerifyScreen(phone: phoneController.text),
           ),
         );
+        phoneController.clear();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Invalid phone number")),
@@ -125,6 +128,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> verifyOtp(
       Map<String, dynamic> data, BuildContext context) async {
     try {
+      var userDetailProvider=Provider.of<GetUserDetailProvider>(context,listen: false);
       final response = await http.post(
         Uri.parse('$authUrl/verify-otp'),
         headers: {'Content-Type': 'application/json'},
@@ -146,10 +150,23 @@ class AuthProvider with ChangeNotifier {
         print("Saved User ID: $id");
         print("Saved Token: $jwt");
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UsersDetails()),
-        );
+        otp.clear();
+
+        await userDetailProvider.getUserDetail(context,);
+        var user = userDetailProvider.user;
+
+        bool isProfileComplete =
+            user?.name != null && user!.name!.isNotEmpty &&
+                user.email != null && user.email!.isNotEmpty;
+
+        if (isProfileComplete) {
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => UsersDetails()),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Invalid OTP")));
@@ -166,7 +183,7 @@ class AuthProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     token = prefs.getString("token");
-    userId = prefs.getString("userId"); // RESTORE USER ID
+    userId = prefs.getString("userId");
 
     if (token != null && token!.isNotEmpty) {
       return true;
@@ -187,9 +204,10 @@ class AuthProvider with ChangeNotifier {
     token = null;
     userId = null;
 
-    Navigator.push(
+    Navigator.pushNamedAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => PhoneAuthScreen()),
+      '/phone_auth_screen',
+          (route) => false,
     );
 
     notifyListeners();

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_test_booking_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_book_test_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_test_booking_cart_screen.dart';
 import 'package:provider/provider.dart';
 
 class PatientLabTestScreen extends StatefulWidget {
@@ -192,6 +193,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                             GestureDetector(
                               onTap: () {
                                 HapticFeedback.mediumImpact();
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => BookTestFormScreen(testName: 'testName', category: 'category'),));
                               },
                               child: Container(
                                 height: 35,
@@ -209,7 +211,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Add to cart',
+                                    'Book Test',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16,

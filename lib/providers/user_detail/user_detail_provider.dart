@@ -39,7 +39,7 @@ class UserDetailProvider with ChangeNotifier {
         genderController.clear();
         dateController.clear();
 
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => DashboardScreen()),
         );

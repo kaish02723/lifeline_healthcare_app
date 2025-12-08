@@ -28,7 +28,7 @@ class HealthCategoryItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(7),
             border: Border.all(color: borderColor, width: 0.5),
           ),
-          child: CachedNetworkImage(imageUrl: imagePath,fit: BoxFit.contain),
+          child: CachedNetworkImage(imageUrl: imagePath,fit: BoxFit.contain,),
         ),
         const SizedBox(height: 4),
         Text(

@@ -243,7 +243,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                         onPressed: () async {
                           DateTime? picked = await showDatePicker(
                             context: context,
-                            initialDate: DateTime(2000),
+                            initialDate: DateTime.now(),
                             firstDate: DateTime(1950),
                             lastDate: DateTime.now(),
                           );
