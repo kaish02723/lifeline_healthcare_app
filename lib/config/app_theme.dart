@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: Colors.blue,
+    primaryColor: Color(0xff00796B),
     cardColor: Color(0xffF5F7FA),
     canvasColor: Color(0xfff5fafa),
     scaffoldBackgroundColor: Colors.white,
@@ -17,7 +17,7 @@ class AppTheme {
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Colors.blue,
+    primaryColor: Color(0xff00796B),
     scaffoldBackgroundColor: Colors.black,
     cardColor: Color(0xff292929),
     canvasColor: Color(0xff292929),
@@ -29,3 +29,5 @@ class AppTheme {
     textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.white)),
   );
 }
+
+

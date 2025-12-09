@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lifeline_healthcare_app/models/labtest_models/my_labtest_model.dart';
+import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class BookTestProvider with ChangeNotifier {
   final TextEditingController testNameController = TextEditingController();
@@ -16,9 +18,7 @@ class BookTestProvider with ChangeNotifier {
     try {
       var api = await http.post(
         Uri.parse('$baseUrl/bookings/book-test'),
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode(data),
       );
 
@@ -43,18 +43,28 @@ class BookTestProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getTestStatus() async {
-    try {
-      var res = await http.get(Uri.parse('$baseUrl/bookings/get-tests'));
+  Future<void> getTestStatus(BuildContext context) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var user_Id = authProvider.userId;
 
-      print(res.body);
-      print(res.request?.headers);
+    print('User id is : $user_Id');
+
+    if (user_Id == null || user_Id.toString().isEmpty) {
+      print("ERROR: USER ID is NULL");
+      return;
+    }
+
+    try {
+      var res = await http.get(
+        Uri.parse('$baseUrl/bookings/get-test/$user_Id'),
+      );
+
+      print("API : ${res.body}");
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body);
         MyLabTestModel model = MyLabTestModel.convertToModel(body);
         myLabTestList = model.data ?? [];
-
         notifyListeners();
       } else {
         print("Failed to load tests");

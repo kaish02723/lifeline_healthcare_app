@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
@@ -12,13 +10,15 @@ import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.d
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
+import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
+import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/offer_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../providers/user_detail/get_userdetail_provider.dart';
-import '../../widgets/dashboard_find_doctor_card.dart';
-import '../patient/patient_physical_screen.dart';
-import 'edit_profile_screen.dart';
+import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
+import '../../widgets/dashboard_widgets/top_feature_card.dart';
 import 'notification_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -55,13 +55,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var screenHeight = MediaQuery.of(context).size.height;
-    var screenWidth = MediaQuery.of(context).size.width;
     var provider = Provider.of<GetUserDetailProvider>(context);
     var userData = provider.user;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? Color(0xffefefef)
+          : Colors.black,
       key: _scaffoldKey,
       drawer: Drawer(
         // backgroundColor: Colors.white,
@@ -204,7 +204,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             fontWeight: FontWeight.bold,
             fontSize: 25,
             shadows: [
-              Shadow(color: Color(0xffFFCC00), blurRadius: 3, offset: Offset(1, 1)),
+              Shadow(
+                color: Color(0xffFFCC00),
+                blurRadius: 3,
+                offset: Offset(1, 1),
+              ),
             ],
           ),
         ),
@@ -227,11 +231,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: ListView(
         children: [
           const SizedBox(height: 20),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(
+              TopFeatureCard(
+                title: "Instant Consult",
+                subtitle: "Chat with doctors",
+                image:
+                    "https://static.vecteezy.com/system/resources/thumbnails/048/740/103/small/doctor-writing-on-a-clipboard-isolated-against-a-transparent-background-png.png",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -240,58 +247,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   );
                 },
-                child: Container(
-                  width: screenWidth * 0.45,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: const Color(0xffD2D2D2),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15, left: 10),
-                        child: Text(
-                          'Instant Video Consult',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 60, left: 10),
-                        child: Text(
-                          'From home',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        top: 35,
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.contain,
-                            imageUrl:
-                                'https://static.vecteezy.com/system/resources/thumbnails/048/740/103/small/doctor-writing-on-a-clipboard-isolated-against-a-transparent-background-png.png',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
+
               const SizedBox(width: 12),
-              GestureDetector(
+
+              TopFeatureCard(
+                title: "Physical Appointment",
+                subtitle: "Book nearby doctor",
+                image:
+                    "https://static.vecteezy.com/system/resources/thumbnails/050/817/819/small/happy-smiling-male-doctor-with-hand-present-something-empty-space-standing-isolate-on-transparent-background-png.png",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -300,55 +264,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   );
                 },
-                child: Container(
-                  width: screenWidth * 0.45,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: const Color(0xffD2D2D2),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15, left: 10),
-                        child: Text(
-                          'Physical Appointment',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 60, left: 10),
-                        child: Text(
-                          'At home',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        top: 25,
-                        child: SizedBox(
-                          width: 130,
-                          height: 110,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.contain,
-                            imageUrl:
-                                'https://static.vecteezy.com/system/resources/thumbnails/050/817/819/small/happy-smiling-male-doctor-with-hand-present-something-empty-space-standing-isolate-on-transparent-background-png.png',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),
@@ -376,7 +291,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
                     children: [
-                      GestureDetector(
+                      ServiceItem(
+                        title: 'Medicine',
+                        imageUrl:
+                            'https://cdn-icons-png.flaticon.com/256/4861/4861715.png',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -385,13 +303,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           );
                         },
-                        child: _buildServiceCard(
-                          'https://cdn-icons-png.flaticon.com/256/4861/4861715.png',
-                          'Medicine',
-                        ),
                       ),
+
                       SizedBox(width: 10),
-                      GestureDetector(
+
+                      ServiceItem(
+                        title: 'LabTest',
+                        imageUrl:
+                            'https://cdn-icons-png.flaticon.com/512/7918/7918318.png',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -400,13 +319,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           );
                         },
-                        child: _buildServiceCard(
-                          'https://cdn-icons-png.flaticon.com/512/7918/7918318.png',
-                          'LabTest',
-                        ),
                       ),
                       SizedBox(width: 10),
-                      GestureDetector(
+
+                      ServiceItem(
+                        title: 'Surgeries',
+                        imageUrl:
+                            'https://cdn-icons-png.flaticon.com/512/9442/9442009.png',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -415,13 +334,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           );
                         },
-                        child: _buildServiceCard(
-                          'https://cdn-icons-png.flaticon.com/512/9442/9442009.png',
-                          'Surgeries',
-                        ),
                       ),
                       SizedBox(width: 10),
-                      GestureDetector(
+
+                      ServiceItem(
+                        title: 'Doctors',
+                        imageUrl:
+                            'https://cdn-icons-png.flaticon.com/512/2991/2991292.png',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -430,10 +349,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           );
                         },
-                        child: _buildServiceCard(
-                          'https://cdn-icons-png.flaticon.com/512/2991/2991292.png',
-                          'Doctors',
-                        ),
                       ),
                     ],
                   ),
@@ -485,14 +400,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           setState(() => _offerPage = index);
                         },
                         children: [
-                          _buildOfferBanner(
-                            'https://www.thehitavada.com/Encyc/2025/6/8/Renowned-Pune-Ayurvedic_202506081035455705_H@@IGHT_626_W@@IDTH_1200.jpg',
+                          OfferBanner(
+                            image:
+                                'https://www.thehitavada.com/Encyc/2025/6/8/Renowned-Pune-Ayurvedic_202506081035455705_H@@IGHT_626_W@@IDTH_1200.jpg',
                           ),
-                          _buildOfferBanner(
-                            'https://medinova-pharmaceuticals.com/wp-content/uploads/2024/05/3.jpg',
+                          OfferBanner(
+                            image:
+                                'https://medinova-pharmaceuticals.com/wp-content/uploads/2024/05/3.jpg',
                           ),
-                          _buildOfferBanner(
-                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiw_lTQ-OnS77ccIFEDyiR2At9c15u8RwTb6xO5i9mZFQFHp82hAGweFpSGF2Ob30Ms9FXo2wgBsEL9g-TuZplHtl5jYxXE_eyS-vaFG7DZtv7rOA8CUHzRJvRMiugMLv7vUc8_gXy1euvP/s1600/APRHS30.jpg',
+                          OfferBanner(
+                            image:
+                                'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiw_lTQ-OnS77ccIFEDyiR2At9c15u8RwTb6xO5i9mZFQFHp82hAGweFpSGF2Ob30Ms9FXo2wgBsEL9g-TuZplHtl5jYxXE_eyS-vaFG7DZtv7rOA8CUHzRJvRMiugMLv7vUc8_gXy1euvP/s1600/APRHS30.jpg',
                           ),
                         ],
                       ),
@@ -502,7 +420,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 const SizedBox(height: 10),
 
-                // Smooth indicator dots
                 SmoothPageIndicator(
                   controller: _offerController,
                   count: 3,
@@ -600,58 +517,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
     );
-  }
-
-  /// Service Card helper
-  Widget _buildServiceCard(String imageUrl, String subTitle) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.25,
-      height: 110,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xffBEBEBE), width: 0.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.20),
-            blurRadius: 6,
-            spreadRadius: 2,
-            offset: const Offset(2, 3),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 20,
-            top: 15,
-            child: SizedBox(
-              width: 55,
-              height: 55,
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 10,
-            left: 8,
-            right: 8,
-            child: Text(
-              subTitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Offer Banner helper
-  Widget _buildOfferBanner(String url) {
-    return CachedNetworkImage(imageUrl: url, fit: BoxFit.cover);
   }
 
   void languageBottomSheet() {

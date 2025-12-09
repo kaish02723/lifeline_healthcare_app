@@ -37,9 +37,7 @@ class _SettingScreenState extends State<SettingScreen> {
           ListTile(
             leading: Icon(
               notificationOn ? Icons.notifications_active : Icons.notifications,
-              color: notificationOn
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey.shade700,
+              color: notificationOn ? Color(0xff00796B) : Colors.grey.shade800,
             ),
             title: const Text("Notifications", style: TextStyle(fontSize: 18)),
             trailing: Row(
@@ -49,20 +47,21 @@ class _SettingScreenState extends State<SettingScreen> {
                   notificationOn ? "ON" : "OFF",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: notificationOn
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
+                    color: notificationOn ? Color(0xff00796B) : Colors.black54,
                   ),
                 ),
                 Switch(
                   value: notificationOn,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Color(0xff00796B),
                   onChanged: (value) {
                     setState(() => notificationOn = value);
                   },
                 ),
               ],
             ),
+            onTap: () {
+              setState(() => notificationOn = !notificationOn);
+            },
           ),
 
           Consumer<ThemeProvider>(
@@ -71,8 +70,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 leading: Icon(
                   provider.isDark ? Icons.dark_mode : Icons.sunny,
                   color: provider.isDark
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey.shade700,
+                      ? Color(0xff00796B)
+                      : Colors.grey.shade800,
                 ),
                 title: const Text("Theme Mode", style: TextStyle(fontSize: 18)),
                 trailing: Row(
@@ -83,15 +82,15 @@ class _SettingScreenState extends State<SettingScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: provider.isDark
-                            ? Theme.of(context).primaryColor
-                            : Colors.black54,
+                            ? Color(0xff00796B)
+                            : Colors.grey.shade700,
                       ),
                     ),
                     Switch(
                       value: provider.isDark,
-                      activeColor: Theme.of(context).primaryColor,
+                      activeColor: Color(0xff00796B),
                       onChanged: (val) {
-                        provider.toggleTheme(); // <-- THEME SWITCH HERE
+                        provider.toggleTheme();
                       },
                     ),
                   ],
@@ -103,7 +102,6 @@ class _SettingScreenState extends State<SettingScreen> {
             },
           ),
 
-          // 👤 Edit Profile
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text("Edit Profile", style: TextStyle(fontSize: 18)),
@@ -113,7 +111,6 @@ class _SettingScreenState extends State<SettingScreen> {
             },
           ),
 
-          // 📄 Terms
           ListTile(
             leading: const Icon(Icons.newspaper),
             title: const Text("Terms & Policy", style: TextStyle(fontSize: 18)),
@@ -121,7 +118,6 @@ class _SettingScreenState extends State<SettingScreen> {
             onTap: () {},
           ),
 
-          // 🌐 Language
           ListTile(
             leading: const Icon(Icons.language),
             title: const Text("Language", style: TextStyle(fontSize: 18)),
@@ -129,7 +125,6 @@ class _SettingScreenState extends State<SettingScreen> {
             onTap: () {},
           ),
 
-          // 🚪 Logout
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("Logout", style: TextStyle(fontSize: 18)),

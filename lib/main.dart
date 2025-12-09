@@ -15,6 +15,7 @@ import 'package:lifeline_healthcare_app/widgets/network_wraper.dart';
 import 'package:provider/provider.dart';
 
 import 'config/app_theme.dart';
+import 'config/app_theme_colors.dart';
 
 void main() {
   runApp(
@@ -47,8 +48,27 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Lifeline Healthcare',
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
+              theme: ThemeData(
+                brightness: Brightness.light,
+                extensions: [
+                  AppThemeColors(
+                    glassBackground: Colors.white.withOpacity(0.4),
+                    borderColor: Colors.white.withOpacity(0.7),
+                    cardShadow: Colors.black.withOpacity(0.05),
+                  )
+                ],
+              ),
+
+              darkTheme: ThemeData(
+                brightness: Brightness.dark,
+                extensions: [
+                  AppThemeColors(
+                    glassBackground: Colors.white.withOpacity(0.10),
+                    borderColor: Colors.white.withOpacity(0.20),
+                    cardShadow: Colors.black.withOpacity(0.50),
+                  )
+                ],
+              ),
               themeMode: themeProvider.isDark
                   ? ThemeMode.dark
                   : ThemeMode.light,

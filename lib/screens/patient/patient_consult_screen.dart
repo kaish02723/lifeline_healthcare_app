@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,15 +11,12 @@ class PatientConsultScreen extends StatelessWidget {
   const PatientConsultScreen({super.key});
 
   static const Color primary = Color(0xFF00796B);
-  static const Color lightAccent = Color(0xFF009688);
 
-  // Sample network icons (placeholder service). Replace with your CDN links when ready.
+  // Sample network icons
   static final Map<String, String> topSpecialitiesImages = {
-    "Mental\nWellness":
-        "https://cdn-icons-png.flaticon.com/512/3475/3475728.png",
+    "Mental\nWellness": "https://cdn-icons-png.flaticon.com/512/3475/3475728.png",
     "Gynae\ncolo": "https://cdn-icons-png.flaticon.com/512/10154/10154415.png",
-    "General\nphysician":
-        "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
+    "General\nphysician": "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
     "Derma\ntology": "https://cdn-icons-png.flaticon.com/512/3468/3468053.png",
     "Ortho-\npedic": "https://cdn-icons-png.flaticon.com/512/4006/4006302.png",
     "Pediat\nrics": "https://cdn-icons-png.flaticon.com/512/9340/9340051.png",
@@ -33,29 +31,26 @@ class PatientConsultScreen extends StatelessWidget {
     "PCOS": "https://via.placeholder.com/120?text=PCOS",
     "Thyroid": "https://cdn-icons-png.flaticon.com/512/10207/10207748.png",
     "Head\naches": "https://cdn-icons-png.flaticon.com/512/4843/4843993.png",
-    "Fungal\nInfection":
-        "https://cdn-icons-png.flaticon.com/512/8711/8711576.png",
+    "Fungal\nInfection": "https://cdn-icons-png.flaticon.com/512/8711/8711576.png",
     "Back Pain": "https://cdn-icons-png.flaticon.com/512/4986/4986231.png",
   };
 
   static final Map<String, String> gpImages = {
     "Fever": "https://cdn-icons-png.flaticon.com/512/6192/6192088.png",
-    "High blood\npressure":
-        "https://cdn-icons-png.flaticon.com/512/5015/5015609.png",
+    "High blood\npressure": "https://cdn-icons-png.flaticon.com/512/5015/5015609.png",
     "Dizziness": "https://cdn-icons-png.flaticon.com/512/6701/6701662.png",
     "Pneum\nonia": "https://cdn-icons-png.flaticon.com/512/7350/7350852.png",
   };
 
   @override
   Widget build(BuildContext context) {
-    // screen width detection
-    final double width = MediaQuery.of(context).size.width;
-
-    // Responsive cross axis count: mobile 3, tablet/large 4
-    final int crossAxisCount = width >= 600 ? 4 : 3;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final width = MediaQuery.of(context).size.width;
+    final crossAxisCount = width >= 600 ? 4 : 3;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Color(0xff121212) : Colors.grey[100],
       appBar: AppBar(
         foregroundColor: Colors.white,
         leading: IconButton(
@@ -93,119 +88,130 @@ class PatientConsultScreen extends StatelessWidget {
           ),
         ],
       ),
-
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // we can further tune sizes based on available height/width through constraints if needed
             return SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Free follow-up card
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(14.r),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE0F2F1),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Free follow-up",
-                          style: TextStyle(
-                            color: primary,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
+                  // Free follow-up card (glassy)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(14.r),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? Colors.white.withOpacity(0.05)
+                              : Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                           ),
                         ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          "for 7 days with every consultation",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FollowUpScreen(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Free follow-up",
+                              style: TextStyle(
+                                color: primary,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
                               ),
-                            );
-                          },
-                          child: Text(
-                            "Know More >",
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 11.sp,
                             ),
-                          ),
+                            SizedBox(height: 6.h),
+                            Text(
+                              "for 7 days with every consultation",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: isDark ? Colors.white70 : Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 6.h),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FollowUpScreen(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Know More >",
+                                style: TextStyle(
+                                  color: isDark ? Colors.white54 : Colors.black54,
+                                  fontSize: 11.sp,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
 
                   SizedBox(height: 18.h),
 
                   // Search
-                  Text(
-                    "Search Health Problem/ symptoms",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search symptoms..",
-                      prefixIcon: Icon(Icons.search, size: 21.sp),
-                      filled: true,
-                      fillColor: const Color(0xfff1f1f1),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide.none,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        color: isDark
+                            ? Colors.white.withOpacity(0.05)
+                            : Colors.white.withOpacity(0.8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "Search symptoms..",
+                            prefixIcon: Icon(Icons.search, size: 21.sp),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
 
                   SizedBox(height: 22.h),
 
-                  sectionHeading("CHOOSE FROM TOP SPECIALITIES"),
-
-                  // Gridview 1 (Top Specialities)
+                  sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
                   buildResponsiveGrid(
                     context: context,
                     items: topSpecialitiesImages.keys.toList(),
                     imageMap: topSpecialitiesImages,
                     crossAxisCount: crossAxisCount,
+                    isDark: isDark,
                   ),
 
                   SizedBox(height: 24.h),
 
-                  sectionHeading("Common Health Issues"),
+                  sectionHeading("Common Health Issues", isDark),
                   buildResponsiveGrid(
                     context: context,
                     items: commonIssuesImages.keys.toList(),
                     imageMap: commonIssuesImages,
                     crossAxisCount: crossAxisCount,
+                    isDark: isDark,
                   ),
 
                   SizedBox(height: 24.h),
 
-                  sectionHeading("General Physician"),
+                  sectionHeading("General Physician", isDark),
                   buildResponsiveGrid(
                     context: context,
                     items: gpImages.keys.toList(),
                     imageMap: gpImages,
                     crossAxisCount: crossAxisCount,
+                    isDark: isDark,
                   ),
 
                   SizedBox(height: 32.h),
@@ -218,24 +224,27 @@ class PatientConsultScreen extends StatelessWidget {
     );
   }
 
-  Widget sectionHeading(String text) {
+  Widget sectionHeading(String text, bool isDark) {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h),
       child: Text(
         text,
-        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+        style: TextStyle(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w700,
+          color: isDark ? Colors.white : Colors.black87,
+        ),
       ),
     );
   }
 
-  /// Generic responsive grid builder
   Widget buildResponsiveGrid({
     required BuildContext context,
     required List<String> items,
     required Map<String, String> imageMap,
     required int crossAxisCount,
+    required bool isDark,
   }) {
-    // spacing tuned for ScreenUtil
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -244,7 +253,6 @@ class PatientConsultScreen extends StatelessWidget {
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: 15.h,
         crossAxisSpacing: 12.w,
-        // childAspectRatio tuned so square-ish image + title fits
         childAspectRatio: 0.72,
       ),
       itemBuilder: (context, index) {
@@ -254,6 +262,7 @@ class PatientConsultScreen extends StatelessWidget {
         return SquareCategory(
           title: title,
           imageUrl: imageUrl,
+          isDark: isDark,
           onTap: () {
             Navigator.push(
               context,
@@ -266,68 +275,85 @@ class PatientConsultScreen extends StatelessWidget {
   }
 }
 
-/// Square category widget (network image + title)
 class SquareCategory extends StatelessWidget {
   final String title;
   final String imageUrl;
+  final bool isDark;
   final VoidCallback? onTap;
 
   const SquareCategory({
     super.key,
     required this.title,
     required this.imageUrl,
+    required this.isDark,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final double containerSize =
-        (MediaQuery.of(context).size.width /
-                (MediaQuery.of(context).size.width >= 600 ? 6.2 : 4.6))
-            .clamp(56.0, 90.0);
+    (MediaQuery.of(context).size.width /
+        (MediaQuery.of(context).size.width >= 600 ? 6.2 : 4.6))
+        .clamp(56.0, 90.0);
 
     return GestureDetector(
       onTap: onTap,
       child: Column(
         children: [
-          Container(
-            width: containerSize.w,
-            height: containerSize.w,
-            padding: EdgeInsets.all(10.w),
-            decoration: BoxDecoration(
-              color: const Color(0xffF5F7FA),
-              borderRadius: BorderRadius.circular(7.r),
-              border: Border.all(color: const Color(0xffd1d1d1), width: 0.5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
-                  blurRadius: 6.r,
-                  offset: Offset(0, 2.r),
-                ),
-              ],
-            ),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.contain,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const Center(
-                  child: SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 1.6),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(7.r),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                width: containerSize.w,
+                height: containerSize.w,
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? Colors.white.withOpacity(0.05)
+                      : Colors.white.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(7.r),
+                  border: Border.all(
+                    color: isDark ? Colors.grey.shade800 : const Color(0xffd1d1d1),
+                    width: 0.5,
                   ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) =>
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDark
+                          ? Colors.black26
+                          : Colors.grey.withOpacity(0.15),
+                      blurRadius: 6.r,
+                      offset: Offset(2, 3),
+                    ),
+                  ],
+                ),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
+                    return const Center(
+                      child: SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 1.6),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) =>
                   const Icon(Icons.broken_image),
+                ),
+              ),
             ),
           ),
           SizedBox(height: 6.h),
           Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13.sp),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
           ),
         ],
       ),

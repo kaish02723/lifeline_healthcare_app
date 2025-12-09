@@ -1,10 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_book_test_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_test_booking_cart_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
 
@@ -28,8 +28,11 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PopularTestProvider>(context);
+    var theme = Theme.of(context);
+    var isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Color(0xff121212) : Colors.grey[100],
       appBar: AppBar(
         title: Text('LabTest'),
         backgroundColor: Color(0xff00796B),
@@ -72,7 +75,9 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                     hintText: 'Search for test..',
                     isDense: true,
                     filled: true,
-                    fillColor: Color(0x74d5d5d5),
+                    fillColor: isDark
+                        ? Colors.white.withOpacity(0.05)
+                        : Colors.white.withOpacity(0.8),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(40),
                       borderSide: BorderSide.none,
@@ -80,26 +85,21 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                   ),
                 ),
               ),
-              // IconButton(
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => TestBookingCart()),
-              //     );
-              //   },
-              //   icon: Icon(CupertinoIcons.cart),
-              // ),
             ],
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15, top: 25, bottom: 15),
             child: Text(
               'Top Booked Diagnostic Tests',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: provider.popularDataList.isEmpty
                 ? Center(
                     child: Padding(
@@ -118,119 +118,155 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 15,
                       crossAxisSpacing: 20,
-                      mainAxisExtent: 210,
+                      mainAxisExtent: 209,
                     ),
                     itemBuilder: (context, index) {
                       var listData = provider.popularDataList[index];
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(color: Colors.grey, width: 0.5),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 170,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                ),
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? Colors.white.withOpacity(0.05)
+                                  : Colors.white.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: isDark
+                                    ? Colors.grey.shade800
+                                    : Colors.grey.shade300,
+                                width: 0.5,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 12,
-                                  right: 12,
-                                  top: 12,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: isDark
+                                      ? Colors.black26
+                                      : Colors.grey.withOpacity(0.2),
+                                  blurRadius: 6,
+                                  offset: Offset(2, 3),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      listData.name ?? '',
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      listData.description ?? '',
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-
-                                    SizedBox(height: 15),
-                                    Text(
-                                      listData.category ?? '',
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black87,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    Text(
-                                      '₹${listData.price}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.mediumImpact();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BookTestFormScreen(
-                                      testName: listData.name.toString(),
-                                      category: listData.category.toString(),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 172,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
                                     ),
                                   ),
-                                );
-                              },
-                              child: Container(
-                                height: 35,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(5),
-                                    bottomRight: Radius.circular(5),
-                                  ),
-                                  border: Border(
-                                    top: BorderSide(
-                                      color: Colors.grey,
-                                      width: 0.5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          listData.name ?? '',
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            overflow: TextOverflow.ellipsis,
+                                            color: isDark
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          listData.description ?? '',
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: isDark
+                                                ? Colors.grey[400]
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                        SizedBox(height: 15),
+                                        Text(
+                                          listData.category ?? '',
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: isDark
+                                                ? Colors.grey[400]
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                        Text(
+                                          '₹${listData.price}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: isDark
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    'Book Test',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      color: Color(0xff00BFA5),
+                                GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.mediumImpact();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            BookTestFormScreen(
+                                              testName: listData.name
+                                                  .toString(),
+                                              category: listData.category
+                                                  .toString(),
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
+                                      ),
+                                      border: Border(
+                                        top: BorderSide(
+                                          color: isDark
+                                              ? Colors.grey.shade800
+                                              : Colors.grey.shade300,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      color: isDark
+                                          ? Color(0xff00796B).withOpacity(0.9)
+                                          : Color(0xff00BFA5).withOpacity(0.9),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Book Test',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       );
                     },
@@ -239,60 +275,6 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
           const SizedBox(height: 20),
         ],
       ),
-      // bottomNavigationBar: Container(
-      //   height: 110,
-      //   decoration: BoxDecoration(
-      //     color: Colors.white,
-      //     border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
-      //   ),
-      //   child: Padding(
-      //     padding: const EdgeInsets.only(left: 15, right: 15),
-      //     child: Column(
-      //       children: [
-      //         SizedBox(height: 15),
-      //         Row(
-      //           children: [
-      //             Text('Total: ', style: TextStyle(fontSize: 18)),
-      //             Text(
-      //               '₹687',
-      //               style: TextStyle(fontSize: 18, color: Color(0xff26A69A)),
-      //             ),
-      //             Spacer(),
-      //             Text('4 Tests', style: TextStyle(fontSize: 18)),
-      //           ],
-      //         ),
-      //         SizedBox(height: 10),
-      //         GestureDetector(
-      //           // onTap: () {
-      //           //   Navigator.push(
-      //           //     context,
-      //           //     MaterialPageRoute(builder: (context) => TestBookingCart()),
-      //           //   );
-      //           // },
-      //           child: Container(
-      //             height: 45,
-      //             decoration: BoxDecoration(
-      //               borderRadius: BorderRadius.circular(7),
-      //               gradient: const LinearGradient(
-      //                 colors: [Color(0xFF26A69A), Color(0xFF00796B)],
-      //               ),
-      //             ),
-      //             child: Center(
-      //               child: Text(
-      //                 "View Cart",
-      //                 style: GoogleFonts.poppins(
-      //                   color: Colors.white,
-      //                   fontSize: 16,
-      //                   fontWeight: FontWeight.w600,
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }
