@@ -25,7 +25,7 @@ class _MyTestScreenState extends State<MyTestScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: Color(0xff00796B),
         leading: InkWell(
           onTap: () => Navigator.pop(context),
           child: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -81,29 +81,32 @@ class _MyTestScreenState extends State<MyTestScreen> {
                   if (value.myLabTestList.isEmpty) {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 250),
+                        padding: const EdgeInsets.only(top: 240),
                         child: MedicalHeartECGLoader(
-                          width: 200,
-                          color: Colors.teal,
+                          width: 320,
+                          color: Colors.teal.shade100,
                         ),
                       ),
                     );
                   }
-                  return ListView.builder(
+                  return  ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: value.myLabTestList.length,
                     itemBuilder: (context, index) {
                       var testData = value.myLabTestList[index];
+
                       return TestCard(
                         userName: testData.user_name.toString(),
                         testName: testData.test_name.toString(),
                         phone: testData.phone.toString(),
                         category: testData.category.toString(),
                         status: testData.status.toString(),
+                        userId: testData.user_id.toString(),
                       );
                     },
                   );
+
                 },
               ),
             ],
@@ -124,6 +127,7 @@ class TestCard extends StatelessWidget {
   final String phone;
   final String category;
   final String status;
+  final String userId;    // ⬅ ADDED
   final VoidCallback? onCancel;
   final VoidCallback? onViewReport;
   final VoidCallback? onTrackStatus;
@@ -135,6 +139,7 @@ class TestCard extends StatelessWidget {
     required this.phone,
     required this.category,
     required this.status,
+    required this.userId,   // ⬅ ADDED
     this.onCancel,
     this.onViewReport,
     this.onTrackStatus,
@@ -152,7 +157,7 @@ class TestCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //  Title (Test Name)
+            // Title
             Text(
               testName,
               style: const TextStyle(
@@ -164,19 +169,19 @@ class TestCard extends StatelessWidget {
 
             const SizedBox(height: 14),
 
-            //  User Info Rich Text
+            // All Details
             _buildRich("User Name", userName),
+            _buildRich("User ID", userId),     // ⬅ ADDED
             _buildRich("Phone", phone),
             _buildRich("Category", category),
 
             const SizedBox(height: 16),
 
-            //  Status Row
+            // Status Chip + Track
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _statusChip(),
-
                 InkWell(
                   onTap: onTrackStatus,
                   child: Row(
@@ -205,9 +210,6 @@ class TestCard extends StatelessWidget {
     );
   }
 
-  /// ---------------------------
-  /// Reusable RichText builder
-  /// ---------------------------
   Widget _buildRich(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -217,10 +219,9 @@ class TestCard extends StatelessWidget {
             TextSpan(
               text: "$label: ",
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black),
             ),
             TextSpan(
               text: value,
@@ -232,9 +233,6 @@ class TestCard extends StatelessWidget {
     );
   }
 
-  /// ---------------------------
-  /// Status Chip UI
-  /// ---------------------------
   Widget _statusChip() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -260,11 +258,8 @@ class TestCard extends StatelessWidget {
     );
   }
 
-  /// ---------------------------
-  /// Button Rendering Logic
-  /// ---------------------------
   Widget _buildButtons() {
-    if (status == "pending") {
+    if (status.toLowerCase() == "pending") {
       return ElevatedButton.icon(
         onPressed: onCancel,
         style: ElevatedButton.styleFrom(
@@ -282,7 +277,7 @@ class TestCard extends StatelessWidget {
       );
     }
 
-    if (status == "completed") {
+    if (status.toLowerCase() == "completed") {
       return ElevatedButton.icon(
         onPressed: onViewReport,
         style: ElevatedButton.styleFrom(
@@ -303,9 +298,6 @@ class TestCard extends StatelessWidget {
     return const SizedBox();
   }
 
-  /// ---------------------------
-  /// Status Color Helper
-  /// ---------------------------
   Color _getStatusColor() {
     switch (status.toLowerCase()) {
       case "pending":
@@ -321,3 +313,4 @@ class TestCard extends StatelessWidget {
     }
   }
 }
+

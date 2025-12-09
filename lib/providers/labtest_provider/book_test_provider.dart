@@ -16,7 +16,9 @@ class BookTestProvider with ChangeNotifier {
     try {
       var api = await http.post(
         Uri.parse('$baseUrl/bookings/book-test'),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: jsonEncode(data),
       );
 

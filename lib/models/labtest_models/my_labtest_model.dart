@@ -16,6 +16,7 @@ class MyLabTestModel {
 
 class MyTestDataModel {
   int? bookingid;
+  int? user_id;
   String? user_name;
   String? test_name;
   String? category;
@@ -26,6 +27,7 @@ class MyTestDataModel {
 
   MyTestDataModel(
     this.bookingid,
+    this.user_id,
     this.user_name,
     this.test_name,
     this.category,
@@ -38,6 +40,7 @@ class MyTestDataModel {
   static MyTestDataModel convertToModel(Map<String, dynamic> apiData) {
     return MyTestDataModel(
       apiData['bookingid'],
+      apiData['user_id'],
       apiData['user_name'],
       apiData['test_name'],
       apiData['category'],

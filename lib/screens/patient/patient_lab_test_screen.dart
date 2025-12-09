@@ -106,7 +106,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                       padding: const EdgeInsets.only(top: 200),
                       child: MedicalHeartECGLoader(
                         width: double.infinity,
-                        color: Colors.redAccent,
+                        color: Colors.grey,
                       ),
                     ),
                   )

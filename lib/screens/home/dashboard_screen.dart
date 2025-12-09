@@ -204,7 +204,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             fontWeight: FontWeight.bold,
             fontSize: 25,
             shadows: [
-              Shadow(color: Colors.red, blurRadius: 3, offset: Offset(1, 1)),
+              Shadow(color: Color(0xffFFCC00), blurRadius: 3, offset: Offset(1, 1)),
             ],
           ),
         ),
@@ -567,11 +567,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       'Crafted with  ',
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
-                    Image.network(
-                      'https://pngimg.com/d/plus_PNG68.png',
-                      width: 15,
-                      height: 15,
-                    ),
+                    // Image.network(
+                    //   'https://pngimg.com/d/plus_PNG119.png',
+                    //   width: 15,
+                    //   height: 15,
+                    // ),
                     Text(
                       '  in India',
                       style: TextStyle(fontSize: 14, color: Colors.grey),

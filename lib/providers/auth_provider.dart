@@ -95,7 +95,7 @@ class AuthProvider with ChangeNotifier {
             builder: (context) => OtpVerifyScreen(phone: phoneController.text),
           ),
         );
-        phoneController.clear();
+        // phoneController.clear();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Invalid phone number")),

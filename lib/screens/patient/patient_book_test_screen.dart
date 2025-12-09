@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/auth_provider.dart';
+
 class BookTestFormScreen extends StatefulWidget {
   final String testName;
   final String category;
@@ -21,6 +23,9 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
   @override
   Widget build(BuildContext context) {
     var bookTestProvider = Provider.of<BookTestProvider>(context);
+    // var authProvider = Provider.of<AuthProvider>(context);
+    //
+    // final userId = authProvider.userId;
 
     return Scaffold(
       appBar: AppBar(
@@ -103,16 +108,23 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
               // SUBMIT BUTTON
               GestureDetector(
                 onTap: () {
+                  final auth = Provider.of<AuthProvider>(context, listen: false);
+
+                  print("User ID (Live): ${auth.userId}");
+
                   if (bookTestProvider.testFormKey.currentState!.validate()) {
                     var data = {
+                      "user_id": auth.userId,
                       "user_name": bookTestProvider.testNameController.text,
                       "test_name": widget.testName,
                       "category": widget.category,
                       "phone": bookTestProvider.testPhoneController.text,
                     };
+
                     bookTestProvider.bookTest(data, context);
                   }
                 },
+
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(

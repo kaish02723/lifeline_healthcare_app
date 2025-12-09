@@ -26,13 +26,7 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
       appBar: AppBar(
         elevation: 0,
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xff009688), Color(0xff00796B)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
+          decoration: const BoxDecoration(color: Color(0xff00796B)),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -54,14 +48,21 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
               children: [
                 const Row(
                   children: [
-                    Text("LifeLine ",
-                        style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    Text("HealthCare",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xffFFB956),
-                            fontWeight: FontWeight.w700)),
+                    Text(
+                      "LifeLine ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      "HealthCare",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Color(0xffFFB956),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ],
                 ),
 
@@ -69,7 +70,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: const Color(0xff009688), width: 1.4),
+                    border: Border.all(
+                      color: const Color(0xff009688),
+                      width: 1.4,
+                    ),
                   ),
                   child: Material(
                     color: Colors.transparent,
@@ -78,21 +82,30 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                       onTap: () {},
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         child: Row(
                           children: const [
-                            Icon(Icons.call, size: 16, color: Color(0xff009688)),
+                            Icon(
+                              Icons.call,
+                              size: 16,
+                              color: Color(0xff009688),
+                            ),
                             SizedBox(width: 6),
-                            Text("Call Now",
-                                style: TextStyle(
-                                    color: Color(0xff009688),
-                                    fontWeight: FontWeight.w600)),
+                            Text(
+                              "Call Now",
+                              style: TextStyle(
+                                color: Color(0xff009688),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
 
@@ -106,9 +119,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black.withOpacity(0.07),
-                      blurRadius: 15,
-                      offset: const Offset(0, 6))
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
+                  ),
                 ],
               ),
               child: Column(
@@ -117,9 +131,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                     "Book an appointment with the best doctors\nfor your health needs.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        height: 1.4),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      height: 1.4,
+                    ),
                   ),
 
                   const SizedBox(height: 25),
@@ -140,8 +155,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                   const SizedBox(height: 14),
 
                   /// ---------------- PHONE FIELD ----------------
-                  _premiumTextField("Phone Number",
-                      keyboard: TextInputType.phone),
+                  _premiumTextField(
+                    "Phone Number",
+                    keyboard: TextInputType.phone,
+                  ),
 
                   const SizedBox(height: 14),
 
@@ -188,13 +205,19 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
   /// ----------------------------------------------------------------------
   /// PREMIUM TEXT FIELD
   /// ----------------------------------------------------------------------
-  Widget _premiumTextField(String hint, {TextInputType keyboard = TextInputType.text}) {
+  Widget _premiumTextField(
+    String hint, {
+    TextInputType keyboard = TextInputType.text,
+  }) {
     return Container(
       decoration: _inputDecoration(),
       child: TextField(
         keyboardType: keyboard,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: InputBorder.none,
           hintText: hint,
           hintStyle: TextStyle(color: Colors.grey.shade500),
@@ -239,9 +262,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
       border: Border.all(color: Colors.grey.shade300),
       boxShadow: [
         BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3)),
+          color: Colors.black.withOpacity(0.04),
+          blurRadius: 8,
+          offset: const Offset(0, 3),
+        ),
       ],
     );
   }
@@ -266,9 +290,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
           ),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.20),
-                blurRadius: 10,
-                offset: const Offset(0, 4))
+              color: Colors.black.withOpacity(0.20),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: Row(
@@ -276,11 +301,14 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
           children: [
             Icon(icon, color: Colors.white),
             const SizedBox(width: 8),
-            Text(title,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600)),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),
@@ -303,9 +331,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
             border: Border.all(color: Colors.white.withOpacity(0.3)),
             boxShadow: [
               BoxShadow(
-                  blurRadius: 15,
-                  offset: const Offset(0, 6),
-                  color: Colors.black.withOpacity(0.01))
+                blurRadius: 15,
+                offset: const Offset(0, 6),
+                color: Colors.black.withOpacity(0.01),
+              ),
             ],
           ),
           child: Column(
@@ -315,16 +344,19 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   CircleAvatar(
-                      radius: 26,
-                      backgroundImage: AssetImage("assets/images/doctor1.png")),
+                    radius: 26,
+                    backgroundImage: AssetImage("assets/images/doctor1.png"),
+                  ),
                   SizedBox(width: 12),
                   CircleAvatar(
-                      radius: 26,
-                      backgroundImage: AssetImage("assets/images/doctor3.png")),
+                    radius: 26,
+                    backgroundImage: AssetImage("assets/images/doctor3.png"),
+                  ),
                   SizedBox(width: 12),
                   CircleAvatar(
-                      radius: 26,
-                      backgroundImage: AssetImage("assets/images/doctor2.png")),
+                    radius: 26,
+                    backgroundImage: AssetImage("assets/images/doctor2.png"),
+                  ),
                 ],
               ),
 
@@ -351,7 +383,12 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                 title: "Call Now",
                 icon: Icons.call,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetailsScreen(),));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MedicineDetailsScreen(),
+                    ),
+                  );
                 },
               ),
             ],
@@ -361,8 +398,3 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
     );
   }
 }
-
-
-
-
-
