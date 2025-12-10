@@ -52,16 +52,13 @@ class HealthCategoryItem extends StatelessWidget {
           child: CachedNetworkImage(imageUrl: imagePath, fit: BoxFit.contain),
         ),
         SizedBox(height: size * 0.08),
-        SizedBox(
-          width: size + 20,
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: size * 0.25,
-              color: Theme.of(context).textTheme.bodyMedium!.color,
-            ),
-            textAlign: TextAlign.center,
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 13,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
           ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
