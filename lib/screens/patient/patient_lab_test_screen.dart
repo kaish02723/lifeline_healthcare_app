@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_book_test_screen.dart';
@@ -110,16 +111,13 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                       ),
                     ),
                   )
-                : GridView.builder(
+
+                : MasonryGridView.count(
                     itemCount: provider.popularDataList.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 15,
-                      crossAxisSpacing: 20,
-                      mainAxisExtent: 209,
-                    ),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 15,
                     itemBuilder: (context, index) {
                       var listData = provider.popularDataList[index];
                       return ClipRRect(
@@ -138,6 +136,8 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                                     : Colors.grey.shade300,
                                 width: 0.5,
                               ),
+
+
                               boxShadow: [
                                 BoxShadow(
                                   color: isDark
@@ -270,6 +270,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                         ),
                       );
                     },
+                    crossAxisCount: 2,
                   ),
           ),
           const SizedBox(height: 20),
