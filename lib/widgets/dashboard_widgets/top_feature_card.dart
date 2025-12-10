@@ -33,7 +33,7 @@ class TopFeatureCard extends StatelessWidget {
               child: Text(
                 title,
                 style: TextStyle(
-                  fontSize: w * 0.040, // responsive font
+                  fontSize: 14, // responsive font
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -44,7 +44,7 @@ class TopFeatureCard extends StatelessWidget {
               child: Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: w * 0.03, // responsive font
+                  fontSize: w * 0.028, // responsive font
                   color: Colors.grey,
                 ),
               ),
