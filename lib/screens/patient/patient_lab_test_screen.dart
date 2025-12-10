@@ -152,7 +152,6 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: 172,
                                   decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.only(
