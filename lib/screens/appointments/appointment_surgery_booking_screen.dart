@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-
+import 'package:lifeline_healthcare_app/providers/surgery_provider.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_my_surgery_screen.dart';
+import 'package:provider/provider.dart';
 import '../patient/patient_medicine_details_screen.dart';
 
 class SurgeryBookingScreen extends StatefulWidget {
@@ -11,190 +13,52 @@ class SurgeryBookingScreen extends StatefulWidget {
 }
 
 class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
-  String? selectedAilment;
+  String? selectedSurgery;
   String? selectedCity;
 
-  List<String> ailments = ["Heart", "Lungs", "Kidney", "Eyes"];
-  List<String> cities = ["Mumbai", "Delhi", "Kolkata", "Patna"];
+  final List<String> surgeryTypes = ["Heart", "Lungs", "Kidney", "Eyes"];
+  final List<String> cities = ["Mumbai", "Delhi", "Kolkata", "Patna"];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF4F6F8),
+    var theme = Theme.of(context);
+    var isDark = theme.brightness == Brightness.dark;
 
-      /// ---------------- APPBAR WITH GRADIENT ----------------
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(color: Color(0xff00796B)),
-        ),
+        backgroundColor: Color(0xff00796B),
+        foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          "Book for surgery",
+          "Book for Surgery",
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MySurgeryScreen()),
+              );
+            },
+            child: Text('Check status', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            /// ---------------- HEADER ROW ----------------
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Row(
-                  children: [
-                    Text(
-                      "LifeLine ",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      "HealthCare",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color(0xffFFB956),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-
-                /// CALL NOW BUTTON
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(
-                      color: const Color(0xff009688),
-                      width: 1.4,
-                    ),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(25),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.call,
-                              size: 16,
-                              color: Color(0xff009688),
-                            ),
-                            SizedBox(width: 6),
-                            Text(
-                              "Call Now",
-                              style: TextStyle(
-                                color: Color(0xff009688),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
+            _headerRow(theme),
             const SizedBox(height: 20),
-
-            /// ---------------- FORM CARD ----------------
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.07),
-                    blurRadius: 15,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  const Text(
-                    "Book an appointment with the best doctors\nfor your health needs.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      height: 1.4,
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  /// ---------------- DROPDOWN ----------------
-                  _premiumDropdown(
-                    hint: "Select Ailment*",
-                    value: selectedAilment,
-                    items: ailments,
-                    onChanged: (v) => setState(() => selectedAilment = v),
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  /// ---------------- NAME FIELD ----------------
-                  _premiumTextField("Enter your name"),
-
-                  const SizedBox(height: 14),
-
-                  /// ---------------- PHONE FIELD ----------------
-                  _premiumTextField(
-                    "Phone Number",
-                    keyboard: TextInputType.phone,
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  /// ---------------- CITY DROPDOWN ----------------
-                  _premiumDropdown(
-                    hint: "City",
-                    value: selectedCity,
-                    items: cities,
-                    onChanged: (v) => setState(() => selectedCity = v),
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  /// ---------------- BOOK BUTTON ----------------
-                  _gradientButton(
-                    title: "Book Appointment",
-                    icon: Icons.phone,
-                    onTap: () {},
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  const Text(
-                    "By submitting this form, you agree to LifeLine HealthCare’s T&C",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-
+            _formCard(theme),
             const SizedBox(height: 25),
-
-            /// ---------------- DOCTOR GLASS CARD ----------------
-            _glassDoctorCard(),
-
+            _glassDoctorCard(theme),
             const SizedBox(height: 30),
           ],
         ),
@@ -202,17 +66,166 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
     );
   }
 
-  /// ----------------------------------------------------------------------
-  /// PREMIUM TEXT FIELD
-  /// ----------------------------------------------------------------------
+  Widget _headerRow(ThemeData theme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Row(
+          children: [
+            Text(
+              "LifeLine ",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              "HealthCare",
+              style: TextStyle(
+                fontSize: 18,
+                color: Color(0xffFFB956),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+        _callNowButton(theme),
+      ],
+    );
+  }
+
+  Widget _callNowButton(ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        border: Border.all(color: theme.colorScheme.secondary, width: 1.4),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(25),
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Icon(Icons.call, size: 16, color: theme.colorScheme.secondary),
+                const SizedBox(width: 6),
+                Text(
+                  "Call Now",
+                  style: TextStyle(
+                    color: theme.colorScheme.secondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _formCard(ThemeData theme) {
+    var theme = Theme.of(context);
+    var isDark = theme.brightness == Brightness.dark;
+    var provider = Provider.of<SurgeryProvider>(context);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.cardColor.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withOpacity(0.2)
+                  : Colors.grey.withOpacity(0.2),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: theme.shadowColor.withOpacity(0.05),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Text(
+                "Book an appointment with the best surgeons\nfor your health needs.",
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 25),
+              _premiumTextField(theme, provider.testNameController, "Name"),
+              const SizedBox(height: 14),
+              _premiumTextField(
+                theme,
+                provider.testPhoneNoController,
+                "Phone Number",
+                keyboard: TextInputType.phone,
+              ),
+              const SizedBox(height: 14),
+              _premiumDropdown(
+                theme: theme,
+                hint: "Surgery Type",
+                value: selectedSurgery,
+                items: surgeryTypes,
+                onChanged: (v) => setState(() => selectedSurgery = v),
+              ),
+              const SizedBox(height: 14),
+              _premiumTextField(
+                theme,
+                provider.testDescriptionController,
+                "Description",
+                maxLines: 4,
+              ),
+              const SizedBox(height: 22),
+              Consumer<SurgeryProvider>(
+                builder: (BuildContext context, value, Widget? child) {
+                  return _gradientButton(
+                    theme,
+                    title: "Book Appointment",
+                    icon: Icons.phone,
+                    onTap: () {
+                      value.addSurgeryDataProvider(context);
+                    },
+                  );
+                },
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "By submitting this form, you agree to LifeLine HealthCare’s T&C",
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.hintColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _premiumTextField(
+    ThemeData theme,
+    TextEditingController controller,
     String hint, {
     TextInputType keyboard = TextInputType.text,
+    int maxLines = 1,
   }) {
     return Container(
-      decoration: _inputDecoration(),
+      decoration: _inputDecoration(theme),
       child: TextField(
+        controller: controller,
         keyboardType: keyboard,
+        maxLines: maxLines,
+        style: theme.textTheme.bodyMedium,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
@@ -220,16 +233,16 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
           ),
           border: InputBorder.none,
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey.shade500),
+          hintStyle: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.hintColor,
+          ),
         ),
       ),
     );
   }
 
-  /// ----------------------------------------------------------------------
-  /// PREMIUM DROPDOWN
-  /// ----------------------------------------------------------------------
   Widget _premiumDropdown({
+    required ThemeData theme,
     required String hint,
     required String? value,
     required List<String> items,
@@ -237,11 +250,14 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: _inputDecoration(),
+      decoration: _inputDecoration(theme),
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
           isExpanded: true,
-          hint: Text(hint, style: TextStyle(color: Colors.grey.shade600)),
+          hint: Text(
+            hint,
+            style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
+          ),
           value: value,
           items: items
               .map((e) => DropdownMenuItem(value: e, child: Text(e)))
@@ -252,17 +268,14 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
     );
   }
 
-  /// ----------------------------------------------------------------------
-  /// SOFT NEUMORPHIC DECORATION
-  /// ----------------------------------------------------------------------
-  BoxDecoration _inputDecoration() {
+  BoxDecoration _inputDecoration(ThemeData theme) {
     return BoxDecoration(
-      color: Colors.white,
+      color: theme.cardColor,
       borderRadius: BorderRadius.circular(14),
-      border: Border.all(color: Colors.grey.shade300),
+      border: Border.all(color: theme.dividerColor),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.04),
+          color: theme.shadowColor.withOpacity(0.03),
           blurRadius: 8,
           offset: const Offset(0, 3),
         ),
@@ -270,10 +283,8 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
     );
   }
 
-  /// ----------------------------------------------------------------------
-  /// GRADIENT BUTTON
-  /// ----------------------------------------------------------------------
-  Widget _gradientButton({
+  Widget _gradientButton(
+    ThemeData theme, {
     required String title,
     required IconData icon,
     required VoidCallback onTap,
@@ -285,12 +296,12 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: const LinearGradient(
-            colors: [Color(0xff009688), Color(0xff00796B)],
+          gradient: LinearGradient(
+            colors: [Color(0xff26A69A), Color(0xff00796B)],
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.20),
+              color: theme.shadowColor.withOpacity(0.15),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -299,14 +310,14 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white),
+            Icon(icon, color: theme.colorScheme.onPrimary),
             const SizedBox(width: 8),
             Text(
               title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onPrimary,
                 fontWeight: FontWeight.w600,
+                fontSize: 16,
               ),
             ),
           ],
@@ -315,18 +326,15 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
     );
   }
 
-  /// ----------------------------------------------------------------------
-  /// GLASSMORPHISM DOCTOR CARD
-  /// ----------------------------------------------------------------------
-  Widget _glassDoctorCard() {
+  Widget _glassDoctorCard(ThemeData theme) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.55),
+            color: theme.cardColor.withOpacity(0.55),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.white.withOpacity(0.3)),
             boxShadow: [
@@ -339,7 +347,6 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
           ),
           child: Column(
             children: [
-              /// Images
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
@@ -359,37 +366,28 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 18),
-
-              const Text(
+              Text(
                 "Our top surgeons are ready to help you.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-
               const SizedBox(height: 4),
-
-              const Text(
+              Text(
                 "Available now to answer all your queries",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 13, color: Colors.black54),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.hintColor,
+                ),
               ),
-
               const SizedBox(height: 16),
-
-              /// CALL NOW BUTTON
               _gradientButton(
+                theme,
                 title: "Call Now",
                 icon: Icons.call,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MedicineDetailsScreen(),
-                    ),
-                  );
-                },
+                onTap: () {},
               ),
             ],
           ),
