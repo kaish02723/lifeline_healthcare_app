@@ -32,16 +32,13 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            /// ====================== WAVE BACKGROUND ======================
             Stack(
               children: [
-                /// Bottom Wave
                 ClipPath(
                   clipper: LowerWaveClipper(),
                   child: Container(height: 300, color: const Color(0xFF009688)),
                 ),
 
-                /// Top Curve (Mirrored)
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(3.1416),
@@ -54,7 +51,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   ),
                 ),
 
-                /// ====================== MAIN CONTENT ======================
                 Padding(
                   padding: const EdgeInsets.only(top: 330),
                   child: Form(
@@ -82,7 +78,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                         const SizedBox(height: 30),
 
-                        /// ====================== PIN INPUT ======================
                         Pinput(
                           length: 6,
                           controller: provider.otp,
@@ -131,7 +126,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                         const SizedBox(height: 18),
 
-                        /// ====================== TIMER + RESEND ======================
                         ValueListenableBuilder(
                           valueListenable: provider.timerValue,
                           builder: (context, value, _) {
@@ -150,7 +144,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 GestureDetector(
                                   onTap: value == 0
                                       ? () {
-                                          provider.resendOtp(widget.phone);
+                                          provider.resendOtp(
+                                            widget.phone,
+                                            context,
+                                          );
                                           HapticFeedback.mediumImpact();
                                         }
                                       : null,
@@ -172,7 +169,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                         const SizedBox(height: 30),
 
-                        /// ====================== VERIFY BUTTON ======================
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,

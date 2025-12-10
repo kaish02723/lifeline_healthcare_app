@@ -140,7 +140,6 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
                       const SizedBox(height: 10),
 
-                      // ---------------- LOGIN BUTTON ----------------
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 15,
@@ -148,11 +147,9 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            var data = {
-                              'phone': '+91${provider.phoneController.text}',
-                            };
+
                             if (provider.formKey.currentState!.validate()) {
-                              provider.sendOtp(data, context);
+                              provider.sendOtp(context);
                             } else {
                               HapticFeedback.mediumImpact();
                             }
@@ -223,9 +220,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   }
 }
 
-//
 //  UPPER CURVE
-//
 class UpperWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -253,9 +248,6 @@ class UpperWaveClipper extends CustomClipper<Path> {
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
 
-//
-// LOWER CURVE
-//
 class LowerWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
