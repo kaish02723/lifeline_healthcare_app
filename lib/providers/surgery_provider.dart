@@ -14,9 +14,12 @@ class SurgeryProvider with ChangeNotifier {
 
   List<BookSurgeryModel> surgeryList = [];
 
-  Future<void> getSurgeryDataProvider() async {
+  Future<void> getSurgeryDataProvider(BuildContext context) async {
+    var authProvider=Provider.of<AuthProvider>(context,listen: false);
+    var user_Id=authProvider.userId;
+
     SurgeryService api = SurgeryService();
-    await api.getSurgeryData();
+    await api.getSurgeryData(user_Id??'');
 
     surgeryList = api.getSurgeryList;
     notifyListeners();

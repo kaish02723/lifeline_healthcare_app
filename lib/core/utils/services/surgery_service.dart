@@ -10,8 +10,8 @@ class SurgeryService {
 
   // ApiHelperSurgery();
 
-  Future<void> getSurgeryData() async {
-    var response = await http.get(Uri.parse("$baseUrl/surgery/all_details"));
+  Future<void> getSurgeryData(String user_Id) async {
+    var response = await http.get(Uri.parse("$baseUrl/surgery/details/$user_Id"));
 
     // print(response.body);
     // print(response.request?.headers);

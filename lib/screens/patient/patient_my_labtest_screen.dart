@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
 
@@ -44,11 +45,13 @@ class _MyTestScreenState extends State<MyTestScreen> {
 
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: h * 0.02),
+          padding: EdgeInsets.symmetric(
+            horizontal: w * 0.04,
+            vertical: h * 0.02,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // -------------------- TOP BOX ---------------------
               Container(
                 padding: EdgeInsets.all(w * 0.05),
@@ -57,13 +60,13 @@ class _MyTestScreenState extends State<MyTestScreen> {
                   gradient: LinearGradient(
                     colors: isDark
                         ? [
-                      Colors.white.withOpacity(0.08),
-                      Colors.white.withOpacity(0.04),
-                    ]
+                            Colors.white.withOpacity(0.08),
+                            Colors.white.withOpacity(0.04),
+                          ]
                         : [
-                      Colors.white.withOpacity(0.90),
-                      Colors.white.withOpacity(0.70),
-                    ],
+                            Colors.white.withOpacity(0.90),
+                            Colors.white.withOpacity(0.70),
+                          ],
                   ),
                   border: Border.all(
                     color: isDark
@@ -82,7 +85,11 @@ class _MyTestScreenState extends State<MyTestScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info_outline, color: Colors.orange, size: 28),
+                    const Icon(
+                      Icons.info_outline,
+                      color: Colors.orange,
+                      size: 28,
+                    ),
                     SizedBox(width: w * 0.03),
                     Expanded(
                       child: Text(
@@ -134,6 +141,17 @@ class _MyTestScreenState extends State<MyTestScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xff00796B),
+        foregroundColor: Colors.white,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PatientLabTestScreen()),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
