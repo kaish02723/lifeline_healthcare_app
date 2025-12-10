@@ -69,6 +69,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
+              decoration: BoxDecoration(
+                // color: Color(0xfffefefe)
+              ),
               child: Row(
                 children: [
                   GestureDetector(

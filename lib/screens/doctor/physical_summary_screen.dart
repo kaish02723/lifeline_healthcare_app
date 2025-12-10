@@ -31,7 +31,11 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.back, size: 23, color: isDark ? Colors.white : Colors.black87),
+          icon: Icon(
+            CupertinoIcons.back,
+            size: 23,
+            color: isDark ? Colors.white : Colors.black87,
+          ),
         ),
       ),
       body: ListView(
@@ -39,9 +43,73 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
           _topBox(isDark, w, h),
           const SizedBox(height: 7),
           _languageBox(isDark, w),
-          const SizedBox(height: 7),
-          _placeholderBox(isDark),
+          const SizedBox(height: 15),
+          _dataAndPrivacyBox(isDark, w),
+          const SizedBox(height: 20),
         ],
+      ),
+      bottomNavigationBar: Container(
+        height: 120,
+        decoration: BoxDecoration(
+          color: isDark ? Colors.grey[900] : Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withOpacity(0.35)
+                  : Colors.grey.withOpacity(0.20),
+              offset: const Offset(0, -2),
+              blurRadius: 8,
+            ),
+          ],
+          border: Border(
+            top: BorderSide(
+              color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+              width: 0.8,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Pay with: UPI, GooglePay, PhonePay etc.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark
+                          ? Colors.grey.shade300
+                          : Colors.grey.shade500,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    'Secure Payment',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: isDark
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              _gradientButton(
+                color: isDark ? Colors.white : CupertinoColors.white,
+                Theme.of(context),
+                title: '₹499 | Pay & Consult',
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -63,7 +131,9 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark ? Colors.black.withOpacity(0.3) : Colors.grey.withOpacity(0.2),
+                  color: isDark
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: Offset(2, 3),
                 ),
@@ -127,14 +197,16 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
         "role": "Counselling Psychologist",
         "experience": "18 years experience",
         "consultations": "9054 consultations",
-        "img": "https://www.shutterstock.com/image-photo/close-head-shot-portrait-preppy-600nw-1433809418.jpg",
+        "img":
+            "https://www.shutterstock.com/image-photo/close-head-shot-portrait-preppy-600nw-1433809418.jpg",
       },
       {
         "name": "Mr. Ramesh",
         "role": "Counselling Psychologist",
         "experience": "11 years experience",
         "consultations": "4120 consultations",
-        "img": "https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129417.jpg?semt=ais_hybrid&w=740&q=80",
+        "img":
+            "https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129417.jpg?semt=ais_hybrid&w=740&q=80",
       },
     ];
 
@@ -157,20 +229,30 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                     SizedBox(height: 20),
                     Text(
                       doctor['name']!,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: isDark ? Colors.white : Colors.black87),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                     ),
                     SizedBox(height: 5),
                     Text(
                       doctor['role']!,
-                      style: TextStyle(color: isDark ? Colors.white70 : Color(0xff555555)),
+                      style: TextStyle(
+                        color: isDark ? Colors.white70 : Color(0xff555555),
+                      ),
                     ),
                     Text(
                       doctor['experience']!,
-                      style: TextStyle(color: isDark ? Colors.white70 : Color(0xff555555)),
+                      style: TextStyle(
+                        color: isDark ? Colors.white70 : Color(0xff555555),
+                      ),
                     ),
                     Text(
                       doctor['consultations']!,
-                      style: TextStyle(color: isDark ? Colors.white70 : Color(0xff555555)),
+                      style: TextStyle(
+                        color: isDark ? Colors.white70 : Color(0xff555555),
+                      ),
                     ),
                   ],
                 ),
@@ -201,7 +283,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               color: isDark ? Colors.white12 : Colors.white.withOpacity(0.9),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                  color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: isDark
@@ -217,12 +300,19 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               children: [
                 Text(
                   'Choose your preferred language',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: isDark ? Colors.white : Colors.black87),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   'We will try to find doctors who can speak the language.',
-                  style: TextStyle(fontSize: 13, color: isDark ? Colors.white70 : Colors.grey.shade600),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: isDark ? Colors.white70 : Colors.grey.shade600,
+                  ),
                 ),
                 const SizedBox(height: 15),
                 Wrap(
@@ -232,6 +322,87 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                     _languageChip("हिन्दी", isDark),
                   ],
                 ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _dataAndPrivacyBox(bool isDark, double w) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: w * 0.04),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: EdgeInsets.all(w * 0.04),
+            decoration: BoxDecoration(
+              color: isDark ? Colors.white12 : Colors.white.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.grey.withOpacity(0.2),
+                  blurRadius: 6,
+                  offset: Offset(2, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  spacing: 5,
+                  children: [
+                    Icon(Icons.lock, size: 18, color: Colors.grey.shade600),
+                    Text(
+                      'Data and Privacy',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: isDark ? Colors.white : Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'The contents of your consultations are private and confidential. Lifeline Healthcare`s medical team may carry out routine anonymised audits to improve service quality.',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: isDark ? Colors.white70 : Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            'By proceeding to avail a consultation, you agree to ',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: isDark ? Colors.white70 : Colors.grey.shade600,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'Lifeline Healthcare`s Terms of use.',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: isDark ? Colors.white70 : Colors.teal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 7),
               ],
             ),
           ),
@@ -270,4 +441,46 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
       margin: EdgeInsets.symmetric(horizontal: 16),
     );
   }
+}
+
+Widget _gradientButton(
+  ThemeData theme, {
+  required Color color,
+  required String title,
+  required VoidCallback onTap,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      height: 47,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient: LinearGradient(
+          colors: [Color(0xff26A69A), Color(0xff00796B)],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withOpacity(0.15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // const SizedBox(width: 8),
+          Text(
+            title,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
