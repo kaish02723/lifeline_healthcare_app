@@ -1,206 +1,140 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class NotifactionScreen extends StatefulWidget {
-  const NotifactionScreen({super.key});
+class NotificationGlassScreen extends StatelessWidget {
+  const NotificationGlassScreen({super.key});
 
-  @override
-  State<NotifactionScreen> createState() => _NotifactionScreenState();
-}
-
-class _NotifactionScreenState extends State<NotifactionScreen> {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Color(0xfff5f5f5),
+      extendBodyBehindAppBar: true,
+      backgroundColor: isDark ? Colors.black : Colors.white,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Icon(Icons.arrow_back, color: Colors.white),
+          child: Icon(Icons.arrow_back,
+              color: isDark ? Colors.white : Colors.black),
         ),
         title: Text(
           "Notification",
           style: TextStyle(
-            color: Colors.white,
+            color: isDark ? Colors.white : Colors.black,
             fontSize: 20,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: Colors.teal,
-        centerTitle: true,
       ),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          // TOP TAB
+          // Background gradient
           Container(
-            width: double.infinity,
-            color: Color(0xfff5f5f5),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: Text(
-              'All',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: isDark
+                    ? [Colors.black, Colors.grey.shade900]
+                    : [Colors.teal.shade50, Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
 
-          SizedBox(height: 10),
-
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                Container(
-                  padding: EdgeInsets.all(14),
-                  margin: EdgeInsets.only(bottom: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade50,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.campaign,
-                          color: Colors.red,
-                          size: 22,
-                        ),
-                      ),
-
-                      SizedBox(width: 12),
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Your Test report is ready",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "2 min ago",
-                                  style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 6),
-
-                            Text(
-                              "Recently you had apply for liver test test is ready.",
-                              style: TextStyle(
-                                fontSize: 13.5,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Container(
-                  padding: EdgeInsets.all(14),
-                  margin: EdgeInsets.only(bottom: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade50,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.campaign,
-                          color: Colors.red,
-                          size: 22,
-                        ),
-                      ),
-
-                      SizedBox(width: 12),
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Book your doctor now",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "10 min ago",
-                                  style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 6),
-
-                            Text(
-                              "Now you can book doctors from   this app.",
-                              style: TextStyle(
-                                fontSize: 13.5,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          ListView(
+            padding: const EdgeInsets.only(top: 100, left: 16, right: 16),
+            children: [
+              _glassTile(
+                isDark,
+                title: "Your Test report is ready",
+                time: "2 min ago",
+                msg: "Recently you applied for a liver test. Test is ready.",
+              ),
+              _glassTile(
+                isDark,
+                title: "Book your doctor now",
+                time: "10 min ago",
+                msg: "You can now book doctors from this app.",
+              ),
+            ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _glassTile(bool isDark,
+      {required String title, required String time, required String msg}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 18),
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color:
+            (isDark ? Colors.white10 : Colors.white.withOpacity(0.4)),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+                color: Colors.white.withOpacity(0.4), width: 1),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _iconBox(),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Text(title,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color:
+                                    isDark ? Colors.white : Colors.black,
+                                  ))),
+                          Text(time,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: isDark
+                                      ? Colors.white70
+                                      : Colors.black54)),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(msg,
+                          style: TextStyle(
+                            fontSize: 13.5,
+                            color: isDark
+                                ? Colors.white70
+                                : Colors.black87,
+                          )),
+                    ]),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _iconBox() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.red.withOpacity(0.15),
+      ),
+      child: const Icon(Icons.notifications_active, color: Colors.red),
     );
   }
 }

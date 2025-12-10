@@ -220,7 +220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotifactionScreen()),
+                MaterialPageRoute(builder: (context) => NotificationGlassScreen()),
               );
             },
             icon: const Badge(

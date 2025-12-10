@@ -29,7 +29,7 @@ class _UsersDetailsState extends State<UsersDetails> {
         foregroundColor: Colors.teal,
         automaticallyImplyLeading: false,
         elevation: 0,
-        title: const Text('Your Details'),
+        title: const Text('Complete your profile'),
         actions: [
           GestureDetector(
             onTap: () {
