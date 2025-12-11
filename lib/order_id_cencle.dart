@@ -51,13 +51,13 @@ class OrderIdTrackingScreen extends StatelessWidget {
                           SizedBox(
                             width: double.infinity,
 
-                            child: ElevatedButton(
+                            child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor:Colors.teal),
                               onPressed: () {
                                 Navigator.pop(context);
                                 // Yaha apna support screen navigate karna
                                 // Navigator.push(context, MaterialPageRoute(builder: (_) => SupportPage()));
                               },
-                              child: Text("Help & Support",style: TextStyle(fontSize: 17),),
+                              child: Text("Help & Support",style: TextStyle(fontSize: 17,color: Colors.white),),
                             ),
                           ),
 
@@ -66,11 +66,11 @@ class OrderIdTrackingScreen extends StatelessWidget {
                           /// Cancel Button
                           SizedBox(
                             width: double.infinity,
-                            child: OutlinedButton(
+                            child: OutlinedButton(style: ElevatedButton.styleFrom(backgroundColor:Colors.teal),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(" Order Cancel",style: TextStyle(fontSize: 17),),
+                              child: Text(" Order Cancel",style: TextStyle(fontSize: 17,color: Colors.white),),
                             ),
                           ),
                         ],
