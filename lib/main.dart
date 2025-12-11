@@ -10,13 +10,10 @@ import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_pro
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
-import 'package:lifeline_healthcare_app/screens/auth/verify_otp_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:lifeline_healthcare_app/screens/splash/splash_screen.dart';
-import 'package:lifeline_healthcare_app/widgets/network_wraper.dart';
 import 'package:provider/provider.dart';
 
-import 'config/app_theme.dart';
 import 'config/app_theme_colors.dart';
 
 void main() {
