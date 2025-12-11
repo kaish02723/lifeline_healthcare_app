@@ -22,6 +22,17 @@ class AuthProvider with ChangeNotifier {
   ValueNotifier<int> timerValue = ValueNotifier(60);
   Timer? _timer;
 
+  // NEW VALUE NOTIFIER FOR BUTTON COLOR
+  ValueNotifier<bool> isPhoneValid = ValueNotifier(false);
+
+  AuthProvider() {
+    phoneController.addListener(_validatePhone);
+  }
+
+  void _validatePhone() {
+    isPhoneValid.value = phoneRegex.hasMatch(phoneController.text);
+  }
+
   String? userId;
   String? token;
 
@@ -120,9 +131,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> verifyOtp(
-    Map<String, dynamic> data,
-    BuildContext context,
-  ) async {
+      Map<String, dynamic> data,
+      BuildContext context,
+      ) async {
     try {
       var userDetailProvider = Provider.of<GetUserDetailProvider>(
         context,
@@ -154,9 +165,9 @@ class AuthProvider with ChangeNotifier {
 
         bool isProfileComplete =
             user?.name != null &&
-            user!.name!.isNotEmpty &&
-            user.email != null &&
-            user.email!.isNotEmpty;
+                user!.name!.isNotEmpty &&
+                user.email != null &&
+                user.email!.isNotEmpty;
 
         if (!context.mounted) return;
 
@@ -202,7 +213,7 @@ class AuthProvider with ChangeNotifier {
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/phone_auth_screen',
-      (route) => false,
+          (route) => false,
     );
 
     notifyListeners();
