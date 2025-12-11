@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
@@ -30,7 +31,6 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final PageController _offerController = PageController();
   String selectedLanguage = "English";
   int _offerPage = 0;
 
@@ -45,11 +45,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context,
       listen: false,
     ).getUserDetail(context);
+    startOfferAutoScroll(context);
   }
 
   @override
   void dispose() {
-    _offerController.dispose();
+    Provider.of<DashBoardProvider>(context).offerController.dispose();
     super.dispose();
   }
 
@@ -57,7 +58,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     var provider = Provider.of<GetUserDetailProvider>(context);
     var userData = provider.user;
-
+    var dashBoardProvider=Provider.of<DashBoardProvider>(context);
+    
     return Scaffold(
       backgroundColor: Theme.of(context).brightness == Brightness.light
           ? Color(0xffefefef)
@@ -220,7 +222,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotificationGlassScreen()),
+                MaterialPageRoute(
+                  builder: (context) => NotificationGlassScreen(),
+                ),
               );
             },
             icon: const Badge(
@@ -398,9 +402,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       height: 170,
                       width: double.infinity,
                       child: PageView(
-                        controller: _offerController,
+                        controller: dashBoardProvider.offerController,
                         onPageChanged: (index) {
-                          setState(() => _offerPage = index);
+                          dashBoardProvider.updatePage(index);
                         },
                         children: [
                           OfferBanner(
@@ -424,7 +428,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 10),
 
                 SmoothPageIndicator(
-                  controller: _offerController,
+                  controller: dashBoardProvider.offerController,
                   count: 3,
                   effect: const ExpandingDotsEffect(
                     activeDotColor: Color(0xff00796B),
