@@ -25,9 +25,6 @@ class AuthProvider with ChangeNotifier {
   String? userId;
   String? token;
 
-  // ---------------------------------------------------------
-  // SAVE USER ID
-  // ---------------------------------------------------------
   Future<void> saveUserId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("userId", id);
@@ -35,9 +32,6 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // ---------------------------------------------------------
-  // SAVE TOKEN
-  // ---------------------------------------------------------
   Future<void> saveToken(String t) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("token", t);
@@ -45,18 +39,12 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // ---------------------------------------------------------
-  // GET TOKEN
-  // ---------------------------------------------------------
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
     return token;
   }
 
-  // ---------------------------------------------------------
-  // START OTP TIMER
-  // ---------------------------------------------------------
   void startTimer() {
     timerValue.value = 60;
     _timer?.cancel();
@@ -73,9 +61,6 @@ class AuthProvider with ChangeNotifier {
     _timer?.cancel();
   }
 
-  // ---------------------------------------------------------
-  // SEND OTP
-  // ---------------------------------------------------------
   Future<void> sendOtp(BuildContext context) async {
     try {
       final res = await http.post(
@@ -103,15 +88,12 @@ class AuthProvider with ChangeNotifier {
       }
     } catch (e) {
       print("SEND OTP ERROR: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Something went wrong")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
     }
   }
 
-  // ---------------------------------------------------------
-  // RESEND OTP
-  // ---------------------------------------------------------
   Future<void> resendOtp(String phone, BuildContext context) async {
     try {
       final res = await http.post(
@@ -137,14 +119,15 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // ---------------------------------------------------------
-  // VERIFY OTP
-  // ---------------------------------------------------------
   Future<void> verifyOtp(
-      Map<String, dynamic> data, BuildContext context) async {
+    Map<String, dynamic> data,
+    BuildContext context,
+  ) async {
     try {
-      var userDetailProvider =
-      Provider.of<GetUserDetailProvider>(context, listen: false);
+      var userDetailProvider = Provider.of<GetUserDetailProvider>(
+        context,
+        listen: false,
+      );
 
       final response = await http.post(
         Uri.parse('$authUrl/verify-otp'),
@@ -171,9 +154,9 @@ class AuthProvider with ChangeNotifier {
 
         bool isProfileComplete =
             user?.name != null &&
-                user!.name!.isNotEmpty &&
-                user.email != null &&
-                user.email!.isNotEmpty;
+            user!.name!.isNotEmpty &&
+            user.email != null &&
+            user.email!.isNotEmpty;
 
         if (!context.mounted) return;
 
@@ -186,17 +169,15 @@ class AuthProvider with ChangeNotifier {
           );
         }
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Invalid OTP")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Invalid OTP")));
       }
     } catch (e) {
       print("VERIFY OTP ERROR: $e");
     }
   }
 
-  // ---------------------------------------------------------
-  // CHECK LOGIN STATUS
-  // ---------------------------------------------------------
   Future<bool> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -206,9 +187,6 @@ class AuthProvider with ChangeNotifier {
     return token != null && token!.isNotEmpty;
   }
 
-  // ---------------------------------------------------------
-  // LOGOUT
-  // ---------------------------------------------------------
   Future<void> logout(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -224,7 +202,7 @@ class AuthProvider with ChangeNotifier {
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/phone_auth_screen',
-          (route) => false,
+      (route) => false,
     );
 
     notifyListeners();

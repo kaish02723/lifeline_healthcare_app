@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
@@ -115,7 +117,7 @@ class _MyTestScreenState extends State<MyTestScreen> {
                         padding: const EdgeInsets.only(top: 240),
                         child: MedicalHeartECGLoader(
                           width: 320,
-                          color: Colors.teal.shade100,
+                          color: Colors.grey,
                         ),
                       ),
                     );
@@ -133,6 +135,13 @@ class _MyTestScreenState extends State<MyTestScreen> {
                         phone: testData.phone.toString(),
                         category: testData.category.toString(),
                         status: testData.status.toString(),
+                        onCancel: () {
+                          showCancelDialog(
+                            context,
+                            onConfirm: () {},
+                            onCancel: () {},
+                          );
+                        },
                       );
                     },
                   );
@@ -155,4 +164,128 @@ class _MyTestScreenState extends State<MyTestScreen> {
       ),
     );
   }
+}
+
+void showCancelDialog(
+  BuildContext context, {
+  required VoidCallback onConfirm,
+  required VoidCallback onCancel,
+}) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color:
+                    (isDark
+                            ? Colors.white.withOpacity(0.07)
+                            : Colors.white.withOpacity(0.55))
+                        .withOpacity(0.6),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withOpacity(0.15)
+                      : Colors.black.withOpacity(0.10),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 50,
+                    color: Colors.redAccent,
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Text(
+                    "Cancel Test?",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    "Are you sure you want to cancel this test?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: isDark
+                          ? Colors.white70
+                          : Colors.black.withOpacity(0.7),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  Row(
+                    children: [
+                      // ✖ NO BUTTON
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade500,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onCancel(); // ⬅ Call custom action
+                          },
+                          child: const Text(
+                            "No",
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 12),
+
+                      // ✔ YES BUTTON
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onConfirm(); // ⬅ Call custom action
+                          },
+                          child: const Text(
+                            "Yes, Cancel",
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

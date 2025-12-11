@@ -47,7 +47,7 @@ class BookTestProvider with ChangeNotifier {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     var user_Id = authProvider.userId;
 
-    print('User id is : $user_Id');
+    // print('User id is : $user_Id');
 
     if (user_Id == null || user_Id.toString().isEmpty) {
       print("ERROR: USER ID is NULL");
