@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/auth/verify_otp_screen.dart';
-import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:provider/provider.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
@@ -98,7 +97,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                   width: 25,
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        'https://img.freepik.com/premium-photo/india-national-fabric-flag_113767-1933.jpg?semt=ais_hybrid&w=740&q=80',
+                                    'https://img.freepik.com/premium-photo/india-national-fabric-flag_113767-1933.jpg?semt=ais_hybrid&w=740&q=80',
                                   ),
                                 ),
                                 const SizedBox(width: 6),
@@ -140,43 +139,61 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
                       const SizedBox(height: 10),
 
+                      /// ==============================
+                      /// SEND OTP BUTTON (UPDATED)
+                      /// ==============================
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 20,
                         ),
-                        child: GestureDetector(
-                          onTap: () {
-
-                            if (provider.formKey.currentState!.validate()) {
-                              provider.sendOtp(context);
-                            } else {
-                              HapticFeedback.mediumImpact();
-                            }
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            height: 50,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(9),
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF00796B), Color(0xFF26A69A)],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Send OTP",
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                        child: ValueListenableBuilder<bool>(
+                          valueListenable: provider.isPhoneValid,
+                          builder: (context, isValid, _) {
+                            return GestureDetector(
+                              onTap: isValid
+                                  ? () {
+                                if (provider.formKey.currentState!
+                                    .validate()) {
+                                  provider.sendOtp(context);
+                                } else {
+                                  HapticFeedback.mediumImpact();
+                                }
+                              }
+                                  : null,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(9),
+                                  gradient: LinearGradient(
+                                    colors: isValid
+                                        ? [
+                                      Color(0xFF00796B),
+                                      Color(0xFF26A69A)
+                                    ]
+                                        : [
+                                      Colors.grey.shade400,
+                                      Colors.grey.shade500
+                                    ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Send OTP",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
                       ),
 
@@ -204,15 +221,6 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                 ),
               ),
             ),
-            // Positioned(
-            //   top: 280,
-            //   left: 20,
-            //   child: Image.asset(
-            //     'images/injection_img.png',
-            //     width: 40,
-            //     height: 40,
-            //   ),
-            // ),
           ],
         ),
       ),
