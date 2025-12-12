@@ -92,7 +92,7 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                   Text(
                     'Secure Payment',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       color: isDark
                           ? Colors.grey.shade400
                           : Colors.grey.shade600,
