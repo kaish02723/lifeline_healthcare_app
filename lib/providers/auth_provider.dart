@@ -131,9 +131,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> verifyOtp(
-      Map<String, dynamic> data,
-      BuildContext context,
-      ) async {
+    Map<String, dynamic> data,
+    BuildContext context,
+  ) async {
     try {
       var userDetailProvider = Provider.of<GetUserDetailProvider>(
         context,
@@ -165,9 +165,9 @@ class AuthProvider with ChangeNotifier {
 
         bool isProfileComplete =
             user?.name != null &&
-                user!.name!.isNotEmpty &&
-                user.email != null &&
-                user.email!.isNotEmpty;
+            user!.name!.isNotEmpty &&
+            user.email != null &&
+            user.email!.isNotEmpty;
 
         if (!context.mounted) return;
 
@@ -213,7 +213,7 @@ class AuthProvider with ChangeNotifier {
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/phone_auth_screen',
-          (route) => false,
+      (route) => false,
     );
 
     notifyListeners();
