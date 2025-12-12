@@ -19,7 +19,16 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Timer start hota rahe
     Provider.of<AuthProvider>(context, listen: false).startTimer();
+
+    // OTP change hote hi UI update ho
+    Provider.of<AuthProvider>(context, listen: false)
+        .otp
+        .addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -144,12 +153,12 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 GestureDetector(
                                   onTap: value == 0
                                       ? () {
-                                          provider.resendOtp(
-                                            widget.phone,
-                                            context,
-                                          );
-                                          HapticFeedback.mediumImpact();
-                                        }
+                                    provider.resendOtp(
+                                      widget.phone,
+                                      context,
+                                    );
+                                    HapticFeedback.mediumImpact();
+                                  }
                                       : null,
                                   child: Text(
                                     "Resend OTP",
@@ -169,13 +178,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                         const SizedBox(height: 30),
 
+                        // =============================== VERIFY BUTTON ===============================
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 15,
                           ),
                           child: GestureDetector(
-                            onTap: () {
+                            onTap: provider.otp.text.length == 6
+                                ? () {
                               if (provider.otpFormKey.currentState!
                                   .validate()) {
                                 var data = {
@@ -185,16 +196,22 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 provider.verifyOtp(data, context);
                                 HapticFeedback.heavyImpact();
                               }
-                            },
+                            }
+                                : null, // DISABLE when less than 6 digits
                             child: Container(
                               height: 50,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(9),
-                                gradient: const LinearGradient(
-                                  colors: [
+                                gradient: LinearGradient(
+                                  colors: provider.otp.text.length == 6
+                                      ? const [
                                     Color(0xFF009688),
                                     Color(0xFF00796B),
+                                  ]
+                                      : [
+                                    Colors.grey,
+                                    Colors.grey,
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -213,6 +230,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                           ),
                         ),
+                        // ==========================================================================
 
                         const SizedBox(height: 15),
                       ],
@@ -228,7 +246,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   }
 }
 
-/// ====================== SAME CLIPPERS YOU USED ======================
 class UpperWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
