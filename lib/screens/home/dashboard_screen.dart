@@ -9,6 +9,7 @@ import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_category_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
@@ -202,20 +203,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         centerTitle: true,
-        title: Text(
-          'Lifeline HealthCare',
-          style: GoogleFonts.nunito(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-            shadows: [
-              Shadow(
-                color: Color(0xffFFCC00),
-                blurRadius: 3,
-                offset: Offset(1, 1),
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 13),
+              child: Text(
+                'Lifeline',
+                style: GoogleFonts.nunito(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  shadows: [
+                    Shadow(
+                      color: Color(0xFF5C3A00),
+                      blurRadius: 3,
+                      offset: Offset(1, 1),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),SizedBox(width: 8),
+            Text("HealthCare",style: GoogleFonts.nunito(
+              color: Color(0xFFFFC107),
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+              shadows: [
+                Shadow(
+                  color: Color(0xFF5C3A00),
+                  blurRadius: 3,
+                  offset: Offset(1, 1)
+                )
+              ]
+            ),)
+          ],
         ),
         actions: [
           IconButton(
@@ -306,7 +326,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MedicineHomeScreen(),
+                              builder: (context) => MedicineCategoryScreen(),
                             ),
                           );
                         },

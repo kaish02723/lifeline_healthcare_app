@@ -139,7 +139,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: Colors.teal,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius:BorderRadius.circular(7),
+                    borderRadius: BorderRadiusGeometry.circular(7),
                   ),
                 ),
                 onPressed: () {
