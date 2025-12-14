@@ -6,14 +6,14 @@ import 'book_in_clinic_appointment.dart';
 
 import 'book_video_consultation_screen.dart';
 
-class AppointmentScreen extends StatefulWidget {
-  const AppointmentScreen({super.key});
+class MyAppointmentScreen extends StatefulWidget {
+  const MyAppointmentScreen({super.key});
 
   @override
-  State<AppointmentScreen> createState() => _AppointmentScreenState();
+  State<MyAppointmentScreen> createState() => _MyAppointmentScreenState();
 }
 
-class _AppointmentScreenState extends State<AppointmentScreen> {
+class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

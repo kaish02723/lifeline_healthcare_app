@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/my_appointment_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
@@ -59,8 +60,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     var provider = Provider.of<GetUserDetailProvider>(context);
     var userData = provider.user;
-    var dashBoardProvider=Provider.of<DashBoardProvider>(context);
-    
+    var dashBoardProvider = Provider.of<DashBoardProvider>(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).brightness == Brightness.light
           ? Color(0xffefefef)
@@ -131,6 +132,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: const Text('Appointments'),
               onTap: () {
                 HapticFeedback.selectionClick();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyAppointmentScreen(),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -222,19 +229,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
-            ),SizedBox(width: 8),
-            Text("HealthCare",style: GoogleFonts.nunito(
-              color: Color(0xFFFFC107),
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-              shadows: [
-                Shadow(
-                  color: Color(0xFF5C3A00),
-                  blurRadius: 3,
-                  offset: Offset(1, 1)
-                )
-              ]
-            ),)
+            ),
+            SizedBox(width: 8),
+            Text(
+              "HealthCare",
+              style: GoogleFonts.nunito(
+                color: Color(0xFFFFC107),
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                shadows: [
+                  Shadow(
+                    color: Color(0xFF5C3A00),
+                    blurRadius: 3,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
         actions: [

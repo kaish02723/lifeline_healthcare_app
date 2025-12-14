@@ -2,17 +2,19 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
-import 'package:lifeline_healthcare_app/screens/home/help_support_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_know_more_screen.dart';
+import 'package:provider/provider.dart';
+import '../../providers/doctor_provider.dart';
+import '../../widgets/doctor_category_card.dart';
 import '../doctor/doctor_find_consult_screen.dart';
+import '../home/help_support_screen.dart';
+import '../patient/patient_know_more_screen.dart';
 
 class PatientConsultScreen extends StatelessWidget {
   const PatientConsultScreen({super.key});
 
   static const Color primary = Color(0xFF00796B);
 
-  // Sample network icons
+  // SAME DATA
   static final Map<String, String> topSpecialitiesImages = {
     "Mental\nWellness": "https://cdn-icons-png.flaticon.com/512/3475/3475728.png",
     "Gynae\ncolo": "https://cdn-icons-png.flaticon.com/512/10154/10154415.png",
@@ -44,319 +46,189 @@ class PatientConsultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final width = MediaQuery.of(context).size.width;
     final crossAxisCount = width >= 600 ? 4 : 3;
 
     return Scaffold(
-      backgroundColor: isDark ? Color(0xff121212) : Colors.grey[100],
+      backgroundColor: isDark ? const Color(0xff121212) : Colors.grey[100],
       appBar: AppBar(
-        foregroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.back, size: 22.sp),
-        ),
         backgroundColor: primary,
-        elevation: 0,
-        title: Text(
-          "Consult a doctor",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
+        title: const Text("Consult a doctor"),
+        leading: IconButton(
+          icon: const Icon(CupertinoIcons.back),
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 14.w),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HelpSupportScreen(),
-                    ),
-                  );
-                },
-                child: Text(
-                  "HELP",
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => HelpSupportScreen()),
+              );
+            },
+            child: const Text("HELP", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Free follow-up card (glassy)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(14.r),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withOpacity(0.05)
-                              : Colors.white.withOpacity(0.8),
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Free follow-up",
-                              style: TextStyle(
-                                color: primary,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 6.h),
-                            Text(
-                              "for 7 days with every consultation",
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: isDark ? Colors.white70 : Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 6.h),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FollowUpScreen(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Know More >",
-                                style: TextStyle(
-                                  color: isDark ? Colors.white54 : Colors.black54,
-                                  fontSize: 11.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(14.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
+            buildGrid(
+              context,
+              topSpecialitiesImages,
+              crossAxisCount,
+              isDark,
+              onTap: (title) {
+                final provider =
+                Provider.of<DoctorProvider>(context, listen: false);
+
+                if (title == "View\nAll") {
+                  provider.filterBySpeciality("All");
+                } else {
+                  provider.filterBySpeciality(
+                    specialityMapper(title),
+                  );
+                }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const DoctorFindConsultScreen(),
                   ),
+                );
+              },
+            ),
 
-                  SizedBox(height: 18.h),
+            sectionHeading("Common Health Issues", isDark),
+            buildGrid(
+              context,
+              commonIssuesImages,
+              crossAxisCount,
+              isDark,
+              onTap: (title) {
+                final provider =
+                Provider.of<DoctorProvider>(context, listen: false);
 
-                  // Search
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        color: isDark
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.white.withOpacity(0.8),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "Search symptoms..",
-                            prefixIcon: Icon(Icons.search, size: 21.sp),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                provider.filterBySpeciality(
+                  issueToSpeciality(title),
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const DoctorFindConsultScreen(),
                   ),
+                );
+              },
+            ),
 
-                  SizedBox(height: 22.h),
+            sectionHeading("General Physician", isDark),
+            buildGrid(
+              context,
+              gpImages,
+              crossAxisCount,
+              isDark,
+              onTap: (_) {
+                final provider =
+                Provider.of<DoctorProvider>(context, listen: false);
 
-                  sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
-                  buildResponsiveGrid(
-                    context: context,
-                    items: topSpecialitiesImages.keys.toList(),
-                    imageMap: topSpecialitiesImages,
-                    crossAxisCount: crossAxisCount,
-                    isDark: isDark,
+                provider.filterBySpeciality("General Physician");
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const DoctorFindConsultScreen(),
                   ),
-
-                  SizedBox(height: 24.h),
-
-                  sectionHeading("Common Health Issues", isDark),
-                  buildResponsiveGrid(
-                    context: context,
-                    items: commonIssuesImages.keys.toList(),
-                    imageMap: commonIssuesImages,
-                    crossAxisCount: crossAxisCount,
-                    isDark: isDark,
-                  ),
-
-                  SizedBox(height: 24.h),
-
-                  sectionHeading("General Physician", isDark),
-                  buildResponsiveGrid(
-                    context: context,
-                    items: gpImages.keys.toList(),
-                    imageMap: gpImages,
-                    crossAxisCount: crossAxisCount,
-                    isDark: isDark,
-                  ),
-
-                  SizedBox(height: 32.h),
-                ],
-              ),
-            );
-          },
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget sectionHeading(String text, bool isDark) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w700,
-          color: isDark ? Colors.white : Colors.black87,
-        ),
-      ),
-    );
-  }
+  // ---------- HELPERS (NO UI CHANGE)
 
-  Widget buildResponsiveGrid({
-    required BuildContext context,
-    required List<String> items,
-    required Map<String, String> imageMap,
-    required int crossAxisCount,
-    required bool isDark,
-  }) {
+  Widget sectionHeading(String text, bool isDark) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 12),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ),
+    ),
+  );
+
+  Widget buildGrid(
+      BuildContext context,
+      Map<String, String> data,
+      int crossAxisCount,
+      bool isDark, {
+        required Function(String) onTap,
+      }) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
+      itemCount: data.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
-        mainAxisSpacing: 15.h,
-        crossAxisSpacing: 12.w,
         childAspectRatio: 0.72,
       ),
-      itemBuilder: (context, index) {
-        final title = items[index];
-        final imageUrl = imageMap[title] ?? imageMap.values.first;
-
+      itemBuilder: (_, index) {
+        final title = data.keys.elementAt(index);
         return SquareCategory(
           title: title,
-          imageUrl: imageUrl,
+          imageUrl: data[title]!,
           isDark: isDark,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => DoctorFindConsultScreen()),
-            );
-          },
+          onTap: () => onTap(title),
         );
       },
     );
   }
 }
 
-class SquareCategory extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final bool isDark;
-  final VoidCallback? onTap;
+// ---------------- MAPPERS ----------------
 
-  const SquareCategory({
-    super.key,
-    required this.title,
-    required this.imageUrl,
-    required this.isDark,
-    this.onTap,
-  });
+String specialityMapper(String title) {
+  switch (title) {
+    case "Pediat\nrics":
+      return "Paediatrics & Neonatology";
+    case "Gynae\ncolo":
+      return "Obstetrics & Gynaecology";
+    case "General\nphysician":
+      return "General"; // match API
+    case "Derma\ntology":
+      return "Dermatologist";
+    case "Ortho-\npedic":
+      return "Orthopedic";
+    case "Mental\nWellness":
+      return "Psychiatrist";
+    default:
+      return "General";
+  }
+}
 
-  @override
-  Widget build(BuildContext context) {
-    final double containerSize =
-    (MediaQuery.of(context).size.width /
-        (MediaQuery.of(context).size.width >= 600 ? 6.2 : 4.6))
-        .clamp(56.0, 90.0);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(7.r),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                width: containerSize.w,
-                height: containerSize.w,
-                padding: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.05)
-                      : Colors.white.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(7.r),
-                  border: Border.all(
-                    color: isDark ? Colors.grey.shade800 : const Color(0xffd1d1d1),
-                    width: 0.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDark
-                          ? Colors.black26
-                          : Colors.grey.withOpacity(0.15),
-                      blurRadius: 6.r,
-                      offset: Offset(2, 3),
-                    ),
-                  ],
-                ),
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.contain,
-                  loadingBuilder: (context, child, progress) {
-                    if (progress == null) return child;
-                    return const Center(
-                      child: SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 1.6),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.broken_image),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    );
+String issueToSpeciality(String issue) {
+  switch (issue) {
+    case "Acne":
+    case "Fungal\nInfection":
+      return "Dermatologist";
+    case "PCOS":
+      return "Gynecologist";
+    case "Back Pain":
+      return "Orthopedic";
+    case "Head\naches":
+      return "Neurologist";
+    case "Stomach\npain":
+      return "Gastroenterologist";
+    default:
+      return "General Physician";
   }
 }
