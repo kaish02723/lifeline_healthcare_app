@@ -9,7 +9,7 @@ import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
-import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_category_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
@@ -23,7 +23,7 @@ import '../../widgets/dashboard_widgets/top_feature_card.dart';
 import 'notification_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key,});
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -306,7 +306,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MedicineCategoryScreen(),
+                              builder: (context) => MedicineHomeScreen(),
                             ),
                           );
                         },

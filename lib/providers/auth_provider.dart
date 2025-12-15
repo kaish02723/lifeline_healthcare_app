@@ -22,6 +22,17 @@ class AuthProvider with ChangeNotifier {
   ValueNotifier<int> timerValue = ValueNotifier(60);
   Timer? _timer;
 
+  // NEW VALUE NOTIFIER FOR BUTTON COLOR
+  ValueNotifier<bool> isPhoneValid = ValueNotifier(false);
+
+  AuthProvider() {
+    phoneController.addListener(_validatePhone);
+  }
+
+  void _validatePhone() {
+    isPhoneValid.value = phoneRegex.hasMatch(phoneController.text);
+  }
+
   String? userId;
   String? token;
 
