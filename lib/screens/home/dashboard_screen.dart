@@ -11,7 +11,6 @@ import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_category_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
