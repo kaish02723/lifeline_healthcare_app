@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import '../../models/medicine/product_model.dart';
+
+class CartItem {
+  final ProductModel product;
+  int quantity;
+
+  CartItem({
+    required this.product,
+    this.quantity = 1,
+  });
+}
+
+class CartProvider with ChangeNotifier {
+  final Map<int, CartItem> _items = {};
+
+  /// GET ALL ITEMS
+  List<CartItem> get items => _items.values.toList();
+
+  /// ITEM COUNT
+  int get itemCount => _items.length;
+
+  /// TOTAL AMOUNT
+  double get totalAmount {
+    double total = 0;
+    for (var item in _items.values) {
+      total += (item.product.medPrice ?? 0) * item.quantity;
+    }
+    return total;
+  }
+
+  /// ADD TO CART
+  void addToCart(ProductModel product) {
+    final id = product.medId!;
+
+    if (_items.containsKey(id)) {
+      _items[id]!.quantity++;
+    } else {
+      _items[id] = CartItem(product: product);
+    }
+
+    notifyListeners();
+  }
+
+  ///Go to cart
+  bool isInCart(int productId) {
+    return items.any((item) => item.product.medId == productId);
+  }
+
+
+  /// INCREASE QUANTITY
+  void increaseQuantity(int productId) {
+    if (_items.containsKey(productId)) {
+      _items[productId]!.quantity++;
+      notifyListeners();
+    }
+  }
+
+  /// DECREASE QUANTITY
+  void decreaseQuantity(int productId) {
+    if (!_items.containsKey(productId)) return;
+
+    if (_items[productId]!.quantity > 1) {
+      _items[productId]!.quantity--;
+    } else {
+      _items.remove(productId);
+    }
+
+    notifyListeners();
+  }
+
+  /// CLEAR CART
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
+}

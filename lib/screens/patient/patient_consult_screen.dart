@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/help_support_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_know_more_screen.dart';
+import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/patient_know_more_screen.dart';
 import '../doctor/doctor_find_consult_screen.dart';
 
 class PatientConsultScreen extends StatelessWidget {
