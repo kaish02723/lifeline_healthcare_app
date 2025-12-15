@@ -20,6 +20,9 @@ class DoctorProvider with ChangeNotifier {
     try {
       final response = await http.get(Uri.parse("$baseUrl/consultDr/all"));
 
+      print(response.body);
+      print(response.request?.headers);
+
       if (response.statusCode == 200) {
         final List<dynamic> resBody = jsonDecode(response.body);
 
