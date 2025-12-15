@@ -12,7 +12,6 @@ class DoctorProvider with ChangeNotifier {
   bool isLoading = false;
   String selectedSpeciality = "All";
 
-  // ================= FETCH =================
   Future<void> getAllDoctors() async {
     isLoading = true;
     notifyListeners();
@@ -20,17 +19,17 @@ class DoctorProvider with ChangeNotifier {
     try {
       final response = await http.get(Uri.parse("$baseUrl/consultDr/all"));
 
-      print(response.body);
-      print(response.request?.headers);
-
       if (response.statusCode == 200) {
         final List<dynamic> resBody = jsonDecode(response.body);
 
         allDoctorsList =
             resBody.map((e) => DoctorModel.fromJson(e)).toList();
 
-        // default list
-        filteredDoctorsList = allDoctorsList;
+        if (selectedSpeciality == "All") {
+          filteredDoctorsList = allDoctorsList;
+        } else {
+          filterBySpeciality(selectedSpeciality);
+        }
       } else {
         allDoctorsList = [];
         filteredDoctorsList = [];
@@ -45,7 +44,24 @@ class DoctorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // ================= FILTER =================
+  final Map<String, List<String>> specialityAliasMap = {
+    "Psychiatry": ["Psychiatrist", "Mental Wellness", "Psychiatry"],
+    "Gynecology": ["Gynecologist", "Gynae", "Gynecology"],
+    "General Physician": [
+      "General Physician",
+      "Physician",
+      "General Medicine"
+    ],
+    "Dermatology": ["Dermatologist", "Dermatology", "Skin"],
+    "Orthopaedics": ["Orthopedic", "Orthopaedics", "Ortho"],
+    "Pediatrics": ["Pediatrician", "Pediatrics", "Child"],
+    "Sexology": ["Sexologist", "Sexology"],
+    "Neurology": ["Neurologist", "Neurology"],
+    "Gastroenterology": ["Gastroenterologist", "Gastroenterology"],
+    "Endocrinology": ["Endocrinologist", "Endocrinology"],
+  };
+
+
   void filterBySpeciality(String speciality) {
     print("FILTER APPLY: $speciality");
     selectedSpeciality = speciality;
@@ -54,28 +70,42 @@ class DoctorProvider with ChangeNotifier {
       filteredDoctorsList = allDoctorsList;
     } else {
       filteredDoctorsList = allDoctorsList.where((doctor) {
-        return doctor.speciality != null &&
-            doctor.speciality!.toLowerCase().contains(
-              speciality.toLowerCase(),
-            );
+        final docSpec = doctor.speciality?.toLowerCase() ?? "";
+
+        final aliases =
+            specialityAliasMap[speciality]?.map((e) => e.toLowerCase()) ?? [];
+
+        return aliases.any((alias) => docSpec.contains(alias));
       }).toList();
     }
 
     notifyListeners();
   }
 
+
   void filterBySearchQuery(String query) {
-    final baseList = selectedSpeciality == "All" ? allDoctorsList : filteredDoctorsList;
-    if (query.isEmpty) {
-      filteredDoctorsList = selectedSpeciality == "All" ? allDoctorsList : filteredDoctorsList;
+    List<DoctorModel> baseList;
+
+    if (selectedSpeciality == "All") {
+      baseList = allDoctorsList;
     } else {
-      filteredDoctorsList = baseList.where((doctor) {
-        final name = doctor.name?.toLowerCase() ?? '';
-        final speciality = doctor.speciality?.toLowerCase() ?? '';
-        final q = query.toLowerCase();
-        return name.contains(q) || speciality.contains(q);
+      baseList = allDoctorsList.where((doctor) {
+        return doctor.speciality != null &&
+            doctor.speciality!.toLowerCase() ==
+                selectedSpeciality.toLowerCase();
       }).toList();
     }
+
+    if (query.isEmpty) {
+      filteredDoctorsList = baseList;
+    } else {
+      final q = query.toLowerCase();
+      filteredDoctorsList = baseList.where((doctor) {
+        return (doctor.name ?? "").toLowerCase().contains(q) ||
+            (doctor.speciality ?? "").toLowerCase().contains(q);
+      }).toList();
+    }
+
     notifyListeners();
   }
 }

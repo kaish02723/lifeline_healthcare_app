@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/help_support_screen.dart';
+import 'package:provider/provider.dart';
+import '../../providers/doctor_provider.dart';
 import '../doctor/doctor_find_consult_screen.dart';
 import '../home/medicine screen/patient_know_more_screen.dart';
 
@@ -41,6 +43,55 @@ class PatientConsultScreen extends StatelessWidget {
     "Dizziness": "https://cdn-icons-png.flaticon.com/512/6701/6701662.png",
     "Pneum\nonia": "https://cdn-icons-png.flaticon.com/512/7350/7350852.png",
   };
+
+  String specialityMapper(String title) {
+    switch (title) {
+      case "Mental\nWellness":
+        return "Psychiatry";
+
+      case "Gynae\ncolo":
+        return "Gynecology";
+
+      case "General\nphysician":
+        return "General Physician";
+
+      case "Derma\ntology":
+        return "Dermatology";
+
+      case "Ortho-\npedic":
+        return "Orthopaedics";
+
+      case "Pediat\nrics":
+        return "Pediatrics";
+
+      case "Sexology":
+        return "Sexology";
+
+      default:
+        return "All";
+    }
+  }
+
+  String issueToSpeciality(String issue) {
+    switch (issue) {
+      case "Stomach\npain":
+        return "Gastroenterology";
+      case "Vertigo":
+      case "Head\naches":
+        return "Neurology";
+      case "Acne":
+      case "Fungal\nInfection":
+        return "Dermatology";
+      case "PCOS":
+        return "Gynecology";
+      case "Thyroid":
+        return "Endocrinology";
+      case "Back Pain":
+        return "Orthopaedics";
+      default:
+        return "General Physician";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -264,11 +315,25 @@ class PatientConsultScreen extends StatelessWidget {
           imageUrl: imageUrl,
           isDark: isDark,
           onTap: () {
+            final provider =
+            Provider.of<DoctorProvider>(context, listen: false);
+
+            if (title == "View\nAll") {
+              provider.filterBySpeciality("All");
+            } else if (commonIssuesImages.containsKey(title)) {
+              provider.filterBySpeciality(issueToSpeciality(title));
+            } else {
+              provider.filterBySpeciality(specialityMapper(title));
+            }
+
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => DoctorFindConsultScreen()),
+              MaterialPageRoute(
+                builder: (_) => const DoctorFindConsultScreen(),
+              ),
             );
           },
+
         );
       },
     );

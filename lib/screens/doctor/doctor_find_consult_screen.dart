@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/screens/doctor/doctors_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/doctor_model.dart';
@@ -70,15 +72,19 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
               Consumer<DoctorProvider>(
                 builder: (context, value, child) {
                   if (value.isLoading) {
-                    return Center(child: Padding(
-                      padding: const EdgeInsets.only(top: 230),
-                      child: CircularProgressIndicator(color: Colors.grey,),
-                    ));
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 230),
+                        child: CircularProgressIndicator(color: Colors.grey),
+                      ),
+                    );
                   } else if (value.filteredDoctorsList.isEmpty) {
-                    return Center(child: Padding(
-                      padding: const EdgeInsets.only(top: 230),
-                      child: Text("No doctors found"),
-                    ));
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 230),
+                        child: Text("No doctors found"),
+                      ),
+                    );
                   }
                   return ListView.builder(
                     itemCount: value.filteredDoctorsList.length,
@@ -93,7 +99,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                     },
                   );
                 },
-              )
+              ),
             ],
           ),
         ),
@@ -114,10 +120,12 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
               borderRadius: BorderRadius.circular(w * 0.03),
               border: Border.all(color: Colors.grey.shade300),
             ),
-            child:  TextField(
+            child: TextField(
               onChanged: (value) {
-                Provider.of<DoctorProvider>(context, listen: false)
-                    .filterBySearchQuery(value);
+                Provider.of<DoctorProvider>(
+                  context,
+                  listen: false,
+                ).filterBySearchQuery(value);
               },
               decoration: InputDecoration(
                 hintText: "Search doctor or speciality...",
@@ -195,7 +203,14 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
     final w = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DoctorDetailScreen(doctor: doctor),
+          ),
+        );
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(w * 0.04),
         child: BackdropFilter(
@@ -312,16 +327,21 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                     ),
                     SizedBox(width: w * 0.03),
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: h * 0.018),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00796B),
-                          borderRadius: BorderRadius.circular(w * 0.03),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Book appointment",
-                            style: TextStyle(color: Colors.white),
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticFeedback.selectionClick();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: h * 0.018),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF00796B),
+                            borderRadius: BorderRadius.circular(w * 0.03),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Book appointment",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),

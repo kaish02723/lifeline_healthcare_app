@@ -11,6 +11,7 @@ class PopularTestProvider with ChangeNotifier {
 
   var searchLabTestController = TextEditingController();
   bool isSearchedLabTest = false;
+  bool isLoading = false;
 
   void clearSearch() {
     searchLabTestController.clear();
@@ -20,21 +21,28 @@ class PopularTestProvider with ChangeNotifier {
   }
 
   Future<void> getPopularLabTest() async {
-    var response = await http.get(Uri.parse('$baseUrl/get-popular'));
-    // print(response.body);
+    isLoading = true;
+    notifyListeners();
 
-    if (response.statusCode == 200) {
-      var jsonBody = jsonDecode(response.body);
+    try {
+      var response = await http.get(
+        Uri.parse('$baseUrl/get-popular'),
+      );
 
-      PopularTestModel model = PopularTestModel.convertToModel(jsonBody);
+      if (response.statusCode == 200) {
+        var jsonBody = jsonDecode(response.body);
+        PopularTestModel model =
+        PopularTestModel.convertToModel(jsonBody);
 
-      originalList = model.data ?? [];
-      popularDataList = List.from(originalList);
-
-      notifyListeners();
-    } else {
-      print("Error: ${response.body}");
+        originalList = model.data ?? [];
+        popularDataList = List.from(originalList);
+      }
+    } catch (e) {
+      debugPrint("API Error: $e");
     }
+
+    isLoading = false;
+    notifyListeners();
   }
 
   void filterSearch(String query) {
