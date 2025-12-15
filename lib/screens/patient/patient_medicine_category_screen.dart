@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
 
 class MedicineCategoryScreen extends StatelessWidget {
   MedicineCategoryScreen({super.key});
@@ -173,7 +172,7 @@ class MedicineCategoryScreen extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => MedicineHomeScreen()),
+          MaterialPageRoute(builder: (_) => MedicineCategoryScreen()),
         );
       },
       child: ClipRRect(

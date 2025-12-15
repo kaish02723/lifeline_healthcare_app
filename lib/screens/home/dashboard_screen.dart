@@ -5,11 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
+import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_category_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
@@ -306,7 +306,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MedicineHomeScreen(),
+                              builder: (context) => MedicineCategoryScreen(),
                             ),
                           );
                         },
