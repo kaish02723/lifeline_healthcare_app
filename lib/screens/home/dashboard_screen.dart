@@ -215,7 +215,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 13),
               child: Text(
-                'Lifeline',
+                'LifeLine',
                 style: GoogleFonts.nunito(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
