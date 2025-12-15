@@ -20,6 +20,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../providers/user_detail/get_userdetail_provider.dart';
 import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
+import '../../widgets/dashboard_widgets/show_rate_us_bottom_sheet.dart';
 import '../../widgets/dashboard_widgets/top_feature_card.dart';
 import 'notification_screen.dart';
 
@@ -164,6 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 HapticFeedback.selectionClick();
               },
             ),
+
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -183,6 +185,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 },
               ),
             ),
+            SizedBox(height: 292),
+            Divider(),
+            ListTile(
+              leading: const Icon(Icons.thumb_up_alt_outlined),
+              title: const Text('Rate Us'),
+              onTap: () {
+                HapticFeedback.selectionClick();
+                showRateUsBottomSheet(context);
+              },
+            ),
+
           ],
         ),
       ),

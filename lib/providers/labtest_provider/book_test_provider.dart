@@ -14,7 +14,8 @@ class BookTestProvider with ChangeNotifier {
 
   final baseUrl = 'https://labtest-and-booktest.onrender.com';
 
-  Future<void> bookTest(Map<String, dynamic> data, BuildContext context) async {
+  // ✅ FINAL BOOK TEST
+  Future<bool> bookTest(Map<String, dynamic> data) async {
     try {
       var api = await http.post(
         Uri.parse('$baseUrl/bookings/book-test'),
@@ -22,24 +23,14 @@ class BookTestProvider with ChangeNotifier {
         body: jsonEncode(data),
       );
 
-      // print("STATUS: ${api.statusCode}");
-      // print("BODY: ${api.body}");
-
       if (api.statusCode == 200 || api.statusCode == 201) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Test booked')));
-        Navigator.pop(context);
+        return true;
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Booking failed!')));
+        return false;
       }
     } catch (e) {
       print("BOOK TEST ERROR: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Something went wrong')));
+      return false;
     }
   }
 
@@ -47,27 +38,18 @@ class BookTestProvider with ChangeNotifier {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     var user_Id = authProvider.userId;
 
-    // print('User id is : $user_Id');
-
-    if (user_Id == null || user_Id.toString().isEmpty) {
-      print("ERROR: USER ID is NULL");
-      return;
-    }
+    if (user_Id == null || user_Id.toString().isEmpty) return;
 
     try {
       var res = await http.get(
         Uri.parse('$baseUrl/bookings/get-test/$user_Id'),
       );
 
-      print("API : ${res.body}");
-
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body);
         MyLabTestModel model = MyLabTestModel.convertToModel(body);
         myLabTestList = model.data ?? [];
         notifyListeners();
-      } else {
-        print("Failed to load tests");
       }
     } catch (e) {
       print("GET TEST ERROR: $e");
