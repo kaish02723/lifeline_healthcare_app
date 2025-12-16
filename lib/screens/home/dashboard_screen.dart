@@ -35,7 +35,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String selectedLanguage = "English";
-  int _offerPage = 0;
 
   @override
   void initState() {
@@ -73,7 +72,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              /// ================= HEADER =================
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -125,7 +123,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               const Divider(),
 
-              /// ================= MAIN MENU (SCROLLABLE) =================
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,
@@ -301,7 +298,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PatientConsultScreen(),
+                      builder: (context) => PhysicalAppointmentScreen(),
                     ),
                   );
                 },
@@ -318,7 +315,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PhysicalAppointmentScreen(),
+                      builder: (context) => PatientConsultScreen(),
                     ),
                   );
                 },
