@@ -184,7 +184,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
 
-              /// ================= FIXED BOTTOM =================
               const Divider(height: 1),
 
               Padding(
@@ -201,7 +200,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
         ),
-
       ),
 
       appBar: AppBar(
@@ -579,11 +577,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required String title,
     required VoidCallback onTap,
   }) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      onTap: onTap,
-    );
+    return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
   }
 
   void languageBottomSheet() {

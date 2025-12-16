@@ -3,6 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/physical_summary_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/doctor_provider.dart';
 
 class PhysicalAppointmentScreen extends StatelessWidget {
   static const Color primary = Color(0xFF00796B);
@@ -49,22 +52,28 @@ class PhysicalAppointmentScreen extends StatelessWidget {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.white.withOpacity(0.05)
-                          : Colors.white.withOpacity(0.8),
+                      color:
+                          isDark
+                              ? Colors.white.withOpacity(0.05)
+                              : Colors.white.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                        color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+                        color:
+                            isDark
+                                ? Colors.grey.shade800
+                                : Colors.grey.shade300,
                       ),
                     ),
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: isDark
-                              ? Colors.white12
-                              : Color(0xFFF0F0F0),
+                          backgroundColor:
+                              isDark ? Colors.white12 : Color(0xFFF0F0F0),
                           child: Icon(
                             Icons.question_mark,
                             color: isDark ? Colors.white : Colors.black87,
@@ -82,8 +91,11 @@ class PhysicalAppointmentScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios,
-                            size: 16, color: isDark ? Colors.white54 : Colors.black54),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: isDark ? Colors.white54 : Colors.black54,
+                        ),
                       ],
                     ),
                   ),
@@ -100,18 +112,24 @@ class PhysicalAppointmentScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.white.withOpacity(0.05)
-                          : Colors.white.withOpacity(0.8),
+                      color:
+                          isDark
+                              ? Colors.white.withOpacity(0.05)
+                              : Colors.white.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+                        color:
+                            isDark
+                                ? Colors.grey.shade800
+                                : Colors.grey.shade300,
                       ),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search,
-                            color: isDark ? Colors.white54 : Colors.grey.shade600),
+                        Icon(
+                          Icons.search,
+                          color: isDark ? Colors.white54 : Colors.grey.shade600,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
@@ -119,10 +137,15 @@ class PhysicalAppointmentScreen extends StatelessWidget {
                               border: InputBorder.none,
                               hintText: "Search Symptoms/ Specialities",
                               hintStyle: TextStyle(
-                                  color: isDark ? Colors.white54 : Colors.grey.shade600),
+                                color:
+                                    isDark
+                                        ? Colors.white54
+                                        : Colors.grey.shade600,
+                              ),
                             ),
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black87),
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
                           ),
                         ),
                       ],
@@ -177,7 +200,6 @@ class PhysicalAppointmentScreen extends StatelessWidget {
               //     ),
               //   ),
               // ),
-
               const SizedBox(height: 20),
 
               Text(
@@ -227,10 +249,15 @@ Widget _gridSection(List<Map<String, dynamic>> list, bool isDark) {
         children: [
           GestureDetector(
             onTap: () {
+              final provider = context.read<DoctorProvider>();
+
+              final speciality = mapTitleToSpeciality(item['title']);
+              provider.filterBySpeciality(speciality);
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PhysicalSummaryScreen(),
+                  builder: (context) => const PhysicalSummaryScreen(),
                 ),
               );
             },
@@ -242,17 +269,21 @@ Widget _gridSection(List<Map<String, dynamic>> list, bool isDark) {
                   height: 60,
                   width: 60,
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withOpacity(0.05)
-                        : Colors.white.withOpacity(0.9),
+                    color:
+                        isDark
+                            ? Colors.white.withOpacity(0.05)
+                            : Colors.white.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(9),
                     border: Border.all(
-                        color: isDark ? Colors.grey.shade800 : Colors.grey, width: 0.5),
+                      color: isDark ? Colors.grey.shade800 : Colors.grey,
+                      width: 0.5,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDark
-                            ? Colors.black26
-                            : Colors.grey.withOpacity(0.2),
+                        color:
+                            isDark
+                                ? Colors.black26
+                                : Colors.grey.withOpacity(0.2),
                         blurRadius: 6,
                         offset: Offset(2, 3),
                       ),
@@ -262,17 +293,21 @@ Widget _gridSection(List<Map<String, dynamic>> list, bool isDark) {
                     child: CachedNetworkImage(
                       imageUrl: item['img'],
                       fit: BoxFit.contain,
-                      placeholder: (context, url) => const Center(
-                        child: SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 1.5),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.broken_image,
-                        color: isDark ? Colors.white54 : Colors.grey,
-                      ),
+                      placeholder:
+                          (context, url) => const Center(
+                            child: SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                              ),
+                            ),
+                          ),
+                      errorWidget:
+                          (context, url, error) => Icon(
+                            Icons.broken_image,
+                            color: isDark ? Colors.white54 : Colors.grey,
+                          ),
                     ),
                   ),
                 ),
@@ -364,3 +399,43 @@ final List<Map<String, dynamic>> _topList2 = [
     "img": "https://cdn-icons-png.flaticon.com/512/565/565547.png",
   },
 ];
+
+String mapTitleToSpeciality(String title) {
+  switch (title.toLowerCase()) {
+    case "stomach pain":
+      return "Gastroenterology";
+    case "vertigo":
+    case "head aches":
+      return "Neurology";
+    case "acne":
+    case "fungal infection":
+      return "Dermatology";
+    case "pcos":
+      return "Gynecology";
+    case "thyroid":
+      return "Endocrinology";
+    case "back pain":
+      return "Orthopaedics";
+
+    case "mental wellness":
+      return "Psychiatry";
+    case "gynae colo":
+      return "Gynecology";
+    case "general physician":
+      return "General Physician";
+    case "dermatology":
+      return "Dermatology";
+    case "ortho-pedic":
+      return "Orthopaedics";
+    case "pediatrics":
+      return "Pediatrics";
+    case "sexology":
+      return "Sexology";
+
+    case "view all":
+      return "All";
+
+    default:
+      return "All";
+  }
+}
