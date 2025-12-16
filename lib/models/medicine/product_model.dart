@@ -16,8 +16,8 @@ class ProductModel {
   String? medKnowMore;
 
   /// IMPORTANT
-  String? categoryString;   // API raw value
-  Category? category;       // enum for filtering
+  String? categoryString;
+  Category? category;
 
   ProductModel({
     this.medId,

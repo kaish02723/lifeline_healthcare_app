@@ -64,142 +64,149 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var dashBoardProvider = Provider.of<DashBoardProvider>(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.light
-          ? Color(0xffefefef)
-          : Colors.black,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.light
+              ? Color(0xffefefef)
+              : Colors.black,
       key: _scaffoldKey,
       drawer: Drawer(
-        // backgroundColor: Colors.white,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                // color: Color(0xfffefefe)
-              ),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserProfileScreen(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              /// ================= HEADER =================
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => UserProfileScreen()),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 32,
+                        backgroundImage: NetworkImage(
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
                         ),
-                      );
-                    },
-                    child: const CircleAvatar(
-                      radius: 35,
-                      backgroundImage: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserProfileScreen(),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 13, top: 45),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            userData?.name ?? '',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userData?.name ?? '',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'View and edit profile',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
+                            const SizedBox(height: 4),
+                            Text(
+                              'View and edit profile',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      const Icon(Icons.chevron_right),
+                    ],
+                  ),
+                ),
+              ),
+
+              const Divider(),
+
+              /// ================= MAIN MENU (SCROLLABLE) =================
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _drawerItem(
+                      icon: Icons.credit_card,
+                      title: 'Appointments',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => MyAppointmentScreen(),
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                  Icon(Icons.navigate_next),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.credit_card),
-              title: const Text('Appointments'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyAppointmentScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(CupertinoIcons.lab_flask_solid),
-              title: Text('TestBooking'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyTestScreen()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(CupertinoIcons.cube_box),
-              title: Text('My Orders'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
-            ListTile(
-              leading: Icon(CupertinoIcons.chat_bubble_2),
-              title: Text('ChatBot'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
 
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingScreen()),
-                );
-              },
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingScreen()),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 292),
-            Divider(),
-            ListTile(
-              leading: const Icon(Icons.thumb_up_alt_outlined),
-              title: const Text('Rate Us'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-                showRateUsBottomSheet(context);
-              },
-            ),
+                    _drawerItem(
+                      icon: CupertinoIcons.lab_flask_solid,
+                      title: 'Test Booking',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => MyTestScreen()),
+                        );
+                      },
+                    ),
 
-          ],
+                    _drawerItem(
+                      icon: CupertinoIcons.cube_box,
+                      title: 'My Orders',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                      },
+                    ),
+
+                    _drawerItem(
+                      icon: CupertinoIcons.chat_bubble_2,
+                      title: 'ChatBot',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                      },
+                    ),
+
+                    _drawerItem(
+                      icon: Icons.settings,
+                      title: 'Settings',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => SettingScreen()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              /// ================= FIXED BOTTOM =================
+              const Divider(height: 1),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                child: ListTile(
+                  leading: const Icon(Icons.thumb_up_alt_outlined),
+                  title: const Text('Rate Us'),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    showRateUsBottomSheet(context);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
+
       ),
+
       appBar: AppBar(
         toolbarHeight: 70,
         backgroundColor: const Color(0xff00796B),
@@ -567,6 +574,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _drawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: onTap,
     );
   }
 

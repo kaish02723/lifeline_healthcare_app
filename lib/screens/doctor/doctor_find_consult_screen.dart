@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/appointment_book_diagnostic_screen.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/book_in_clinic_appointment.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/doctors_detail_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -330,6 +333,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                       child: GestureDetector(
                         onTap: () {
                           HapticFeedback.selectionClick();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SlotBookingScreen(),));
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: h * 0.018),

@@ -14,7 +14,8 @@ class DoctorDetailScreen extends StatelessWidget {
     final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xff0E0E0E) : const Color(0xffF6F8FA),
+      backgroundColor:
+          isDark ? const Color(0xff0E0E0E) : const Color(0xffF6F8FA),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -75,15 +76,22 @@ class DoctorDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Qualifications', style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Qualifications',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
-                    children: (doctor.qualification ?? [])
-                        .map(
-                          (q) => Chip(label: Text(q),backgroundColor: Colors.white,),
-                    )
-                        .toList(),
+                    children:
+                        (doctor.qualification ?? [])
+                            .map(
+                              (q) => Chip(
+                                label: Text(q),
+                                backgroundColor: Colors.white,
+                              ),
+                            )
+                            .toList(),
                   ),
                 ],
               ),
@@ -95,9 +103,14 @@ class DoctorDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Available Timing', style: TextStyle(fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Available Timing',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     const SizedBox(height: 8),
-                    Text('${doctor.timing!.day} : ${doctor.timing!.start} - ${doctor.timing!.end}')
+                    Text(
+                      '${doctor.timing!.day} : ${doctor.timing!.start} am - ${doctor.timing!.end} pm',
+                    ),
                   ],
                 ),
               ),
@@ -109,12 +122,14 @@ class DoctorDetailScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff00796B),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
                 onPressed: () {},
                 child: const Text('Book Appointment'),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -131,7 +146,10 @@ class DoctorDetailScreen extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withOpacity(0.08) : Colors.white.withOpacity(0.75),
+            color:
+                isDark
+                    ? Colors.white.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.75),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.white.withOpacity(0.15)),
           ),
@@ -146,7 +164,13 @@ class DoctorDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          SizedBox(width: 120, child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500))),
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
           Expanded(child: Text(value ?? '-')),
         ],
       ),
