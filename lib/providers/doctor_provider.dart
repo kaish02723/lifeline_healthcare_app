@@ -61,6 +61,20 @@ class DoctorProvider with ChangeNotifier {
     "Endocrinology": ["Endocrinologist", "Endocrinology"],
   };
 
+  void searchDoctors(String query) {
+    if (query.isEmpty) {
+      filteredDoctorsList = allDoctorsList;
+    } else {
+      final q = query.toLowerCase();
+
+      filteredDoctorsList = allDoctorsList.where((doc) {
+        return doc.name!.toLowerCase().contains(q) ||
+            doc.speciality!.toLowerCase().contains(q) ||
+            doc.hospital!.toLowerCase().contains(q);
+      }).toList();
+    }
+    notifyListeners();
+  }
 
   void filterBySpeciality(String speciality) {
     print("FILTER APPLY: $speciality");
@@ -105,7 +119,6 @@ class DoctorProvider with ChangeNotifier {
             (doctor.speciality ?? "").toLowerCase().contains(q);
       }).toList();
     }
-
     notifyListeners();
   }
 }

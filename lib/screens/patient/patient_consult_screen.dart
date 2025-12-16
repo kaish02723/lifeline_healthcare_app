@@ -9,7 +9,7 @@ import '../../providers/doctor_provider.dart';
 import '../doctor/doctor_find_consult_screen.dart';
 import '../home/medicine screen/patient_know_more_screen.dart';
 
-class PatientConsultScreen extends StatelessWidget {
+class PatientConsultScreen extends StatefulWidget {
   const PatientConsultScreen({super.key});
 
   static const Color primary = Color(0xFF00796B);
@@ -44,6 +44,11 @@ class PatientConsultScreen extends StatelessWidget {
     "Pneum\nonia": "https://cdn-icons-png.flaticon.com/512/7350/7350852.png",
   };
 
+  @override
+  State<PatientConsultScreen> createState() => _PatientConsultScreenState();
+}
+
+class _PatientConsultScreenState extends State<PatientConsultScreen> {
   String specialityMapper(String title) {
     switch (title) {
       case "Mental\nWellness":
@@ -92,6 +97,8 @@ class PatientConsultScreen extends StatelessWidget {
         return "General Physician";
     }
   }
+  final TextEditingController _searchController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +106,7 @@ class PatientConsultScreen extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final width = MediaQuery.of(context).size.width;
     final crossAxisCount = width >= 600 ? 4 : 3;
+    var doctorProvider=Provider.of<DoctorProvider>(context);
 
     return Scaffold(
       backgroundColor: isDark ? Color(0xff121212) : Colors.grey[100],
@@ -108,7 +116,7 @@ class PatientConsultScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           icon: Icon(CupertinoIcons.back, size: 22.sp),
         ),
-        backgroundColor: primary,
+        backgroundColor: PatientConsultScreen.primary,
         elevation: 0,
         title: Text(
           "Consult a doctor",
@@ -170,7 +178,7 @@ class PatientConsultScreen extends StatelessWidget {
                             Text(
                               "Free follow-up",
                               style: TextStyle(
-                                color: primary,
+                                color: PatientConsultScreen.primary,
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -219,9 +227,36 @@ class PatientConsultScreen extends StatelessWidget {
                             ? Colors.white.withOpacity(0.05)
                             : Colors.white.withOpacity(0.8),
                         child: TextField(
+                          controller: _searchController,
+                          onChanged: (value) {
+                            Provider.of<DoctorProvider>(
+                              context,
+                              listen: false,
+                            ).searchDoctors(value);
+                          },
+                          onSubmitted: (value) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const DoctorFindConsultScreen(),
+                              ),
+                            );
+                          },
                           decoration: InputDecoration(
                             hintText: "Search symptoms..",
                             prefixIcon: Icon(Icons.search, size: 21.sp),
+                            suffixIcon: _searchController.text.isNotEmpty
+                                ? IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () {
+                                _searchController.clear();
+                                Provider.of<DoctorProvider>(
+                                  context,
+                                  listen: false,
+                                ).searchDoctors("");
+                              },
+                            )
+                                : null,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.r),
                               borderSide: BorderSide.none,
@@ -237,8 +272,8 @@ class PatientConsultScreen extends StatelessWidget {
                   sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
                   buildResponsiveGrid(
                     context: context,
-                    items: topSpecialitiesImages.keys.toList(),
-                    imageMap: topSpecialitiesImages,
+                    items: PatientConsultScreen.topSpecialitiesImages.keys.toList(),
+                    imageMap: PatientConsultScreen.topSpecialitiesImages,
                     crossAxisCount: crossAxisCount,
                     isDark: isDark,
                   ),
@@ -248,8 +283,8 @@ class PatientConsultScreen extends StatelessWidget {
                   sectionHeading("Common Health Issues", isDark),
                   buildResponsiveGrid(
                     context: context,
-                    items: commonIssuesImages.keys.toList(),
-                    imageMap: commonIssuesImages,
+                    items: PatientConsultScreen.commonIssuesImages.keys.toList(),
+                    imageMap: PatientConsultScreen.commonIssuesImages,
                     crossAxisCount: crossAxisCount,
                     isDark: isDark,
                   ),
@@ -259,8 +294,8 @@ class PatientConsultScreen extends StatelessWidget {
                   sectionHeading("General Physician", isDark),
                   buildResponsiveGrid(
                     context: context,
-                    items: gpImages.keys.toList(),
-                    imageMap: gpImages,
+                    items: PatientConsultScreen.gpImages.keys.toList(),
+                    imageMap: PatientConsultScreen.gpImages,
                     crossAxisCount: crossAxisCount,
                     isDark: isDark,
                   ),
@@ -320,7 +355,7 @@ class PatientConsultScreen extends StatelessWidget {
 
             if (title == "View\nAll") {
               provider.filterBySpeciality("All");
-            } else if (commonIssuesImages.containsKey(title)) {
+            } else if (PatientConsultScreen.commonIssuesImages.containsKey(title)) {
               provider.filterBySpeciality(issueToSpeciality(title));
             } else {
               provider.filterBySpeciality(specialityMapper(title));
