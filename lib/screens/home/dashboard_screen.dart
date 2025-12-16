@@ -4,13 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/my_appointment_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
+import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_category_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_category_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
@@ -20,6 +21,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../providers/user_detail/get_userdetail_provider.dart';
 import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
+import '../../widgets/dashboard_widgets/show_rate_us_bottom_sheet.dart';
 import '../../widgets/dashboard_widgets/top_feature_card.dart';
 import 'notification_screen.dart';
 
@@ -59,127 +61,152 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     var provider = Provider.of<GetUserDetailProvider>(context);
     var userData = provider.user;
-    var dashBoardProvider=Provider.of<DashBoardProvider>(context);
-    
+    var dashBoardProvider = Provider.of<DashBoardProvider>(context);
+
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.light
-          ? Color(0xffefefef)
-          : Colors.black,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.light
+              ? Color(0xffefefef)
+              : Colors.black,
       key: _scaffoldKey,
       drawer: Drawer(
-        // backgroundColor: Colors.white,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                // color: Color(0xfffefefe)
-              ),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserProfileScreen(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              /// ================= HEADER =================
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => UserProfileScreen()),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 32,
+                        backgroundImage: NetworkImage(
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
                         ),
-                      );
-                    },
-                    child: const CircleAvatar(
-                      radius: 35,
-                      backgroundImage: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserProfileScreen(),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 13, top: 45),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            userData?.name ?? '',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userData?.name ?? '',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'View and edit profile',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
+                            const SizedBox(height: 4),
+                            Text(
+                              'View and edit profile',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      const Icon(Icons.chevron_right),
+                    ],
                   ),
-                  Icon(Icons.navigate_next),
-                ],
+                ),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.credit_card),
-              title: const Text('Appointments'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
-            ListTile(
-              leading: Icon(CupertinoIcons.lab_flask_solid),
-              title: Text('TestBooking'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyTestScreen()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(CupertinoIcons.cube_box),
-              title: Text('My Orders'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
-            ListTile(
-              leading: Icon(CupertinoIcons.chat_bubble_2),
-              title: Text('ChatBot'),
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingScreen()),
-                );
-              },
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingScreen()),
-                  );
-                },
+
+              const Divider(),
+
+              /// ================= MAIN MENU (SCROLLABLE) =================
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _drawerItem(
+                      icon: Icons.credit_card,
+                      title: 'Appointments',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => MyAppointmentScreen(),
+                          ),
+                        );
+                      },
+                    ),
+
+                    _drawerItem(
+                      icon: CupertinoIcons.lab_flask_solid,
+                      title: 'Test Booking',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => MyTestScreen()),
+                        );
+                      },
+                    ),
+
+                    _drawerItem(
+                      icon: CupertinoIcons.cube_box,
+                      title: 'My Orders',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                      },
+                    ),
+
+                    _drawerItem(
+                      icon: CupertinoIcons.chat_bubble_2,
+                      title: 'ChatBot',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                      },
+                    ),
+
+                    _drawerItem(
+                      icon: Icons.settings,
+                      title: 'Settings',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => SettingScreen()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+
+              /// ================= FIXED BOTTOM =================
+              const Divider(height: 1),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                child: ListTile(
+                  leading: const Icon(Icons.thumb_up_alt_outlined),
+                  title: const Text('Rate Us'),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    showRateUsBottomSheet(context);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
+
       ),
+
       appBar: AppBar(
         toolbarHeight: 70,
         backgroundColor: const Color(0xff00796B),
@@ -222,19 +249,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
-            ),SizedBox(width: 8),
-            Text("HealthCare",style: GoogleFonts.nunito(
-              color: Color(0xFFFFC107),
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-              shadows: [
-                Shadow(
-                  color: Color(0xFF5C3A00),
-                  blurRadius: 3,
-                  offset: Offset(1, 1)
-                )
-              ]
-            ),)
+            ),
+            SizedBox(width: 8),
+            Text(
+              "HealthCare",
+              style: GoogleFonts.nunito(
+                color: Color(0xFFFFC107),
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                shadows: [
+                  Shadow(
+                    color: Color(0xFF5C3A00),
+                    blurRadius: 3,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
         actions: [
@@ -543,6 +574,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _drawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: onTap,
     );
   }
 

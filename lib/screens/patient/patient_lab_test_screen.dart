@@ -101,7 +101,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: provider.popularDataList.isEmpty
+            child: provider.isLoading
                 ? Center(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 200),

@@ -1,7 +1,17 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/appointment_book_diagnostic_screen.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/book_in_clinic_appointment.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
+import 'package:lifeline_healthcare_app/screens/doctor/doctors_detail_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/doctor_model.dart';
 
 class DoctorFindConsultScreen extends StatefulWidget {
   const DoctorFindConsultScreen({super.key});
@@ -12,6 +22,17 @@ class DoctorFindConsultScreen extends StatefulWidget {
 }
 
 class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final provider = Provider.of<DoctorProvider>(context, listen: false);
+      if (provider.allDoctorsList.isEmpty) {
+        provider.getAllDoctors();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
@@ -51,7 +72,37 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
               SizedBox(height: h * 0.02),
               _sectionTitle("Results Offering Prime benefits", isDark),
               SizedBox(height: h * 0.02),
-              ...List.generate(3, (index) => _doctorCard(context, isDark)),
+              Consumer<DoctorProvider>(
+                builder: (context, value, child) {
+                  if (value.isLoading) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 230),
+                        child: CircularProgressIndicator(color: Colors.grey),
+                      ),
+                    );
+                  } else if (value.filteredDoctorsList.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 230),
+                        child: Text("No doctors found"),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: value.filteredDoctorsList.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return _doctorCard(
+                        context,
+                        isDark,
+                        value.filteredDoctorsList[index],
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -72,9 +123,15 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
               borderRadius: BorderRadius.circular(w * 0.03),
               border: Border.all(color: Colors.grey.shade300),
             ),
-            child: const TextField(
+            child: TextField(
+              onChanged: (value) {
+                Provider.of<DoctorProvider>(
+                  context,
+                  listen: false,
+                ).filterBySearchQuery(value);
+              },
               decoration: InputDecoration(
-                hintText: "Dermatologist..",
+                hintText: "Search doctor or speciality...",
                 border: InputBorder.none,
               ),
             ),
@@ -144,12 +201,19 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
     );
   }
 
-  Widget _doctorCard(BuildContext context, bool isDark) {
+  Widget _doctorCard(BuildContext context, bool isDark, DoctorModel doctor) {
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DoctorDetailScreen(doctor: doctor),
+          ),
+        );
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(w * 0.04),
         child: BackdropFilter(
@@ -163,7 +227,8 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                   : Colors.white.withOpacity(0.85),
               borderRadius: BorderRadius.circular(w * 0.04),
               border: Border.all(
-                  color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: isDark
@@ -181,11 +246,14 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(w * 0.25),
-                      child: Image.network(
-                        "https://assets.bucketlistly.blog/sites/5adf778b6eabcc00190b75b1/content_entry5adf77af6eabcc00190b75b6/6075185986d092000b192d0a/files/best-free-travel-images-main-image-hd-op.webp",
+                      child: CachedNetworkImage(
                         width: 100.w,
                         height: 100.w,
                         fit: BoxFit.cover,
+                        imageUrl:
+                            doctor.image != null && doctor.image!.isNotEmpty
+                            ? doctor.image!
+                            : "https://via.placeholder.com/150",
                       ),
                     ),
                     SizedBox(width: w * 0.04),
@@ -194,7 +262,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Dr. Vijay Kumar",
+                            doctor.name ?? "Doctor Name",
                             style: TextStyle(
                               fontSize: w * 0.045,
                               fontWeight: FontWeight.w600,
@@ -203,14 +271,14 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                           ),
                           SizedBox(height: h * 0.005),
                           Text(
-                            "General Physician",
+                            doctor.speciality ?? "Speciality",
                             style: TextStyle(
                               color: isDark ? Colors.white70 : Colors.black54,
                             ),
                           ),
                           SizedBox(height: h * 0.005),
                           Text(
-                            "22 years experience overall",
+                            doctor.experience ?? "",
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: w * 0.035,
@@ -224,9 +292,20 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                 SizedBox(height: h * 0.015),
                 Row(
                   children: [
-                    _infoTag(icon: Icons.thumb_up, text: "60%", w: w, h: h),
+                    _infoTag(
+                      icon: Icons.thumb_up,
+                      text: "${((doctor.rating ?? 0) * 20).toInt()}%",
+                      w: w,
+                      h: h,
+                    ),
+
                     SizedBox(width: w * 0.03),
-                    _infoTag(icon: Icons.star, text: "4.2", w: w, h: h),
+                    _infoTag(
+                      icon: Icons.star,
+                      text: doctor.rating?.toStringAsFixed(1) ?? "0.0",
+                      w: w,
+                      h: h,
+                    ),
                   ],
                 ),
                 SizedBox(height: h * 0.02),
@@ -243,23 +322,30 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                           child: Text(
                             "Contact Hospital",
                             style: TextStyle(
-                                color: isDark ? Colors.white70 : Colors.black87),
+                              color: isDark ? Colors.white70 : Colors.black87,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     SizedBox(width: w * 0.03),
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: h * 0.018),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00796B),
-                          borderRadius: BorderRadius.circular(w * 0.03),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Book appointment",
-                            style: TextStyle(color: Colors.white),
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticFeedback.selectionClick();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SlotBookingScreen(),));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: h * 0.018),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF00796B),
+                            borderRadius: BorderRadius.circular(w * 0.03),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Book appointment",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),

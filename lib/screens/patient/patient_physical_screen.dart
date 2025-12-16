@@ -147,36 +147,36 @@ class PhysicalAppointmentScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // View All Specialities
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.white.withOpacity(0.05)
-                          : Colors.white.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isDark ? Colors.grey.shade800 : Colors.black87,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "View All Specialities",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // // View All Specialities
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(12),
+              //   child: BackdropFilter(
+              //     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              //     child: Container(
+              //       width: double.infinity,
+              //       padding: const EdgeInsets.symmetric(vertical: 14),
+              //       decoration: BoxDecoration(
+              //         color: isDark
+              //             ? Colors.white.withOpacity(0.05)
+              //             : Colors.white.withOpacity(0.8),
+              //         borderRadius: BorderRadius.circular(12),
+              //         border: Border.all(
+              //           color: isDark ? Colors.grey.shade800 : Colors.black87,
+              //         ),
+              //       ),
+              //       child: Center(
+              //         child: Text(
+              //           "View All Specialities",
+              //           style: TextStyle(
+              //             fontWeight: FontWeight.w600,
+              //             fontSize: 15,
+              //             color: isDark ? Colors.white : Colors.black87,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
 
               const SizedBox(height: 20),
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/surgery_provider.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_surgery_screen.dart';
 import 'package:provider/provider.dart';
-import '../patient/patient_medicine_details_screen.dart';
 
 class SurgeryBookingScreen extends StatefulWidget {
   const SurgeryBookingScreen({super.key});
