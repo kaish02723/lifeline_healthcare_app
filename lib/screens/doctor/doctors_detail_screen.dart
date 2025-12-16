@@ -108,8 +108,23 @@ class DoctorDetailScreen extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 6,
+                      children:
+                          doctor.timing!.day!
+                              .map(
+                                (d) => Chip(
+                                  backgroundColor: Colors.white,
+                                  label: Text(d),
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                              )
+                              .toList(),
+                    ),
+                    SizedBox(height: 10),
                     Text(
-                      '${doctor.timing!.day} : ${doctor.timing!.start} am - ${doctor.timing!.end} pm',
+                      '${doctor.timing!.start} AM - ${doctor.timing!.end} PM',
+                      style: const TextStyle(height: 1.4),
                     ),
                   ],
                 ),

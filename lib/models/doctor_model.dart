@@ -67,7 +67,7 @@ class DoctorModel {
 class DoctorTimingDataModel {
   String? start;
   String? end;
-  String? day;
+  List<String>? day;
 
   DoctorTimingDataModel({
     this.start,
@@ -79,16 +79,24 @@ class DoctorTimingDataModel {
     return DoctorTimingDataModel(
       start: json['start'],
       end: json['end'],
-      day: json['day'],
+      day: json['day_of_week'] != null
+          ? List<String>.from(json['day_of_week'])
+          : [],
     );
+  }
+
+  String get formattedDays {
+    if (day == null || day!.isEmpty) return "-";
+    return day!.join(", ");
   }
 
   Map<String, dynamic> toJson() {
     return {
       "start": start,
       "end": end,
-      "day": day,
+      "day_of_week": day,
     };
   }
 }
+
 

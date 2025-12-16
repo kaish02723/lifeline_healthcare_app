@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/doctor_provider.dart';
 
 class PhysicalSummaryScreen extends StatefulWidget {
   const PhysicalSummaryScreen({super.key});
@@ -10,6 +13,14 @@ class PhysicalSummaryScreen extends StatefulWidget {
 }
 
 class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<DoctorProvider>().getAllDoctors();
+    });
+  }
+
   String selectedLanguage = "English";
 
   @override
@@ -58,9 +69,10 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: isDark
-                  ? Colors.black.withOpacity(0.35)
-                  : Colors.grey.withOpacity(0.20),
+              color:
+                  isDark
+                      ? Colors.black.withOpacity(0.35)
+                      : Colors.grey.withOpacity(0.20),
               offset: const Offset(0, -2),
               blurRadius: 8,
             ),
@@ -83,9 +95,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                     'Pay with: UPI, GooglePay, PhonePay etc.',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark
-                          ? Colors.grey.shade300
-                          : Colors.grey.shade500,
+                      color:
+                          isDark ? Colors.grey.shade300 : Colors.grey.shade500,
                     ),
                   ),
                   Spacer(),
@@ -93,9 +104,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                     'Secure Payment',
                     style: TextStyle(
                       fontSize: 15,
-                      color: isDark
-                          ? Colors.grey.shade400
-                          : Colors.grey.shade600,
+                      color:
+                          isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                     ),
                   ),
                 ],
@@ -131,9 +141,10 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.grey.withOpacity(0.2),
+                  color:
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: Offset(2, 3),
                 ),
@@ -191,82 +202,100 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
   }
 
   Widget _doctorList(bool isDark) {
-    final doctors = [
-      {
-        "name": "Ms. Bipasha",
-        "role": "Counselling Psychologist",
-        "experience": "18 years experience",
-        "consultations": "9054 consultations",
-        "img":
-            "https://www.shutterstock.com/image-photo/close-head-shot-portrait-preppy-600nw-1433809418.jpg",
-      },
-      {
-        "name": "Mr. Ramesh",
-        "role": "Counselling Psychologist",
-        "experience": "11 years experience",
-        "consultations": "4120 consultations",
-        "img":
-            "https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129417.jpg?semt=ais_hybrid&w=740&q=80",
-      },
-    ];
+    return Consumer<DoctorProvider>(
+      builder: (context, provider, _) {
+        final doctors = provider.filteredDoctorsList;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: doctors.map((doctor) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 35,
-                  backgroundImage: NetworkImage(doctor['img']!),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    Text(
-                      doctor['name']!,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: isDark ? Colors.white : Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      doctor['role']!,
-                      style: TextStyle(
-                        color: isDark ? Colors.white70 : Color(0xff555555),
-                      ),
-                    ),
-                    Text(
-                      doctor['experience']!,
-                      style: TextStyle(
-                        color: isDark ? Colors.white70 : Color(0xff555555),
-                      ),
-                    ),
-                    Text(
-                      doctor['consultations']!,
-                      style: TextStyle(
-                        color: isDark ? Colors.white70 : Color(0xff555555),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 0.5,
-                  height: 100,
-                  margin: const EdgeInsets.only(left: 20),
-                  color: Colors.grey.shade400,
-                ),
-              ],
+        if (provider.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.teal,
+              strokeWidth: 3,
             ),
           );
-        }).toList(),
-      ),
+        }
+
+        if (doctors.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              "No doctors available for this speciality",
+              style: TextStyle(color: isDark ? Colors.redAccent : Colors.red),
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children:
+                doctors.map((doctor) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundImage: NetworkImage(
+                            doctor.image ?? "https://via.placeholder.com/150",
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              doctor.name ?? "",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              doctor.speciality ?? "",
+                              style: TextStyle(
+                                color:
+                                    isDark
+                                        ? Colors.white70
+                                        : const Color(0xff555555),
+                              ),
+                            ),
+                            Text(
+                              doctor.experience ?? "",
+                              style: TextStyle(
+                                color:
+                                    isDark
+                                        ? Colors.white70
+                                        : const Color(0xff555555),
+                              ),
+                            ),
+                            Text(
+                              "${doctor.totalConsult ?? 0} consultations",
+                              style: TextStyle(
+                                color:
+                                    isDark
+                                        ? Colors.white70
+                                        : const Color(0xff555555),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          width: 0.5,
+                          height: 100,
+                          margin: const EdgeInsets.only(left: 20),
+                          color: Colors.grey.shade400,
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+          ),
+        );
+      },
     );
   }
 
@@ -287,9 +316,10 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.grey.withOpacity(0.2),
+                  color:
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: Offset(2, 3),
                 ),
@@ -347,9 +377,10 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.grey.withOpacity(0.2),
+                  color:
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: Offset(2, 3),
                 ),
