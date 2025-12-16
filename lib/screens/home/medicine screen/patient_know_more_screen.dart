@@ -1,23 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../home/help_support_screen.dart';
-
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: const FollowUpScreen(),
-    );
-  }
-}
+import '../help_support_screen.dart';
 
 class FollowUpScreen extends StatelessWidget {
   const FollowUpScreen({Key? key}) : super(key: key);
