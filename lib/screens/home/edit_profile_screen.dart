@@ -48,12 +48,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: CircleAvatar(
                   radius: 55,
                   backgroundColor: Colors.grey.shade300,
-                  backgroundImage: imageFile != null
-                      ? FileImage(imageFile!)
-                      : null,
-                  child: imageFile == null
-                      ? Icon(Icons.camera_alt, size: 32, color: Colors.black54)
-                      : null,
+                  backgroundImage:
+                      imageFile != null ? FileImage(imageFile!) : null,
+                  child:
+                      imageFile == null
+                          ? Icon(
+                            Icons.camera_alt,
+                            size: 32,
+                            color: Colors.black54,
+                          )
+                          : null,
                 ),
               ),
             ),
@@ -89,11 +93,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 labelText: "Gender",
                 border: OutlineInputBorder(),
               ),
-              items: [
-                "Male",
-                "Female",
-                "Other",
-              ].map((g) => DropdownMenuItem(child: Text(g), value: g)).toList(),
+              items:
+                  ["Male", "Female", "Other"]
+                      .map((g) => DropdownMenuItem(child: Text(g), value: g))
+                      .toList(),
               onChanged: (value) {
                 setState(() {
                   provider.updateGender = value;
@@ -139,21 +142,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: Colors.teal,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7) ,
+                    borderRadius: BorderRadius.circular(7),
                   ),
                 ),
-                onPressed: () {
-                  var data = {
+                onPressed: () async {
+                  String? imageUrl;
+
+                  if (imageFile != null) {
+                    imageUrl =
+                    await provider.uploadProfileImage(imageFile!, context);
+                  }
+
+                  Map<String, dynamic> data = {
                     "name": provider.updateNameController.text,
                     "email": provider.updateEmailController.text,
                     "gender": provider.updateGender,
                     "date_of_birth": provider.updateDobController.text,
                     "address": provider.updateAddressController.text,
-                    "picture": imageFile?.path,
                   };
+
+                  if (imageUrl != null && imageUrl.isNotEmpty) {
+                    data["picture"] = imageUrl;
+                  }
+
                   provider.updateUserProfile(context, data);
-                  print("Saving profile...");
                 },
+
                 child: Text("SAVE CHANGES"),
               ),
             ),

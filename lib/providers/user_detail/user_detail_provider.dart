@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../auth_provider.dart';
 
 class UserDetailProvider with ChangeNotifier {
   final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com/userProfile';
@@ -12,7 +15,7 @@ class UserDetailProvider with ChangeNotifier {
   var genderController = TextEditingController();
   var dateController = TextEditingController();
 
-  Future<bool> addUserDetails(
+  Future<bool> completeProfile(
     String? userId,
     Map<String, dynamic> data,
     BuildContext context,
@@ -23,11 +26,18 @@ class UserDetailProvider with ChangeNotifier {
         return false;
       }
 
-      final url = Uri.parse('$baseUrl/create/$userId');
+      final url = Uri.parse('$baseUrl/create-profile');
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      final token = await authProvider.getToken();
+
 
       final response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
         body: jsonEncode(data),
       );
 
@@ -55,6 +65,4 @@ class UserDetailProvider with ChangeNotifier {
       return false;
     }
   }
-
-
 }

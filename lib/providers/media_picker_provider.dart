@@ -9,7 +9,10 @@ import 'package:provider/provider.dart';
 
 class MediaPickerProvider with ChangeNotifier {
   final formKey = GlobalKey<FormState>();
-  XFile? profileImage;
+
+  XFile? profileImage;        // local picked image
+  String? profileImageUrl;   // server image url
+
   final ImagePicker picker = ImagePicker();
 
   /// PICK FROM GALLERY
