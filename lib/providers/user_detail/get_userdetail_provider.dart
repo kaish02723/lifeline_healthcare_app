@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
@@ -31,7 +32,7 @@ class GetUserDetailProvider with ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/details/$userId'),
+        Uri.parse('$baseUrl/get-profile'),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -88,7 +89,7 @@ class GetUserDetailProvider with ChangeNotifier {
 
     try {
       final response = await http.put(
-        Uri.parse('$baseUrl/update/$userId'),
+        Uri.parse('$baseUrl/update-profile'),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -142,5 +143,32 @@ class GetUserDetailProvider with ChangeNotifier {
     if (g == "male") return "Male";
     if (g == "female") return "Female";
     return "Other";
+  }
+
+  Future<String?> uploadProfileImage(File file, BuildContext context) async {
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var userId = authProvider.userId;
+
+    final url = Uri.parse(
+      "https://phone-auth-with-jwt-4.onrender.com/userProfile/upload/$userId",
+    );
+
+    var request = http.MultipartRequest("POST", url);
+    final token = await authProvider.getToken();
+
+    request.headers['Authorization'] = 'Bearer $token';
+
+    request.files.add(
+      await http.MultipartFile.fromPath("image", file.path),
+    );
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      final res = await http.Response.fromStream(response);
+      final data = jsonDecode(res.body);
+      return data["imageUrl"];
+    }
+    return null;
   }
 }

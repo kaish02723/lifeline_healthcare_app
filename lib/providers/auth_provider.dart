@@ -146,6 +146,9 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode(data),
       );
 
+      print(response.body);
+      print(response.request?.headers);
+
       final body = jsonDecode(response.body);
 
       print("VERIFY RESPONSE: $body");
