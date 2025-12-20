@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../config/app_theme_colors.dart';
 import '../../../config/color.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
+import '../../../providers/user_detail/get_userdetail_provider.dart';
 import 'medicine_checkout_screen.dart';
 
 class MedicineCart extends StatelessWidget {
@@ -17,6 +18,8 @@ class MedicineCart extends StatelessWidget {
     final cart = context.watch<CartProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    var provider = Provider.of<GetUserDetailProvider>(context);
+    var userData = provider.user;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -114,7 +117,7 @@ class MedicineCart extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              "MD Jahir\nHouse 12, Delhi NCR\nPhone: 9123456789",
+                              "${userData?.name}\nHouse 12, Delhi NCR\nPhone: **********",
                               style: TextStyle(
                                 color:
                                     isDark

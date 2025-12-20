@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../config/color.dart';
 import '../../../config/app_theme_colors.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
+import '../../../providers/user_detail/get_userdetail_provider.dart';
 
 class MedicineCheckoutScreen extends StatefulWidget {
   const MedicineCheckoutScreen({super.key});
@@ -22,6 +23,8 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final glass = theme.extension<AppThemeColors>()!;
+    var provider = Provider.of<GetUserDetailProvider>(context);
+    var userData = provider.user;
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
@@ -86,10 +89,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                         ),
                         onPressed: () {
                           if (selectedPayment == 'COD') {
-                            // TODO: COD order API
-                          } else {
-                            // TODO: Online payment
-                          }
+                          } else {}
                         },
                         child: Text(
                           selectedPayment == 'COD'
@@ -124,7 +124,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                 ),
               ),
               subtitle: Text(
-                "MD Jahir\nHouse 12, Delhi NCR\nPhone: 9123456789",
+                "${userData?.name}\nHouse 12, Delhi NCR\nPhone: **********",
                 style: TextStyle(
                   color:
                       isDark
