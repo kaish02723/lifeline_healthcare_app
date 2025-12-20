@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
+import 'package:provider/provider.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
 
+  @override
+  State<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<MedicineOrderProvider>(context,listen: false).getMedicine();
+  }
 
   // Rating Bar Method
   Widget buildRatingBar(int rating) {
@@ -30,153 +42,98 @@ class OrdersScreen extends StatelessWidget {
         ),
         title: Text('Orders', style: TextStyle(color: Colors.white)),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(8),
-        children: [
-          // Order 1
-          Card(
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: Container(
-                width: 60,
-                height: 60,
-                color: Colors.grey[300],
-                child: Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text('Delivery on Nov 03'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('FUBAR Medicine Relax Mind'),
-                  SizedBox(height: 4),
-                  buildRatingBar(0),
-                  Text('Rate this product now', style: TextStyle(fontSize: 12)),
-                ],
-              ),
-              trailing: Icon(Icons.chevron_right),
-            ),
-          ),
+      body: Consumer<MedicineOrderProvider>(
+        builder: (BuildContext context, value, Widget? child) {
+          return ListView.builder(
+            itemCount: value.ordersDetailList.length,
+            itemBuilder: (context, index) {
+              var order = value.ordersDetailList[index];
 
-          // Order 2
-          Card(
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: Container(
-                width: 60,
-                height: 60,
-                color: Colors.grey[300],
-                child: Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text('Delivery on Nov 03'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('FUBAR Medicine Relax Mind'),
-                  SizedBox(height: 4),
-                  buildRatingBar(5),
-                  Text('Write a Review', style: TextStyle(fontSize: 12, color: Colors.blue)),
-                ],
-              ),
-              trailing: Icon(Icons.chevron_right),
-            ),
-          ),
+              return Card(
+                margin: const EdgeInsets.only(bottom: 12, left: 8, right: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Order Code + Status
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            order.orderCode ?? "ORD-XXXX",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            order.orderStatus ?? "Processing",
+                            style: TextStyle(
+                              color:
+                                  order.orderStatus == "processing"
+                                      ? Colors.orange
+                                      : Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
 
-          // Order 3
-          Card(
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: Container(
-                width: 60,
-                height: 60,
-                color: Colors.grey[300],
-                child: Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text('Delivery on Nov 03'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('FUBAR Medicine Relax Mind'),
-                  SizedBox(height: 4),
-                  buildRatingBar(0),
-                  Text('Rate this product now', style: TextStyle(fontSize: 12)),
-                ],
-              ),
-              trailing: Icon(Icons.chevron_right),
-            ),
-          ),
+                      const SizedBox(height: 6),
 
-          // Order 4
-          Card(
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: Container(
-                width: 60,
-                height: 60,
-                color: Colors.grey[300],
-                child: Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text('Delivery on Nov 03'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('FUBAR Medicine Relax Mind'),
-                  SizedBox(height: 4),
-                  buildRatingBar(0),
-                  Text('Rate this product now', style: TextStyle(fontSize: 12)),
-                ],
-              ),
-              trailing: Icon(Icons.chevron_right),
-            ),
-          ),
+                      // Total Amount
+                      Text(
+                        "Total: ₹${order.totalAmount}",
+                        style: const TextStyle(fontSize: 14),
+                      ),
 
-          // Order 5
-          Card(
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: Container(
-                width: 60,
-                height: 60,
-                color: Colors.grey[300],
-                child: Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text('Delivery on Nov 03'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('FUBAR Medicine Relax Mind'),
-                  SizedBox(height: 4),
-                  buildRatingBar(0),
-                  Text('Rate this product now', style: TextStyle(fontSize: 12)),
-                ],
-              ),
-              trailing: Icon(Icons.chevron_right),
-            ),
-          ),
+                      const SizedBox(height: 4),
 
-          // Order 6
-          Card(
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: Container(
-                width: 60,
-                height: 60,
-                color: Colors.grey[300],
-                child: Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text('Delivery on Nov 03'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('FUBAR Medicine Relax Mind'),
-                  SizedBox(height: 4),
-                  buildRatingBar(0),
-                  Text('Rate this product now', style: TextStyle(fontSize: 12)),
-                ],
-              ),
-              trailing: Icon(Icons.chevron_right),
-            ),
-          ),
-        ],
+                      // Delivery Date
+                      Text(
+                        "Delivery: ${order.deliveryDate?.toIso8601String().split("T")[0]}",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // Rating (optional)
+                      Row(
+                        children: [
+                          const Text("Rating: "),
+                          ...List.generate(
+                            5,
+                            (i) => Icon(
+                              i < (order.rating?.toInt() ?? 0)
+                                  ? Icons.star
+                                  : Icons.star_border,
+                              color: Colors.green,
+                              size: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // Optional Review
+                      if ((order.review ?? "").isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            "Review: ${order.review}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
