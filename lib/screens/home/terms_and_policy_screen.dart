@@ -17,7 +17,6 @@ class TermsPolicyScreen extends StatelessWidget {
       backgroundColor:
       isDark ? AppColors.backgroundDark : AppColors.background,
 
-      /// 🔹 APP BAR
       appBar: AppBar(
         title: const Text("Terms & Policy"),
         backgroundColor:
@@ -82,7 +81,6 @@ class TermsPolicyScreen extends StatelessWidget {
     );
   }
 
-  /// 🧊 GLASS CARD
   Widget _glassCard(
       BuildContext context, {
         required String title,
