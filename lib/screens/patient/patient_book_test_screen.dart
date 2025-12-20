@@ -20,7 +20,7 @@ class BookTestFormScreen extends StatefulWidget {
 
 class _BookTestFormScreenState extends State<BookTestFormScreen> {
 
-  // ✅ SUCCESS + REVIEW DIALOG
+  //  SUCCESS + REVIEW DIALOG
   void showTestSuccessDialog() {
     int rating = 0;
 
@@ -216,4 +216,3 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
     );
   }
 }
-
