@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../config/color.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
 
 class MedicineCheckoutScreen extends StatefulWidget {
   const MedicineCheckoutScreen({super.key});
 
   @override
-  State<MedicineCheckoutScreen> createState() =>
-      _MedicineCheckoutScreenState();
+  State<MedicineCheckoutScreen> createState() => _MedicineCheckoutScreenState();
 }
 
 class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
@@ -29,32 +29,79 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
         elevation: 0,
       ),
 
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              minimumSize: const Size(double.infinity, 50),
-            ),
-            onPressed: () {
-              // 🔥 FINAL ORDER API
-              // provider.placeOrder(...)
-            },
-            child: Text(
-              selectedPayment == 'COD'
-                  ? "Place Order"
-                  : "Pay & Place Order",
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-        ),
-      ),
+      bottomNavigationBar:
+          cart.items.isEmpty
+              ? null
+              : SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.cardDark : AppColors.card,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 12,
+                        color: Colors.black.withOpacity(0.12),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total: ₹${cart.totalAmount}",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  isDark ? AppColors.textDark : AppColors.text,
+                            ),
+                          ),
+                          Text(
+                            "${cart.itemCount} items",
+                            style: TextStyle(
+                              color:
+                                  isDark
+                                      ? AppColors.lightGreyTextDark
+                                      : AppColors.lightGreyText,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          minimumSize: const Size(double.infinity, 48),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const MedicineCheckoutScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          selectedPayment == 'COD'
+                              ? "Place Order"
+                              : "Pay & Place Order",
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          /// 📍 Address
           _glassCard(
             isDark,
             child: ListTile(
@@ -71,7 +118,6 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
 
           const SizedBox(height: 20),
 
-          /// 📦 Order Summary
           _glassCard(
             isDark,
             child: Column(
@@ -83,7 +129,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                 ),
                 const Divider(),
                 ...cart.items.map(
-                      (e) => Row(
+                  (e) => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("${e.product.medName} x${e.quantity}"),
@@ -108,7 +154,6 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
 
           const SizedBox(height: 20),
 
-          /// 💳 Payment
           _glassCard(
             isDark,
             child: Column(
@@ -141,9 +186,10 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark
-                ? Colors.white.withOpacity(0.08)
-                : Colors.white.withOpacity(0.6),
+            color:
+                isDark
+                    ? Colors.white.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.6),
             borderRadius: BorderRadius.circular(16),
           ),
           child: child,

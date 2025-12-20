@@ -44,29 +44,6 @@ class MedicineCart extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Total: ₹${cart.totalAmount}",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  isDark ? AppColors.textDark : AppColors.text,
-                            ),
-                          ),
-                          Text(
-                            "${cart.itemCount} items",
-                            style: TextStyle(
-                              color:
-                                  isDark
-                                      ? AppColors.lightGreyTextDark
-                                      : AppColors.lightGreyText,
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(height: 12),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
