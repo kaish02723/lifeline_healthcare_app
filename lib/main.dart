@@ -31,12 +31,20 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => MediaPickerProvider()),
         ChangeNotifierProvider(create: (context) => BookTestProvider()),
+<<<<<<< HEAD
         ChangeNotifierProvider(create: (context) => SurgeryProvider(),),
         ChangeNotifierProvider(create: (context) => DashBoardProvider(),),
         ChangeNotifierProvider(create: (context) => DoctorProvider(),),
         ChangeNotifierProvider(create: (context) => ProductProvider(),),
         ChangeNotifierProvider(create: (context) => CartProvider(),),
         ChangeNotifierProvider(create: (context) => MedicineOrderProvider(),)
+=======
+        ChangeNotifierProvider(create: (context) => SurgeryProvider()),
+        ChangeNotifierProvider(create: (context) => DashBoardProvider()),
+        ChangeNotifierProvider(create: (context) => DoctorProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+>>>>>>> 20268886a66c839f16f2d88f750d15330d42b4da
       ],
       child: MyApp(),
     ),
@@ -64,7 +72,7 @@ class MyApp extends StatelessWidget {
                     glassBackground: Colors.white.withOpacity(0.4),
                     borderColor: Colors.white.withOpacity(0.7),
                     cardShadow: Colors.black.withOpacity(0.05),
-                  )
+                  ),
                 ],
               ),
 
@@ -75,12 +83,11 @@ class MyApp extends StatelessWidget {
                     glassBackground: Colors.white.withOpacity(0.10),
                     borderColor: Colors.white.withOpacity(0.20),
                     cardShadow: Colors.black.withOpacity(0.50),
-                  )
+                  ),
                 ],
               ),
-              themeMode: themeProvider.isDark
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
+              themeMode:
+                  themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
               routes: {
                 '/phone_auth_screen': (context) => const PhoneAuthScreen(),
                 '/dashboard': (context) => const DashboardScreen(),
