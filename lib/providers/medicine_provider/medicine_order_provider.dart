@@ -22,6 +22,7 @@ class MedicineOrderProvider with ChangeNotifier {
     final data = {
       "order": order,
       "items": items,
+
     };
 
     await service.postMedicineData(data);
