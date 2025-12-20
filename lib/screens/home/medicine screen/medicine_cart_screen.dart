@@ -128,7 +128,6 @@ class MedicineCart extends StatelessWidget {
                     ),
           ),
 
-          /// TOTAL + CHECKOUT
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
