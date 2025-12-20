@@ -9,7 +9,7 @@ import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_category_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/orders_screen.dart';
+import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_order_detail_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_category_screen.dart';

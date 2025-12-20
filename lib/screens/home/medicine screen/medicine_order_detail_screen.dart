@@ -38,7 +38,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: Text('Orders', style: TextStyle(color: Colors.white)),
       ),

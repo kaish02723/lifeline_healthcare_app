@@ -25,7 +25,7 @@ class MedicineOrderService {
   }
 
 
-  Future<void> postMedicineData(Map<String, dynamic> data) async {
+  Future<void> createMedicineOrder(Map<String, dynamic> data) async {
     var response = await http.post(
       Uri.parse('$baseUrl/order/create'),
       headers: {"Content-Type": "application/json"},
@@ -33,7 +33,7 @@ class MedicineOrderService {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("Order Created Successfully");
+      print("Order Confirmed");
       print(response.body);
     } else {
       print("Error: ${response.statusCode}");

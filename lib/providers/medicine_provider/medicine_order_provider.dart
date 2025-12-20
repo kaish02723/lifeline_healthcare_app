@@ -25,7 +25,7 @@ class MedicineOrderProvider with ChangeNotifier {
 
     };
 
-    await service.postMedicineData(data);
+    await service.createMedicineOrder(data);
   }
 
   String generateOrderCode() {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../../models/medicine/product_model.dart';
+import '../../models/medicine/medicine_product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductProvider with ChangeNotifier {

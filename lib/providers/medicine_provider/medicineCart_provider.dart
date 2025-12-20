@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/medicine/product_model.dart';
+import '../../models/medicine/medicine_product_model.dart';
 
 class CartItem {
   final ProductModel product;
