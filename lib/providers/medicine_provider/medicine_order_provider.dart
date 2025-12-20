@@ -29,6 +29,7 @@ class MedicineOrderProvider with ChangeNotifier {
   }
 
   String generateOrderCode() {
+
     return "ORD-${DateTime.now().millisecondsSinceEpoch}";
   }
 }
