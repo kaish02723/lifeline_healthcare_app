@@ -13,6 +13,7 @@ import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.d
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_category_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_my_surgery_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/offer_banner.dart';
@@ -154,6 +155,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
 
                     _drawerItem(
+                      icon: Icons.local_hospital_outlined,
+                      title: 'My Surgery',
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MySurgeryScreen(),
+                          ),
+                        );
+                      },
+                    ),
+
+                    _drawerItem(
                       icon: CupertinoIcons.cube_box,
                       title: 'My Orders',
                       onTap: () {
@@ -166,6 +181,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       title: 'ChatBot',
                       onTap: () {
                         HapticFeedback.selectionClick();
+                        Navigator.pop(context); // drawer close
+                        _showComingSoonDialog(context);
                       },
                     ),
 
@@ -231,6 +248,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.only(left: 13),
               child: Text(
                 'Lifeline',
+                textScaler: TextScaler.linear(0.93),
                 style: GoogleFonts.nunito(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -248,6 +266,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SizedBox(width: 8),
             Text(
               "HealthCare",
+              textScaler: TextScaler.linear(0.93),
               style: GoogleFonts.nunito(
                 color: Color(0xFFFFC107),
                 fontWeight: FontWeight.bold,
@@ -680,6 +699,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  void _showComingSoonDialog(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.smart_toy_outlined,
+                color: const Color(0xff00796B),
+                size: 26,
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                "Coming Soon",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          content: Text(
+            "🤖 Our AI ChatBot is on the way!\n\n"
+            "Very soon you’ll be able to chat with doctors, "
+            "get instant health guidance, and quick support.",
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.5,
+              color: isDark ? Colors.grey.shade300 : Colors.grey.shade700,
+            ),
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xff00796B),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 10,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                "Got it",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
         );
       },
     );
