@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/models/get_user_detail_model.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
@@ -158,9 +159,7 @@ class GetUserDetailProvider with ChangeNotifier {
 
     request.headers['Authorization'] = 'Bearer $token';
 
-    request.files.add(
-      await http.MultipartFile.fromPath("image", file.path),
-    );
+    request.files.add(await http.MultipartFile.fromPath("image", file.path));
 
     var response = await request.send();
 
@@ -170,5 +169,23 @@ class GetUserDetailProvider with ChangeNotifier {
       return data["imageUrl"];
     }
     return null;
+  }
+
+  updateGenderValue(String value) {
+    updateGender = value;
+    notifyListeners();
+  }
+
+  // update profile
+  File? imageFile;
+
+  Future<void> pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
+      notifyListeners();
+    }
   }
 }
