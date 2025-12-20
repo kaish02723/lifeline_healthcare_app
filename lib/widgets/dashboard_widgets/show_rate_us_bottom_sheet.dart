@@ -1,9 +1,12 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/rating_model/submit_rating_model.dart';
+import '../../providers/rating_provider/submit_rating_provider.dart';
 
 void showRateUsBottomSheet(BuildContext context) {
+  final rootContext = context;
+
   int selectedRating = 0;
   TextEditingController feedbackController = TextEditingController();
 
@@ -13,15 +16,15 @@ void showRateUsBottomSheet(BuildContext context) {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
-    builder: (context) {
+    builder: (sheetContext) {
       return StatefulBuilder(
-        builder: (context, setState) {
+        builder: (sheetContext, setState) {
           return Padding(
             padding: EdgeInsets.only(
               left: 16,
               right: 16,
               top: 16,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+              bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 16,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -39,7 +42,7 @@ void showRateUsBottomSheet(BuildContext context) {
 
                 const SizedBox(height: 16),
 
-                // ⭐ STAR RATING
+                ///  STAR RATING
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (index) {
@@ -52,15 +55,16 @@ void showRateUsBottomSheet(BuildContext context) {
                       icon: Icon(
                         Icons.star,
                         size: 34,
-                        color: index < selectedRating
-                            ? const Color(0xFFFFC107)
-                            : Colors.grey.shade400,
+                        color:
+                            index < selectedRating
+                                ? const Color(0xFFFFC107)
+                                : Colors.grey.shade400,
                       ),
                     );
                   }),
                 ),
 
-                // FEEDBACK FIELD
+                ///  FEEDBACK
                 TextField(
                   controller: feedbackController,
                   maxLength: 200,
@@ -74,41 +78,76 @@ void showRateUsBottomSheet(BuildContext context) {
 
                 const SizedBox(height: 10),
 
-                // SUBMIT BUTTON
+                ///  SUBMIT BUTTON
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFC107),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () async {
-                      if (selectedRating == 0) return;
-
-                      Navigator.pop(context);
-
-                      if (selectedRating >= 4) {
-                        // 👉 Play Store redirect
-                        // final url = Uri.parse(
-                        //   "https://play.google.com/store/apps/details?id=com.lifeline.healthcare",
-                        // );
-                        // await launchUrl(url, mode: LaunchMode.externalApplication);
-                      }
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "Thank you for rating Lifeline Healthcare 💙",
+                  child: Consumer<SubmitRatingProvider>(
+                    builder: (context, provider, _) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFFC107),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
+                        onPressed:
+                            provider.isLoading
+                                ? null
+                                : () async {
+                                  if (selectedRating == 0) {
+                                    ScaffoldMessenger.of(
+                                      rootContext,
+                                    ).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("Please select rating"),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  final model = SubmitRatingModel(
+                                    ratingTypes: "app",
+                                    rating: selectedRating.toDouble(),
+                                    feedback: feedbackController.text.trim(),
+                                    appVersion: 1.0,
+                                    platform: "android",
+                                  );
+
+                                  await provider.submitRating(model);
+
+                                  if (provider.successMessage != null) {
+                                    ScaffoldMessenger.of(
+                                      rootContext,
+                                    ).showSnackBar(
+                                      SnackBar(
+                                        content: Text(provider.successMessage!),
+                                      ),
+                                    );
+
+                                    Navigator.pop(sheetContext); // LAST
+                                  }
+
+                                  if (provider.errorMessage != null) {
+                                    ScaffoldMessenger.of(
+                                      rootContext,
+                                    ).showSnackBar(
+                                      SnackBar(
+                                        content: Text(provider.errorMessage!),
+                                      ),
+                                    );
+                                  }
+                                },
+                        child:
+                            provider.isLoading
+                                ? const CircularProgressIndicator(
+                                  color: Colors.black,
+                                )
+                                : const Text(
+                                  "Submit Rating",
+                                  style: TextStyle(color: Colors.black),
+                                ),
                       );
                     },
-                    child: const Text(
-                      "Submit Rating",
-                      style: TextStyle(color: Colors.black),
-                    ),
                   ),
                 ),
               ],

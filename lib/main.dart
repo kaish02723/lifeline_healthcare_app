@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lifeline_healthcare_app/providers/rating_provider/app_rating_review_provider.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
@@ -8,6 +9,7 @@ import 'package:lifeline_healthcare_app/providers/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicineCart_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/product_provider.dart';
+import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
 import 'package:lifeline_healthcare_app/providers/surgery_provider.dart';
 import 'package:lifeline_healthcare_app/providers/theme_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
@@ -31,20 +33,19 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => MediaPickerProvider()),
         ChangeNotifierProvider(create: (context) => BookTestProvider()),
-<<<<<<< HEAD
         ChangeNotifierProvider(create: (context) => SurgeryProvider(),),
         ChangeNotifierProvider(create: (context) => DashBoardProvider(),),
         ChangeNotifierProvider(create: (context) => DoctorProvider(),),
         ChangeNotifierProvider(create: (context) => ProductProvider(),),
         ChangeNotifierProvider(create: (context) => CartProvider(),),
-        ChangeNotifierProvider(create: (context) => MedicineOrderProvider(),)
-=======
+        ChangeNotifierProvider(create:  (context) => TopRatingProvider(),),
+        ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),),
+        ChangeNotifierProvider(create: (context) => MedicineOrderProvider(),),
         ChangeNotifierProvider(create: (context) => SurgeryProvider()),
         ChangeNotifierProvider(create: (context) => DashBoardProvider()),
         ChangeNotifierProvider(create: (context) => DoctorProvider()),
         ChangeNotifierProvider(create: (context) => ProductProvider()),
-        ChangeNotifierProvider(create: (context) => CartProvider()),
->>>>>>> 20268886a66c839f16f2d88f750d15330d42b4da
+        ChangeNotifierProvider(create: (context) => CartProvider())
       ],
       child: MyApp(),
     ),

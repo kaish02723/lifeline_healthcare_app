@@ -21,6 +21,7 @@ import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/offer_banner.d
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../providers/rating_provider/app_rating_review_provider.dart';
 import '../../providers/user_detail/get_userdetail_provider.dart';
 import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
 import '../../widgets/dashboard_widgets/show_rate_us_bottom_sheet.dart';
@@ -49,6 +50,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context,
       listen: false,
     ).getUserDetail(context);
+
+    Provider.of<TopRatingProvider>(context, listen: false)
+        .getTopRatings();
     startOfferAutoScroll(context);
   }
 
