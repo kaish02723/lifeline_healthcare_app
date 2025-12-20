@@ -1,10 +1,9 @@
 import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/color.dart';
+import '../../../config/app_theme_colors.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
 
 class MedicineCheckoutScreen extends StatefulWidget {
@@ -20,12 +19,18 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final glass = theme.extension<AppThemeColors>()!;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+
       appBar: AppBar(
         title: const Text("Checkout"),
-        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
+        foregroundColor: AppColors.white,
         elevation: 0,
       ),
 
@@ -38,10 +43,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.cardDark : AppColors.card,
                     boxShadow: [
-                      BoxShadow(
-                        blurRadius: 12,
-                        color: Colors.black.withOpacity(0.12),
-                      ),
+                      BoxShadow(blurRadius: 14, color: glass.cardShadow),
                     ],
                   ),
                   child: Column(
@@ -51,16 +53,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Total: ₹${cart.totalAmount}",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  isDark ? AppColors.textDark : AppColors.text,
-                            ),
-                          ),
-                          Text(
-                            "${cart.itemCount} items",
+                            "Total Amount",
                             style: TextStyle(
                               color:
                                   isDark
@@ -68,30 +61,44 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                                       : AppColors.lightGreyText,
                             ),
                           ),
+                          Text(
+                            "₹${cart.totalAmount}",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  isDark ? AppColors.textDark : AppColors.text,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 12),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          minimumSize: const Size(double.infinity, 48),
+                          backgroundColor:
+                              isDark
+                                  ? AppColors.primaryDark
+                                  : AppColors.primary,
+                          minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(14),
                           ),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const MedicineCheckoutScreen(),
-                            ),
-                          );
+                          if (selectedPayment == 'COD') {
+                            // TODO: COD order API
+                          } else {
+                            // TODO: Online payment
+                          }
                         },
                         child: Text(
                           selectedPayment == 'COD'
                               ? "Place Order"
                               : "Pay & Place Order",
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -103,15 +110,37 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           _glassCard(
-            isDark,
+            context,
             child: ListTile(
-              title: const Text("Delivery Address"),
-              subtitle: const Text(
+              leading: Icon(
+                Icons.location_on_outlined,
+                color: isDark ? AppColors.iconDark : AppColors.icon,
+              ),
+              title: Text(
+                "Delivery Address",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? AppColors.textDark : AppColors.text,
+                ),
+              ),
+              subtitle: Text(
                 "MD Jahir\nHouse 12, Delhi NCR\nPhone: 9123456789",
+                style: TextStyle(
+                  color:
+                      isDark
+                          ? AppColors.lightGreyTextDark
+                          : AppColors.lightGreyText,
+                ),
               ),
               trailing: TextButton(
                 onPressed: () {},
-                child: const Text("CHANGE"),
+                child: Text(
+                  "CHANGE",
+                  style: TextStyle(
+                    color:
+                        isDark ? AppColors.secondaryDark : AppColors.secondary,
+                  ),
+                ),
               ),
             ),
           ),
@@ -119,32 +148,65 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
           const SizedBox(height: 20),
 
           _glassCard(
-            isDark,
+            context,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   "Order Summary",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.textDark : AppColors.text,
+                  ),
                 ),
-                const Divider(),
+                const SizedBox(height: 12),
                 ...cart.items.map(
-                  (e) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("${e.product.medName} x${e.quantity}"),
-                      Text("₹${e.product.medPrice}"),
-                    ],
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "${e.product.medName} x${e.quantity}",
+                            style: TextStyle(
+                              color:
+                                  isDark
+                                      ? AppColors.greyTextDark
+                                      : AppColors.greyText,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "₹${e.product.medPrice}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color:
+                                isDark
+                                    ? AppColors.goldenDark
+                                    : AppColors.golden,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Total"),
+                    Text(
+                      "Total",
+                      style: TextStyle(
+                        color: isDark ? AppColors.textDark : AppColors.text,
+                      ),
+                    ),
                     Text(
                       "₹${cart.totalAmount}",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
@@ -155,19 +217,33 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
           const SizedBox(height: 20),
 
           _glassCard(
-            isDark,
+            context,
             child: Column(
               children: [
                 RadioListTile(
                   value: 'COD',
                   groupValue: selectedPayment,
-                  title: const Text("Cash on Delivery"),
+                  activeColor:
+                      isDark ? AppColors.primaryDark : AppColors.primary,
+                  title: Text(
+                    "Cash on Delivery",
+                    style: TextStyle(
+                      color: isDark ? AppColors.textDark : AppColors.text,
+                    ),
+                  ),
                   onChanged: (v) => setState(() => selectedPayment = v!),
                 ),
                 RadioListTile(
                   value: 'ONLINE',
                   groupValue: selectedPayment,
-                  title: const Text("Online Payment"),
+                  activeColor:
+                      isDark ? AppColors.primaryDark : AppColors.primary,
+                  title: Text(
+                    "Online Payment",
+                    style: TextStyle(
+                      color: isDark ? AppColors.textDark : AppColors.text,
+                    ),
+                  ),
                   onChanged: (v) => setState(() => selectedPayment = v!),
                 ),
               ],
@@ -178,19 +254,21 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
     );
   }
 
-  Widget _glassCard(bool isDark, {required Widget child}) {
+  Widget _glassCard(BuildContext context, {required Widget child}) {
+    final theme = Theme.of(context);
+    final glass = theme.extension<AppThemeColors>()!;
+    final isDark = theme.brightness == Brightness.dark;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color:
-                isDark
-                    ? Colors.white.withOpacity(0.08)
-                    : Colors.white.withOpacity(0.6),
+            color: glass.glassBackground,
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: glass.borderColor),
           ),
           child: child,
         ),

@@ -61,9 +61,24 @@ class MedicineCart extends StatelessWidget {
                             ),
                           );
                         },
-                        child: const Text(
-                          "Place Order",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '₹${cart.totalAmount}  |  ',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const Text(
+                              "Order now",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
