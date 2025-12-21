@@ -97,7 +97,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                   width: 25,
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                    'https://img.freepik.com/premium-photo/india-national-fabric-flag_113767-1933.jpg?semt=ais_hybrid&w=740&q=80',
+                                        'https://img.freepik.com/premium-photo/india-national-fabric-flag_113767-1933.jpg?semt=ais_hybrid&w=740&q=80',
                                   ),
                                 ),
                                 const SizedBox(width: 6),
@@ -151,16 +151,17 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           valueListenable: provider.isPhoneValid,
                           builder: (context, isValid, _) {
                             return GestureDetector(
-                              onTap: isValid
-                                  ? () {
-                                if (provider.formKey.currentState!
-                                    .validate()) {
-                                  provider.sendOtp(context);
-                                } else {
-                                  HapticFeedback.mediumImpact();
-                                }
-                              }
-                                  : null,
+                              onTap:
+                                  isValid
+                                      ? () {
+                                        if (provider.formKey.currentState!
+                                            .validate()) {
+                                          provider.sendOtp(context);
+                                        } else {
+                                          HapticFeedback.mediumImpact();
+                                        }
+                                      }
+                                      : null,
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 250),
                                 height: 50,
@@ -168,15 +169,16 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(9),
                                   gradient: LinearGradient(
-                                    colors: isValid
-                                        ? [
-                                      Color(0xFF00796B),
-                                      Color(0xFF26A69A)
-                                    ]
-                                        : [
-                                      Colors.grey.shade400,
-                                      Colors.grey.shade500
-                                    ],
+                                    colors:
+                                        isValid
+                                            ? [
+                                              Color(0xFF00796B),
+                                              Color(0xFF26A69A),
+                                            ]
+                                            : [
+                                              Colors.grey.shade400,
+                                              Colors.grey.shade500,
+                                            ],
                                     begin: Alignment.centerLeft,
                                     end: Alignment.centerRight,
                                   ),
@@ -205,17 +207,17 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           fontSize: 13,
                         ),
                       ),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => UsersDetails(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: const Text('Skip'),
-                      // ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UsersDetails(),
+                            ),
+                          );
+                        },
+                        child: const Text('Skip'),
+                      ),
                     ],
                   ),
                 ),
