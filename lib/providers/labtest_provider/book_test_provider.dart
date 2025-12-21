@@ -45,6 +45,9 @@ class BookTestProvider with ChangeNotifier {
         Uri.parse('$baseUrl/bookings/get-test/$user_Id'),
       );
 
+      print(res.body);
+      print(res.request?.headers);
+
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body);
         MyLabTestModel model = MyLabTestModel.convertToModel(body);

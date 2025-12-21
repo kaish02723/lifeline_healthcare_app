@@ -4,6 +4,7 @@ import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
+import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_provider.dart';
 import 'package:lifeline_healthcare_app/providers/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicineCart_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
@@ -45,7 +46,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => ProductProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => TopRatingProvider(),),
-        ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),)
+        ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),),
+        ChangeNotifierProvider(create: (context) => CancelTestProvider(),)
       ],
       child: MyApp(),
     ),

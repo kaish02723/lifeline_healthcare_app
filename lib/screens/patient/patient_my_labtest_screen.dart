@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
+import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_provider.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
@@ -60,26 +62,29 @@ class _MyTestScreenState extends State<MyTestScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   gradient: LinearGradient(
-                    colors: isDark
-                        ? [
-                            Colors.white.withOpacity(0.08),
-                            Colors.white.withOpacity(0.04),
-                          ]
-                        : [
-                            Colors.white.withOpacity(0.90),
-                            Colors.white.withOpacity(0.70),
-                          ],
+                    colors:
+                        isDark
+                            ? [
+                              Colors.white.withOpacity(0.08),
+                              Colors.white.withOpacity(0.04),
+                            ]
+                            : [
+                              Colors.white.withOpacity(0.90),
+                              Colors.white.withOpacity(0.70),
+                            ],
                   ),
                   border: Border.all(
-                    color: isDark
-                        ? Colors.white.withOpacity(0.12)
-                        : Colors.black12,
+                    color:
+                        isDark
+                            ? Colors.white.withOpacity(0.12)
+                            : Colors.black12,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.black.withOpacity(0.6)
-                          : Colors.black12,
+                      color:
+                          isDark
+                              ? Colors.black.withOpacity(0.6)
+                              : Colors.black12,
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -129,17 +134,23 @@ class _MyTestScreenState extends State<MyTestScreen> {
                     itemBuilder: (context, index) {
                       var testData = value.myLabTestList[index];
 
-                      return TestCard(
-                        userName: testData.user_name.toString(),
-                        testName: testData.test_name.toString(),
-                        phone: testData.phone.toString(),
-                        category: testData.category.toString(),
-                        status: testData.status.toString(),
-                        onCancel: () {
-                          showCancelDialog(
-                            context,
-                            onConfirm: () {},
-                            onCancel: () {},
+                      return Consumer<CancelTestProvider>(
+                        builder: (BuildContext context, value, Widget? child) {
+                          return TestCard(
+                            userName: testData.user_name.toString(),
+                            testName: testData.test_name.toString(),
+                            phone: testData.phone.toString(),
+                            category: testData.category.toString(),
+                            status: testData.status.toString(),
+                            onCancel: () {
+                              showCancelDialog(
+                                context,
+                                onConfirm: () {
+                                  value.cancelLabTest(context, index);
+                                },
+                                onCancel: () {},
+                              );
+                            },
                           );
                         },
                       );
@@ -183,105 +194,157 @@ void showCancelDialog(
           borderRadius: BorderRadius.circular(20),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color:
-                    (isDark
+            child: Consumer<CancelTestProvider>(
+              builder: (BuildContext context, value, Widget? child) {
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color:
+                        isDark
                             ? Colors.white.withOpacity(0.07)
-                            : Colors.white.withOpacity(0.55))
-                        .withOpacity(0.6),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.15)
-                      : Colors.black.withOpacity(0.10),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.warning_amber_rounded,
-                    size: 50,
-                    color: Colors.redAccent,
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  Text(
-                    "Cancel Test?",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
+                            : Colors.white.withOpacity(0.65),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color:
+                          isDark
+                              ? Colors.white.withOpacity(0.15)
+                              : Colors.black.withOpacity(0.10),
                     ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Text(
-                    "Are you sure you want to cancel this test?",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: isDark
-                          ? Colors.white70
-                          : Colors.black.withOpacity(0.7),
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  Row(
-                    children: [
-                      // ✖ NO BUTTON
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey.shade500,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            onCancel(); // ⬅ Call custom action
-                          },
-                          child: const Text(
-                            "No",
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 12),
-
-                      // ✔ YES BUTTON
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            onConfirm(); // ⬅ Call custom action
-                          },
-                          child: const Text(
-                            "Yes, Cancel",
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                          ),
-                        ),
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            isDark
+                                ? Colors.black26
+                                : Colors.grey.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                ],
-              ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        size: 50,
+                        color: Colors.redAccent,
+                      ),
+                      const SizedBox(height: 12),
+
+                      /// Title
+                      Text(
+                        "Cancel Test?",
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      /// Subtitle
+                      Text(
+                        "Please provide a reason for canceling this test.",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color:
+                              isDark
+                                  ? Colors.white70
+                                  : Colors.black.withOpacity(0.7),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      /// Cancel Reason TextField
+                      TextField(
+                        controller: value.cancelReasonController,
+                        maxLines: 2,
+                        style: GoogleFonts.poppins(
+                          color: isDark ? Colors.white : Colors.black87,
+                          fontSize: 14,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: "Enter reason...",
+                          hintStyle: GoogleFonts.poppins(
+                            color: isDark ? Colors.white54 : Colors.grey[600],
+                            fontSize: 14,
+                          ),
+                          filled: true,
+                          fillColor:
+                              isDark
+                                  ? Colors.white.withOpacity(0.05)
+                                  : Colors.grey.withOpacity(0.15),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 10,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      /// Buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade500,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                onCancel();
+                              },
+                              child: Text(
+                                "No",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                onConfirm();
+                              },
+                              child: Text(
+                                "Yes, Cancel",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),
