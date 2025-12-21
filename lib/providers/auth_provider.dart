@@ -182,7 +182,7 @@ class AuthProvider with ChangeNotifier {
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => UsersDetails()),
+            MaterialPageRoute(builder: (context) => CompleteProfileScreen()),
           );
         }
       } else {

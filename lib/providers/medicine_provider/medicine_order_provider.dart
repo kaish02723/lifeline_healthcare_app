@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lifeline_healthcare_app/core/utils/services/medicine_order_service.dart';
-import 'package:lifeline_healthcare_app/models/medicine/medicine_order_modal.dart';
-import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
+
+import '../../models/medicine_models/medicine_order_modal.dart';
 
 class MedicineOrderProvider with ChangeNotifier {
   final MedicineOrderService service = MedicineOrderService();

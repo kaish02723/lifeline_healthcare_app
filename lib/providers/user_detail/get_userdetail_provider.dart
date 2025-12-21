@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lifeline_healthcare_app/models/get_user_detail_model.dart';
+import 'package:lifeline_healthcare_app/models/user_model.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +19,13 @@ class GetUserDetailProvider with ChangeNotifier {
   final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com/userProfile';
 
   UserDataModel? user;
+
+  bool get isProfileCompleted => user?.isProfileComplete ?? false;
+
+  String get userName =>
+      user?.name?.isNotEmpty == true ? user!.name! : "Guest User";
+
+  String? get profileImage => user?.picture;
 
   Future<void> getUserDetail(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -40,8 +47,8 @@ class GetUserDetailProvider with ChangeNotifier {
         },
       );
 
-      // print("RESPONSE BODY: ${response.body}");
-      // print("HEADERS USED: ${response.request?.headers}");
+      print("RESPONSE BODY: ${response.body}");
+      print("HEADERS USED: ${response.request?.headers}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -50,6 +57,7 @@ class GetUserDetailProvider with ChangeNotifier {
         user = model.user;
 
         print("User Detail Loaded: ${user?.name}");
+        fillUserData();
         notifyListeners();
       } else {
         print("ERROR: ${response.body}");
@@ -158,7 +166,6 @@ class GetUserDetailProvider with ChangeNotifier {
     final token = await authProvider.getToken();
 
     request.headers['Authorization'] = 'Bearer $token';
-
     request.files.add(await http.MultipartFile.fromPath("image", file.path));
 
     var response = await request.send();
@@ -170,6 +177,19 @@ class GetUserDetailProvider with ChangeNotifier {
     }
     return null;
   }
+
+  Future<void> uploadAndUpdateImage(
+      File file,
+      BuildContext context,
+      ) async {
+    final imageUrl = await uploadProfileImage(file, context);
+
+    if (imageUrl != null) {
+      user?.picture = imageUrl;
+      notifyListeners();
+    }
+  }
+
 
   updateGenderValue(String value) {
     updateGender = value;
