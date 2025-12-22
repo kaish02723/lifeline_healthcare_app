@@ -35,6 +35,14 @@ class AuthProvider with ChangeNotifier {
 
   String? userId;
   String? token;
+  // String? phone_no;
+  //
+  // Future<void> savePhoneNumber(String phone) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   await pref.setString('phone_no', phoneController.text);
+  //   phone_no = phone;
+  //   notifyListeners();
+  // }
 
   Future<void> saveUserId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,8 +88,6 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode({"phone": "+91${phoneController.text}"}),
       );
 
-      print(res.body);
-      print(res.request?.headers);
 
       final body = jsonDecode(res.body);
 
@@ -159,8 +165,10 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode == 200 &&
           body["message"] == "OTP verified successfully") {
         String id = body["user"]["id"].toString();
+        // String phone=body['user']['phone'].toString();
         String jwt = body["token"];
 
+        // await savePhoneNumber(phone);
         await saveToken(jwt);
         await saveUserId(id);
 

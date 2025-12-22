@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/labtest_models/popular_test_model.dart';
@@ -18,96 +20,135 @@ class BookTestFormScreen extends StatefulWidget {
 }
 
 class _BookTestFormScreenState extends State<BookTestFormScreen> {
+  @override
+  @override
+  void initState() {
+    super.initState();
+
+    final bookTestProvider = Provider.of<BookTestProvider>(
+      context,
+      listen: false,
+    );
+    final userProvider = Provider.of<GetUserDetailProvider>(
+      context,
+      listen: false,
+    );
+    final userName = userProvider.user?.name;
+
+    bookTestProvider.testNameController.text = userName!;
+  }
 
   void showTestSuccessDialog() {
-    int rating = 0;
-
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          content: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 350),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.green, size: 70),
-                  const SizedBox(height: 12),
-                  const Text(
-                    "Test Booked Successfully 🎉",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+      builder:
+          (_) => StatefulBuilder(
+            builder:
+                (context, setState) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    widget.test.name ?? "",
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    widget.test.category ?? "",
-                    style: const TextStyle(color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text("Rate your experience", textAlign: TextAlign.center),
-                  const SizedBox(height: 6),
+                  content: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 350),
+                    child: SingleChildScrollView(
+                      child: Consumer<SubmitRatingProvider>(
+                        builder: (BuildContext context, value, Widget? child) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size: 70,
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
+                                "Test Booked Successfully 🎉",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                widget.test.name ?? "",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                widget.test.category ?? "",
+                                style: const TextStyle(color: Colors.grey),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                "Rate your experience",
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 6),
 
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 3,
-                    children: List.generate(
-                      5,
-                          (index) => IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        onPressed: () => setState(() => rating = index + 1),
-                        icon: Icon(
-                          Icons.star,
-                          color: index < rating ? const Color(0xFFFFC107) : Colors.grey,
-                        ),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 3,
+                                children: List.generate(
+                                  5,
+                                  (index) => IconButton(
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                    onPressed: () {
+                                      value.labtestSelectedRatingCount(index);
+                                    },
+                                    icon: Icon(
+                                      Icons.star,
+                                      color:
+                                          index < value.labtestRating
+                                              ? const Color(0xFFFFC107)
+                                              : Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.teal,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => DashboardScreen(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  },
+                                  child: const Text(
+                                    "OK",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (_) => DashboardScreen()),
-                              (route) => false,
-                        );
-                      },
-                      child: const Text(
-                        "OK",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                ),
           ),
-        ),
-      ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

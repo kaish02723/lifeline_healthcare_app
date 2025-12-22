@@ -30,10 +30,10 @@ class CancelTestProvider with ChangeNotifier {
         body: jsonEncode({"status": 'cancelled'}),
       );
 
-      print('cancel test: ${cancelTestResponse.body}');
-      print('cancel test req headers: ${cancelTestResponse.request?.headers}');
-      print('update test status: ${updateTestStatusResponse.body}');
-      print('update test status req headers: ${updateTestStatusResponse.request?.headers}');
+      // print('cancel test: ${cancelTestResponse.body}');
+      // print('cancel test req headers: ${cancelTestResponse.request?.headers}');
+      // print('update test status: ${updateTestStatusResponse.body}');
+      // print('update test status req headers: ${updateTestStatusResponse.request?.headers}');
 
       if (cancelTestResponse.statusCode == 200 && updateTestStatusResponse.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(

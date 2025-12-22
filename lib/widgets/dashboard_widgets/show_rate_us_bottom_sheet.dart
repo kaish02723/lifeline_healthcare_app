@@ -7,7 +7,6 @@ import '../../providers/rating_provider/submit_rating_provider.dart';
 void showRateUsBottomSheet(BuildContext context) {
   final rootContext = context;
 
-  int selectedRating = 0;
   TextEditingController feedbackController = TextEditingController();
 
   showModalBottomSheet(
@@ -26,64 +25,65 @@ void showRateUsBottomSheet(BuildContext context) {
               top: 16,
               bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 16,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Rate Your Experience",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  "Lifeline Healthcare ke sath aapka experience kaisa raha?",
-                  style: TextStyle(color: Colors.grey),
-                ),
-
-                const SizedBox(height: 16),
-
-                ///  STAR RATING
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) {
-                    return IconButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedRating = index + 1;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.star,
-                        size: 34,
-                        color:
-                            index < selectedRating
-                                ? const Color(0xFFFFC107)
-                                : Colors.grey.shade400,
+            child: Consumer<SubmitRatingProvider>(
+              builder: (BuildContext context, value, Widget? child) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Rate Your Experience",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  }),
-                ),
-
-                ///  FEEDBACK
-                TextField(
-                  controller: feedbackController,
-                  maxLength: 200,
-                  decoration: InputDecoration(
-                    hintText: "Short feedback (optional)",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      "Lifeline Healthcare ke sath aapka experience kaisa raha?",
+                      style: TextStyle(color: Colors.grey),
+                    ),
 
-                const SizedBox(height: 10),
+                    const SizedBox(height: 16),
 
-                ///  SUBMIT BUTTON
-                SizedBox(
-                  width: double.infinity,
-                  child: Consumer<SubmitRatingProvider>(
-                    builder: (context, provider, _) {
-                      return ElevatedButton(
+                    ///  STAR RATING
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(5, (index) {
+                        return IconButton(
+                          onPressed: () {
+                            value.selectedRatingCount(index);
+                          },
+                          icon: Icon(
+                            Icons.star,
+                            size: 34,
+                            color:
+                                index < value.selectedRating
+                                    ? const Color(0xFFFFC107)
+                                    : Colors.grey.shade400,
+                          ),
+                        );
+                      }),
+                    ),
+
+                    ///  FEEDBACK
+                    TextField(
+                      controller: feedbackController,
+                      maxLength: 200,
+                      decoration: InputDecoration(
+                        hintText: "Short feedback (optional)",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    ///  SUBMIT BUTTON
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFFC107),
                           shape: RoundedRectangleBorder(
@@ -91,10 +91,10 @@ void showRateUsBottomSheet(BuildContext context) {
                           ),
                         ),
                         onPressed:
-                            provider.isLoading
+                            value.isLoading
                                 ? null
                                 : () async {
-                                  if (selectedRating == 0) {
+                                  if (value.selectedRating == 0) {
                                     ScaffoldMessenger.of(
                                       rootContext,
                                     ).showSnackBar(
@@ -107,38 +107,38 @@ void showRateUsBottomSheet(BuildContext context) {
 
                                   final model = SubmitRatingModel(
                                     ratingTypes: "app",
-                                    rating: selectedRating.toDouble(),
+                                    rating: value.selectedRating.toDouble(),
                                     feedback: feedbackController.text.trim(),
                                     appVersion: 1.0,
                                     platform: "android",
                                   );
 
-                                  await provider.submitRating(model);
+                                  await value.submitRating(model, context);
 
-                                  if (provider.successMessage != null) {
+                                  if (value.successMessage != null) {
                                     ScaffoldMessenger.of(
                                       rootContext,
                                     ).showSnackBar(
                                       SnackBar(
-                                        content: Text(provider.successMessage!),
+                                        content: Text(value.successMessage!),
                                       ),
                                     );
 
                                     Navigator.pop(sheetContext); // LAST
                                   }
 
-                                  if (provider.errorMessage != null) {
+                                  if (value.errorMessage != null) {
                                     ScaffoldMessenger.of(
                                       rootContext,
                                     ).showSnackBar(
                                       SnackBar(
-                                        content: Text(provider.errorMessage!),
+                                        content: Text(value.errorMessage!),
                                       ),
                                     );
                                   }
                                 },
                         child:
-                            provider.isLoading
+                            value.isLoading
                                 ? const CircularProgressIndicator(
                                   color: Colors.black,
                                 )
@@ -146,11 +146,11 @@ void showRateUsBottomSheet(BuildContext context) {
                                   "Submit Rating",
                                   style: TextStyle(color: Colors.black),
                                 ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           );
         },

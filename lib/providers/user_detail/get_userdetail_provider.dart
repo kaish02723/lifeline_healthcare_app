@@ -47,9 +47,6 @@ class GetUserDetailProvider with ChangeNotifier {
         },
       );
 
-      print("RESPONSE BODY: ${response.body}");
-      print("HEADERS USED: ${response.request?.headers}");
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
@@ -106,7 +103,7 @@ class GetUserDetailProvider with ChangeNotifier {
         body: jsonEncode(data),
       );
 
-      print("UPDATE RESPONSE: ${response.body}");
+      // print("UPDATE RESPONSE: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         /// UPDATE SUCCESS
