@@ -5,40 +5,41 @@ import '../models/medicine/medicine_product_model.dart';
 import 'medicine_provider/medicineCart_provider.dart';
 
 class CartDataProvider with ChangeNotifier {
-  List<CartItem> _items = [];
+  List<CartItemModel> _items = [];
 
-  List<CartItem> get items => _items;
+  List<CartItemModel> get items => _items;
 
   bool isInCart(int productId) {
     return items.any((i) => i.product.medId == productId);
   }
 
   double get totalAmount => _items.fold(
-    0,
-        (sum, item) =>
-    sum + (item.product.medPrice ?? 0) * item.quantity,
+    0.0,
+        (sum, item) => sum + (item.product.medPrice ?? 0.0) * item.quantity,
   );
+
 
   /// LOAD FROM DB (CALL IN initState)
   Future<void> loadCart() async {
     final data = await CartDB.getAll();
-    _items =
-        data
-            .map(
-              (e) => CartItem(
-            product: ProductModel(
-              medId: e['productId'],
-              medName: e['name'],
-              medPrice: e['price'],
-              medImage: e['image'],
-            ),
-            quantity: e['quantity'],
-          ),
-        )
-            .toList();
+
+    _items = data.map((e) {
+      return CartItemModel(
+        product: ProductModel(
+          medId: e['productId'] as int,
+          medName: e['name'] as String,
+          medImage: e['image'] as String?,
+          medPrice: (e['price'] as num).toInt(), // FIX
+        ),
+        quantity: e['quantity'] as int,
+      );
+    }).toList();
 
     notifyListeners();
   }
+
+
+
 
   /// ADD
   Future<void> addToCart(ProductModel product) async {
@@ -52,7 +53,7 @@ class CartDataProvider with ChangeNotifier {
         _items[index].quantity,
       );
     } else {
-      _items.add(CartItem(product: product));
+      _items.add(CartItemModel(product: product));
       await CartDB.insert({
         'productId': product.medId,
         'name': product.medName,

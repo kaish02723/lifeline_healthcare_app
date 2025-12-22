@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../models/medicine/medicine_product_model.dart';
-import '../../../providers/medicine_provider/medicineCart_provider.dart';
+import '../../../config/color.dart';
+import '../../../providers/CartProvider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
 import 'medicine_cart_screen.dart';
 import 'medicine_list_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MedicineCategoryScreen extends StatefulWidget {
   const MedicineCategoryScreen({super.key});
 
   @override
-  State<MedicineCategoryScreen> createState() => _MedicineCategoryScreenState();
+  State<MedicineCategoryScreen> createState() =>
+      _MedicineCategoryScreenState();
 }
 
 class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
@@ -27,27 +27,27 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
     "Cold & Cough",
   ];
 
-  late List<String> recentSearches = [];
+  List<String> recentSearches = [];
 
   @override
   void initState() {
     super.initState();
+
     context.read<ProductProvider>().fetchAllMedicines();
-    _loadRecentSearches(); //load recent search
+    context.read<CartDataProvider>().loadCart(); // 🔥 SQFLite cart load
+
+    _loadRecentSearches();
   }
 
+  /// 🔎 Search submit
   void _onSearchSubmit(String value) {
     final query = value.trim();
     if (query.isEmpty) return;
 
     final provider = context.read<ProductProvider>();
-
     provider.searchMedicine(query);
-    _saveRecentSearch(query);
 
-    if (!recentSearches.contains(value)) {
-      recentSearches.insert(0, value);
-    }
+    _saveRecentSearch(query);
 
     Navigator.push(
       context,
@@ -55,16 +55,18 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
     );
   }
 
+  /// 🔄 Load recent search
   Future<void> _loadRecentSearches() async {
     final prefs = await SharedPreferences.getInstance();
     recentSearches = prefs.getStringList('recent_searches') ?? [];
     setState(() {});
   }
 
+  /// 💾 Save recent search
   Future<void> _saveRecentSearch(String value) async {
     final prefs = await SharedPreferences.getInstance();
 
-    recentSearches.remove(value); // duplicate hatao
+    recentSearches.remove(value);
     recentSearches.insert(0, value);
 
     if (recentSearches.length > 6) {
@@ -77,18 +79,20 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<ProductProvider>();
+    final productProvider = context.watch<ProductProvider>();
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back),
-        ),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 1,
 
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+
+        /// 🔍 Search box
         title: Container(
           height: 44,
           decoration: BoxDecoration(
@@ -100,16 +104,17 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
             textInputAction: TextInputAction.search,
             onSubmitted: _onSearchSubmit,
             decoration: const InputDecoration(
-              hintText: "Search medicine..",
+              hintText: "Search medicine...",
               prefixIcon: Icon(Icons.search),
               border: InputBorder.none,
             ),
           ),
         ),
 
+        /// 🛒 CART ICON (SQFLITE)
         actions: [
-          Consumer<CartProvider>(
-            builder: (context, cart, _) {
+          Consumer<CartDataProvider>(
+            builder: (_, cart, __) {
               return Stack(
                 alignment: Alignment.center,
                 children: [
@@ -118,15 +123,17 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const MedicineCart()),
+                        MaterialPageRoute(
+                          builder: (_) => const MedicineCart(),
+                        ),
                       );
                     },
                   ),
 
-                  if (cart.itemCount > 0)
+                  if (cart.items.isNotEmpty)
                     Positioned(
-                      right: 8,
-                      top: 8,
+                      right: 6,
+                      top: 6,
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: const BoxDecoration(
@@ -134,7 +141,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: Text(
-                          cart.itemCount.toString(),
+                          cart.items.length.toString(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
@@ -154,19 +161,22 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
         padding: EdgeInsets.all(16.w),
         child: ListView(
           children: [
+            /// 🕘 Recent searches
             if (recentSearches.isNotEmpty) ...[
               _sectionTitle("Recent Searches"),
               _horizontalChips(recentSearches),
               20.verticalSpace,
             ],
 
+            /// 🔥 Trending
             _sectionTitle("Trending Searches"),
             _horizontalChips(trendingSearches),
             24.verticalSpace,
 
+            /// 📂 Categories
             _sectionTitle("Categories"),
             12.verticalSpace,
-            _categoryList(provider),
+            _categoryList(productProvider),
           ],
         ),
       ),
@@ -187,7 +197,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
         separatorBuilder: (_, __) => 10.horizontalSpace,
-        itemBuilder: (context, index) {
+        itemBuilder: (_, index) {
           return ActionChip(
             label: Text(items[index]),
             onPressed: () => _onSearchSubmit(items[index]),
@@ -206,7 +216,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
         separatorBuilder: (_, __) => 14.horizontalSpace,
-        itemBuilder: (context, index) {
+        itemBuilder: (_, index) {
           final category = categories[index];
           final image = provider.getCategoryImage(category);
 
@@ -216,7 +226,9 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
 
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AllMedicinesScreen()),
+                MaterialPageRoute(
+                  builder: (_) => const AllMedicinesScreen(),
+                ),
               );
             },
             child: Container(
@@ -235,14 +247,13 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
               child: Column(
                 children: [
                   Expanded(
-                    child:
-                        image == null
-                            ? const Icon(Icons.medical_services)
-                            : Image.network(image, fit: BoxFit.contain),
+                    child: image == null
+                        ? const Icon(Icons.medical_services)
+                        : Image.network(image, fit: BoxFit.contain),
                   ),
                   6.verticalSpace,
                   Text(
-                    categoryValues.reverse[category] ?? '',
+                    category.toString(),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12.sp),
                   ),

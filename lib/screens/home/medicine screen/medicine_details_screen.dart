@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
@@ -38,7 +39,7 @@ class _MedicineDetailsScreenState extends State<MedicineDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ProductProvider>();
-    final cart = context.watch<CartProvider>();
+    final cart = context.watch<CartDataProvider>();
     final theme = Theme.of(context);
     final colors = theme.extension<AppThemeColors>()!;
 

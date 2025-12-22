@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/color.dart';
@@ -19,7 +20,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cart = context.watch<CartProvider>();
+    final cart = context.watch<CartDataProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final glass = theme.extension<AppThemeColors>()!;
