@@ -12,7 +12,6 @@ class SurgeryBookingScreen extends StatefulWidget {
 }
 
 class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
-  String? selectedSurgery;
   String? selectedCity;
 
   final List<String> surgeryTypes = ["Heart", "Lungs", "Kidney", "Eyes"];
@@ -37,17 +36,6 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
           "Book for Surgery",
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MySurgeryScreen()),
-              );
-            },
-            child: Text('Check status', style: TextStyle(color: Colors.white)),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -137,9 +125,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
             color: theme.cardColor.withOpacity(0.6),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isDark
-                  ? Colors.white.withOpacity(0.2)
-                  : Colors.grey.withOpacity(0.2),
+              color:
+                  isDark
+                      ? Colors.white.withOpacity(0.2)
+                      : Colors.grey.withOpacity(0.2),
             ),
             boxShadow: [
               BoxShadow(
@@ -172,9 +161,11 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
               _premiumDropdown(
                 theme: theme,
                 hint: "Surgery Type",
-                value: selectedSurgery,
+                value: provider.selectedSurgery,
                 items: surgeryTypes,
-                onChanged: (v) => setState(() => selectedSurgery = v),
+                onChanged: (value) {
+                  provider.changeSelectedSurgeryValue(value!);
+                },
               ),
               const SizedBox(height: 14),
               _premiumTextField(
@@ -258,9 +249,10 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
             style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
           ),
           value: value,
-          items: items
-              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-              .toList(),
+          items:
+              items
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .toList(),
           onChanged: onChanged,
         ),
       ),

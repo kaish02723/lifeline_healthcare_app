@@ -4,9 +4,13 @@ import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
+import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_provider.dart';
 import 'package:lifeline_healthcare_app/providers/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicineCart_provider.dart';
+import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/product_provider.dart';
+import 'package:lifeline_healthcare_app/providers/rating_provider/app_rating_review_provider.dart';
+import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
 import 'package:lifeline_healthcare_app/providers/surgery_provider.dart';
 import 'package:lifeline_healthcare_app/providers/theme_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
@@ -34,7 +38,16 @@ void main() {
         ChangeNotifierProvider(create: (context) => DashBoardProvider(),),
         ChangeNotifierProvider(create: (context) => DoctorProvider(),),
         ChangeNotifierProvider(create: (context) => ProductProvider(),),
-        ChangeNotifierProvider(create: (context) => CartProvider(),)
+        ChangeNotifierProvider(create: (context) => CartProvider(),),
+        ChangeNotifierProvider(create: (context) => MedicineOrderProvider(),),
+        ChangeNotifierProvider(create: (context) => SurgeryProvider()),
+        ChangeNotifierProvider(create: (context) => DashBoardProvider()),
+        ChangeNotifierProvider(create: (context) => DoctorProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => TopRatingProvider(),),
+        ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),),
+        ChangeNotifierProvider(create: (context) => CancelTestProvider(),)
       ],
       child: MyApp(),
     ),
@@ -62,7 +75,7 @@ class MyApp extends StatelessWidget {
                     glassBackground: Colors.white.withOpacity(0.4),
                     borderColor: Colors.white.withOpacity(0.7),
                     cardShadow: Colors.black.withOpacity(0.05),
-                  )
+                  ),
                 ],
               ),
 
@@ -73,12 +86,11 @@ class MyApp extends StatelessWidget {
                     glassBackground: Colors.white.withOpacity(0.10),
                     borderColor: Colors.white.withOpacity(0.20),
                     cardShadow: Colors.black.withOpacity(0.50),
-                  )
+                  ),
                 ],
               ),
-              themeMode: themeProvider.isDark
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
+              themeMode:
+                  themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
               routes: {
                 '/phone_auth_screen': (context) => const PhoneAuthScreen(),
                 '/dashboard': (context) => const DashboardScreen(),

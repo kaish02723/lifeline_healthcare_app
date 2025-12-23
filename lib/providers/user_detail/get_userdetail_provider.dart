@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
-import 'package:lifeline_healthcare_app/models/get_user_detail_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:lifeline_healthcare_app/models/user_model.dart';
 import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,13 @@ class GetUserDetailProvider with ChangeNotifier {
 
   UserDataModel? user;
 
+  bool get isProfileCompleted => user?.isProfileComplete ?? false;
+
+  String get userName =>
+      user?.name?.isNotEmpty == true ? user!.name! : "Guest User";
+
+  String? get profileImage => user?.picture;
+
   Future<void> getUserDetail(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
@@ -31,15 +40,12 @@ class GetUserDetailProvider with ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/details/$userId'),
+        Uri.parse('$baseUrl/get-profile'),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
         },
       );
-
-      // print("RESPONSE BODY: ${response.body}");
-      // print("HEADERS USED: ${response.request?.headers}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -48,6 +54,7 @@ class GetUserDetailProvider with ChangeNotifier {
         user = model.user;
 
         print("User Detail Loaded: ${user?.name}");
+        fillUserData();
         notifyListeners();
       } else {
         print("ERROR: ${response.body}");
@@ -88,7 +95,7 @@ class GetUserDetailProvider with ChangeNotifier {
 
     try {
       final response = await http.put(
-        Uri.parse('$baseUrl/update/$userId'),
+        Uri.parse('$baseUrl/update-profile'),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -96,7 +103,7 @@ class GetUserDetailProvider with ChangeNotifier {
         body: jsonEncode(data),
       );
 
-      print("UPDATE RESPONSE: ${response.body}");
+      // print("UPDATE RESPONSE: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         /// UPDATE SUCCESS
@@ -142,5 +149,60 @@ class GetUserDetailProvider with ChangeNotifier {
     if (g == "male") return "Male";
     if (g == "female") return "Female";
     return "Other";
+  }
+
+  Future<String?> uploadProfileImage(File file, BuildContext context) async {
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var userId = authProvider.userId;
+
+    final url = Uri.parse(
+      "https://phone-auth-with-jwt-4.onrender.com/userProfile/upload/$userId",
+    );
+
+    var request = http.MultipartRequest("POST", url);
+    final token = await authProvider.getToken();
+
+    request.headers['Authorization'] = 'Bearer $token';
+    request.files.add(await http.MultipartFile.fromPath("image", file.path));
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      final res = await http.Response.fromStream(response);
+      final data = jsonDecode(res.body);
+      return data["imageUrl"];
+    }
+    return null;
+  }
+
+  Future<void> uploadAndUpdateImage(
+      File file,
+      BuildContext context,
+      ) async {
+    final imageUrl = await uploadProfileImage(file, context);
+
+    if (imageUrl != null) {
+      user?.picture = imageUrl;
+      notifyListeners();
+    }
+  }
+
+
+  updateGenderValue(String value) {
+    updateGender = value;
+    notifyListeners();
+  }
+
+  // update profile
+  File? imageFile;
+
+  Future<void> pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
+      notifyListeners();
+    }
   }
 }

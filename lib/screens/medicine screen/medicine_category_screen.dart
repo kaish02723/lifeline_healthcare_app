@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/medicine/product_model.dart';
+import '../../../models/medicine_models/medicine_product_model.dart';
+import '../../../providers/medicine_provider/medicineCart_provider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
+import 'medicine_cart_screen.dart';
 import 'medicine_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,12 +14,10 @@ class MedicineCategoryScreen extends StatefulWidget {
   const MedicineCategoryScreen({super.key});
 
   @override
-  State<MedicineCategoryScreen> createState() =>
-      _MedicineCategoryScreenState();
+  State<MedicineCategoryScreen> createState() => _MedicineCategoryScreenState();
 }
 
-class _MedicineCategoryScreenState
-    extends State<MedicineCategoryScreen> {
+class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   final List<String> trendingSearches = [
@@ -51,9 +51,7 @@ class _MedicineCategoryScreenState
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const AllMedicinesScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const AllMedicinesScreen()),
     );
   }
 
@@ -83,8 +81,14 @@ class _MedicineCategoryScreenState
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
         backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
         elevation: 1,
+
         title: Container(
           height: 44,
           decoration: BoxDecoration(
@@ -95,41 +99,71 @@ class _MedicineCategoryScreenState
             controller: _searchController,
             textInputAction: TextInputAction.search,
             onSubmitted: _onSearchSubmit,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            decoration: InputDecoration(
-              hintText: "Search by category or medicine",
-              border:  OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
-              prefixIcon: const Icon(Icons.search),
+            decoration: const InputDecoration(
+              hintText: "Search medicine_models..",
+              prefixIcon: Icon(Icons.search),
+              border: InputBorder.none,
             ),
-            enableSuggestions: true,
-            autofocus: true,
-            smartQuotesType: SmartQuotesType.enabled,
-            autocorrect: true,
-            autofillHints:["skin care","pain relief","baby care","women care"],
-            canRequestFocus: true,
-            cursorOpacityAnimates: true,
           ),
         ),
 
+        actions: [
+          Consumer<CartProvider>(
+            builder: (context, cart, _) {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.shopping_cart_outlined),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const MedicineCart()),
+                      );
+                    },
+                  ),
+
+                  if (cart.itemCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          cart.itemCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
 
       body: Padding(
         padding: EdgeInsets.all(16.w),
         child: ListView(
           children: [
-            /// ---------------- RECENT SEARCH ----------------
             if (recentSearches.isNotEmpty) ...[
               _sectionTitle("Recent Searches"),
               _horizontalChips(recentSearches),
               20.verticalSpace,
             ],
 
-            /// ---------------- TRENDING SEARCH ----------------
             _sectionTitle("Trending Searches"),
             _horizontalChips(trendingSearches),
             24.verticalSpace,
 
-            /// ---------------- CATEGORIES ----------------
             _sectionTitle("Categories"),
             12.verticalSpace,
             _categoryList(provider),
@@ -139,15 +173,10 @@ class _MedicineCategoryScreenState
     );
   }
 
-  /// ---------------- UI PARTS ----------------
-
   Widget _sectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
-        fontSize: 16.sp,
-        fontWeight: FontWeight.bold,
-      ),
+      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
     );
   }
 
@@ -187,9 +216,7 @@ class _MedicineCategoryScreenState
 
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const AllMedicinesScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const AllMedicinesScreen()),
               );
             },
             child: Container(
@@ -208,9 +235,10 @@ class _MedicineCategoryScreenState
               child: Column(
                 children: [
                   Expanded(
-                    child: image == null
-                        ? const Icon(Icons.medical_services)
-                        : Image.network(image, fit: BoxFit.contain),
+                    child:
+                        image == null
+                            ? const Icon(Icons.medical_services)
+                            : Image.network(image, fit: BoxFit.contain),
                   ),
                   6.verticalSpace,
                   Text(

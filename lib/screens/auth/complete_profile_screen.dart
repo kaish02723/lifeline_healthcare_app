@@ -9,14 +9,14 @@ import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-class UsersDetails extends StatefulWidget {
-  const UsersDetails({super.key});
+class CompleteProfileScreen extends StatefulWidget {
+  const CompleteProfileScreen({super.key});
 
   @override
-  State<UsersDetails> createState() => _UsersDetailsState();
+  State<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
 }
 
-class _UsersDetailsState extends State<UsersDetails> {
+class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserDetailProvider>(context, listen: false);
@@ -72,23 +72,27 @@ class _UsersDetailsState extends State<UsersDetails> {
                       border: Border.all(color: Colors.teal, width: 0.5),
                     ),
                     child: CircleAvatar(
+                      radius: 70,
                       backgroundColor: Colors.grey.shade100,
-                      backgroundImage: mediaProvider.profileImage != null
-                          ? FileImage(File(mediaProvider.profileImage!.path))
-                      as ImageProvider
-                          : mediaProvider.profileImage != null
-                          ? CachedNetworkImageProvider(
-                        mediaProvider.profileImage!.path,
-                      )
-                          : null,
-                      child: mediaProvider.profileImage == null &&
-                          mediaProvider.profileImage == null
-                          ? Icon(
-                        Icons.person,
-                        size: 70,
-                        color: Colors.grey.shade400,
-                      )
-                          : null,
+                      backgroundImage:
+                          mediaProvider.profileImage != null
+                              ? FileImage(
+                                File(mediaProvider.profileImage!.path),
+                              ) // LOCAL PREVIEW
+                              : mediaProvider.profileImageUrl != null
+                              ? CachedNetworkImageProvider(
+                                mediaProvider.profileImageUrl!,
+                              ) // SERVER IMAGE
+                              : null,
+                      child:
+                          mediaProvider.profileImage == null &&
+                                  mediaProvider.profileImageUrl == null
+                              ? Icon(
+                                Icons.person,
+                                size: 70,
+                                color: Colors.grey.shade400,
+                              )
+                              : null,
                     ),
                   ),
                   Positioned(
@@ -133,19 +137,20 @@ class _UsersDetailsState extends State<UsersDetails> {
                                     const SizedBox(height: 25),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Column(
                                           children: [
                                             CircleAvatar(
                                               radius: 30,
                                               backgroundColor:
-                                              Colors.grey.shade200,
+                                                  Colors.grey.shade200,
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                   mediaProvider.pickFromCamera(
-                                                      context);
+                                                    context,
+                                                  );
                                                 },
                                                 icon: const Icon(
                                                   Icons.camera_alt,
@@ -162,12 +167,13 @@ class _UsersDetailsState extends State<UsersDetails> {
                                             CircleAvatar(
                                               radius: 30,
                                               backgroundColor:
-                                              Colors.grey.shade200,
+                                                  Colors.grey.shade200,
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                   mediaProvider.pickFromGallery(
-                                                      context);
+                                                    context,
+                                                  );
                                                 },
                                                 icon: const Icon(
                                                   Icons.image,
@@ -249,7 +255,7 @@ class _UsersDetailsState extends State<UsersDetails> {
                           );
                           if (picked != null) {
                             provider.dateController.text =
-                            "${picked.day}/${picked.month}/${picked.year}";
+                                "${picked.day}/${picked.month}/${picked.year}";
                           }
                         },
                       ),
@@ -294,8 +300,9 @@ class _UsersDetailsState extends State<UsersDetails> {
                           if (provider.dateController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content:
-                                Text("Please select your Date of Birth"),
+                                content: Text(
+                                  "Please select your Date of Birth",
+                                ),
                               ),
                             );
                             return;
@@ -314,13 +321,13 @@ class _UsersDetailsState extends State<UsersDetails> {
                             "email": provider.emailController.text.trim(),
                             "gender": provider.genderController.text.trim(),
                             "date_of_birth":
-                            provider.dateController.text.trim(),
+                                provider.dateController.text.trim(),
                             "address": "anywhere",
                             "picture": imageUrl,
                           };
 
                           String? userId = authProvider.userId;
-                          provider.addUserDetails(userId!, data, context);
+                          provider.completeProfile(userId!, data, context);
                         }
                       },
                       child: const Text(
@@ -362,8 +369,7 @@ class _UsersDetailsState extends State<UsersDetails> {
         }
 
         if (label == "Email Address") {
-          final emailRegex =
-          RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
           if (!emailRegex.hasMatch(value.trim())) {
             return "Enter a valid email";
           }
@@ -383,7 +389,10 @@ class _UsersDetailsState extends State<UsersDetails> {
         prefixIcon: Icon(icon, color: Colors.teal),
         filled: true,
         fillColor: Colors.grey[50],
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 18,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.teal, width: 0.5),
