@@ -1,12 +1,15 @@
-class GetUserDetailModel {
+//Ye sirf GET PROFILE API ke liye hai.
+class UserDetailModel {
   String? message;
+  bool? exists;
   UserDataModel? user;
 
-  GetUserDetailModel({this.message, this.user});
+  UserDetailModel({this.message, this.user ,this.exists});
 
-  static GetUserDetailModel fromJson(Map<String, dynamic> json) {
-    return GetUserDetailModel(
+  static UserDetailModel fromJson(Map<String, dynamic> json) {
+    return UserDetailModel(
       message: json["message"],
+      exists: json["exists"],
       user: json["user"] != null ? UserDataModel.fromJson(json["user"]) : null,
     );
   }
@@ -22,6 +25,7 @@ class UserDataModel {
   String? address;
   String? roleSpecificData;
   String? picture;
+  int? isProfileComplete;
 
   UserDataModel({
     this.id,
@@ -33,6 +37,7 @@ class UserDataModel {
     this.address,
     this.roleSpecificData,
     this.picture,
+    this.isProfileComplete
   });
 
   static UserDataModel fromJson(Map<String, dynamic> json) {
@@ -46,6 +51,7 @@ class UserDataModel {
       address: json["address"],
       roleSpecificData: json["role_specific_data"],
       picture: json["picture"],
+      isProfileComplete:json["isProfileComplete"]
     );
   }
 }

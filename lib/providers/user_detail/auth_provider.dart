@@ -170,20 +170,18 @@ class AuthProvider with ChangeNotifier {
         var user = userDetailProvider.user;
 
         bool isProfileComplete =
-            user?.name != null &&
-            user!.name!.isNotEmpty &&
-            user.email != null &&
-            user.email!.isNotEmpty;
+            user != null &&
+                user.name != null &&
+                user.name!.trim().isNotEmpty &&
+                user.email != null &&
+                user.email!.trim().isNotEmpty;
 
         if (!context.mounted) return;
 
         if (isProfileComplete) {
           Navigator.pushReplacementNamed(context, '/dashboard');
         } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => UsersDetails()),
-          );
+          Navigator.pushReplacementNamed(context, '/create_profile');
         }
       } else {
         ScaffoldMessenger.of(
