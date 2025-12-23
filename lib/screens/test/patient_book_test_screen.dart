@@ -4,15 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
 import 'package:provider/provider.dart';
-<<<<<<< HEAD:lib/screens/test/patient_book_test_screen.dart
 import '../../providers/user_detail/auth_provider.dart';
-=======
 
 import '../../models/labtest_models/popular_test_model.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/labtest_provider/book_test_provider.dart';
 import '../home/dashboard_screen.dart';
->>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633:lib/screens/patient/patient_book_test_screen.dart
 
 class BookTestFormScreen extends StatefulWidget {
   final TestDataModel test;

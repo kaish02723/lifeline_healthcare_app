@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lifeline_healthcare_app/screens/auth/verify_otp_screen.dart';
+import 'package:lifeline_healthcare_app/screens/user_profile/complete_profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -88,11 +89,8 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode({"phone": "+91${phoneController.text}"}),
       );
 
-<<<<<<< HEAD:lib/providers/user_detail/auth_provider.dart
       // print(res.body);
       // print(res.request?.headers);
-=======
->>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633:lib/providers/auth_provider.dart
 
       final body = jsonDecode(res.body);
 
@@ -195,14 +193,11 @@ class AuthProvider with ChangeNotifier {
         if (isProfileComplete) {
           Navigator.pushReplacementNamed(context, '/dashboard');
         } else {
-<<<<<<< HEAD:lib/providers/user_detail/auth_provider.dart
           Navigator.pushReplacementNamed(context, '/create_profile');
-=======
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => CompleteProfileScreen()),
           );
->>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633:lib/providers/auth_provider.dart
         }
       } else {
         ScaffoldMessenger.of(

@@ -1,9 +1,11 @@
-<<<<<<< HEAD:lib/screens/user_profile/edit_profile_screen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../../config/color.dart';
+import '../../providers/user_detail/get_userdetail_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -175,127 +177,119 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
-=======
-import 'dart:io';
-import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
-import '../../config/color.dart';
-import '../../providers/user_detail/get_userdetail_provider.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
-
-  @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
-}
-
-class _EditProfileScreenState extends State<EditProfileScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final provider = context.watch<GetUserDetailProvider>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
-
-      appBar: AppBar(
-        title: const Text("Edit Profile"),
-        elevation: 0,
-        backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
-        foregroundColor: Colors.white,
-      ),
-
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _profileImageSection(isDark),
-
-            const SizedBox(height: 24),
-
-            _formCard(
-              context,
-              children: [
-                _inputField(
-                  controller: provider.updateNameController,
-                  label: "Name",
-                  icon: Icons.person_outline,
-                ),
-
-                _inputField(
-                  controller: provider.updateEmailController,
-                  label: "Email",
-                  icon: Icons.email_outlined,
-                ),
-
-                _genderDropdown(provider),
-
-                _dobField(provider),
-
-                _inputField(
-                  controller: provider.updateAddressController,
-                  label: "Address",
-                  icon: Icons.location_on_outlined,
-                  maxLines: 2,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      isDark ? AppColors.secondaryDark : AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-                onPressed: () async {
-                  String? imageUrl;
-
-                  if (provider.imageFile != null) {
-                    imageUrl = await provider.uploadProfileImage(
-                      provider.imageFile!,
-                      context,
-                    );
-                  }
-
-                  final data = {
-                    "name": provider.updateNameController.text,
-                    "email": provider.updateEmailController.text,
-                    "gender": provider.updateGender,
-                    "date_of_birth": provider.updateDobController.text,
-                    "address": provider.updateAddressController.text,
-                  };
-
-                  if (imageUrl != null && imageUrl.isNotEmpty) {
-                    data["picture"] = imageUrl;
-                  }
-
-                  provider.updateUserProfile(context, data);
-                },
-                child: const Text(
-                  "SAVE CHANGES",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+// class EditProfileScreen extends StatefulWidget {
+//   const EditProfileScreen({super.key});
+//
+//   @override
+//   State<EditProfileScreen> createState() => _EditProfileScreenState();
+// }
+//
+// class _EditProfileScreenState extends State<EditProfileScreen> {
+//   @override
+//   Widget build(BuildContext context) {
+//     final provider = context.watch<GetUserDetailProvider>();
+//     final isDark = Theme.of(context).brightness == Brightness.dark;
+//
+//     return Scaffold(
+//       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+//
+//       appBar: AppBar(
+//         title: const Text("Edit Profile"),
+//         elevation: 0,
+//         backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
+//         foregroundColor: Colors.white,
+//       ),
+//
+//       body: SingleChildScrollView(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           children: [
+//             _profileImageSection(isDark),
+//
+//             const SizedBox(height: 24),
+//
+//             _formCard(
+//               context,
+//               children: [
+//                 _inputField(
+//                   controller: provider.updateNameController,
+//                   label: "Name",
+//                   icon: Icons.person_outline,
+//                 ),
+//
+//                 _inputField(
+//                   controller: provider.updateEmailController,
+//                   label: "Email",
+//                   icon: Icons.email_outlined,
+//                 ),
+//
+//                 _genderDropdown(provider),
+//
+//                 _dobField(provider),
+//
+//                 _inputField(
+//                   controller: provider.updateAddressController,
+//                   label: "Address",
+//                   icon: Icons.location_on_outlined,
+//                   maxLines: 2,
+//                 ),
+//               ],
+//             ),
+//
+//             const SizedBox(height: 24),
+//
+//             SizedBox(
+//               width: double.infinity,
+//               height: 48,
+//               child: ElevatedButton(
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor:
+//                       isDark ? AppColors.secondaryDark : AppColors.primary,
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(7),
+//                   ),
+//                 ),
+//                 onPressed: () async {
+//                   String? imageUrl;
+//
+//                   if (provider.imageFile != null) {
+//                     imageUrl = await provider.uploadProfileImage(
+//                       provider.imageFile!,
+//                       context,
+//                     );
+//                   }
+//
+//                   final data = {
+//                     "name": provider.updateNameController.text,
+//                     "email": provider.updateEmailController.text,
+//                     "gender": provider.updateGender,
+//                     "date_of_birth": provider.updateDobController.text,
+//                     "address": provider.updateAddressController.text,
+//                   };
+//
+//                   if (imageUrl != null && imageUrl.isNotEmpty) {
+//                     data["picture"] = imageUrl;
+//                   }
+//
+//                   provider.updateUserProfile(context, data);
+//                 },
+//                 child: const Text(
+//                   "SAVE CHANGES",
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.white,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 
   Widget _profileImageSection(bool isDark) {
     return Consumer<GetUserDetailProvider>(
@@ -403,7 +397,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _dobField(GetUserDetailProvider provider) {
+  Widget _dobField(GetUserDetailProvider provider,BuildContext context) {
     return TextField(
       controller: provider.updateDobController,
       readOnly: true,
@@ -415,5 +409,3 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       onTap: () => provider.selectDate(context),
     );
   }
-}
->>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633:lib/screens/home/edit_profile_screen.dart

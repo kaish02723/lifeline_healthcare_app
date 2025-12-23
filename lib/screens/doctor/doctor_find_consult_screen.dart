@@ -4,15 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-<<<<<<< HEAD
 import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
-=======
-import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
->>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
-import 'package:lifeline_healthcare_app/screens/appointments/appointment_book_diagnostic_screen.dart';
-import 'package:lifeline_healthcare_app/screens/appointments/book_in_clinic_appointment.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/doctors_detail_screen.dart';
 import 'package:provider/provider.dart';

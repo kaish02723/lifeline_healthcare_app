@@ -4,12 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:provider/provider.dart';
-<<<<<<< HEAD
-
 import '../../providers/user_detail/auth_provider.dart';
-=======
-import '../../providers/auth_provider.dart';
->>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
