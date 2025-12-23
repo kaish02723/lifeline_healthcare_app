@@ -45,6 +45,7 @@ class CancelTestProvider with ChangeNotifier {
           SnackBar(content: Text('Failed to cancel test: ${cancelTestResponse.body}')),
         );
       }
+      notifyListeners();
     } catch (e) {
       print('Error cancelling test: $e');
       ScaffoldMessenger.of(context).showSnackBar(
