@@ -21,6 +21,7 @@ import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_serv
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/offer_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../providers/doctor_provider/doctor_provider.dart';
 import '../../providers/rating_provider/app_rating_review_provider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
 import '../../providers/user_detail/get_userdetail_provider.dart';
@@ -100,7 +101,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Row(
                     children: [
                       CircleAvatar(
-
                         backgroundColor: AppColors.primary.withOpacity(0.15),
                         backgroundImage:
                             (userData?.picture != null &&
@@ -273,18 +273,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: CircleAvatar(
               backgroundColor: Colors.white,
               radius: 22,
-              backgroundImage: (userData?.picture != null &&
-                  userData!.picture!.isNotEmpty)
-                  ? NetworkImage(
-                userData.picture!.startsWith("http")
-                    ? userData.picture!
-                    : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
-              )
-                  : null,
-              child: (userData?.picture == null ||
-                  userData!.picture!.isEmpty)
-                  ? const Icon(Icons.person, color: Colors.grey)
-                  : null,
+              backgroundImage:
+                  (userData?.picture != null && userData!.picture!.isNotEmpty)
+                      ? NetworkImage(
+                        userData.picture!.startsWith("http")
+                            ? userData.picture!
+                            : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
+                      )
+                      : null,
+              child:
+                  (userData?.picture == null || userData!.picture!.isEmpty)
+                      ? const Icon(Icons.person, color: Colors.grey)
+                      : null,
             ),
           ),
         ),
@@ -573,18 +573,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 mainAxisSpacing: 8,
               ),
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FindDoctor()),
-                    );
-                  },
-                  child: HealthCategoryItem(
-                    title: healthCategories[index]['title']!,
-                    imagePath: healthCategories[index]['image']!,
-                    backgroundColor: Theme.of(context).cardColor,
-                  ),
+                return HealthCategoryItem(
+                  title: healthCategories[index]['title']!,
+                  imagePath: healthCategories[index]['image']!,
+                  backgroundColor: Theme.of(context).cardColor,
                 );
               },
             ),

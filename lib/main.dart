@@ -49,7 +49,7 @@ void main() async{
         ChangeNotifierProvider(create: (context) => TopRatingProvider(),),
         ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),),
         ChangeNotifierProvider(create: (context) => UserProfileProvider(),),
-        ChangeNotifierProvider(create: (context) => CancelTestProvider(),)
+        ChangeNotifierProvider(create: (context) => CancelTestProvider(),),
       ],
       child: MyApp(),
     ),

@@ -22,14 +22,12 @@ class MedicineOrderProvider with ChangeNotifier {
     final data = {
       "order": order,
       "items": items,
-
     };
 
     await service.createMedicineOrder(data);
   }
 
   String generateOrderCode() {
-
     return "ORD-${DateTime.now().millisecondsSinceEpoch}";
   }
 }

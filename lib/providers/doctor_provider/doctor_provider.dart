@@ -55,7 +55,7 @@ class DoctorProvider with ChangeNotifier {
     "Dermatology": ["Dermatologist", "Dermatology", "Skin"],
     "Orthopaedics": ["Orthopedic", "Orthopaedics", "Ortho"],
     "Pediatrics": ["Pediatrician", "Pediatrics", "Child"],
-    "Sexology": ["Sexologist", "Sexology"],
+    "Sexology": ["Sexologist", "Sexology","sexlogy"],
     "Neurology": ["Neurologist", "Neurology"],
     "Gastroenterology": ["Gastroenterologist", "Gastroenterology"],
     "Endocrinology": ["Endocrinologist", "Endocrinology"],
@@ -77,7 +77,6 @@ class DoctorProvider with ChangeNotifier {
   }
 
   void filterBySpeciality(String speciality) {
-    print("FILTER APPLY: $speciality");
     selectedSpeciality = speciality;
 
     if (speciality == "All") {
@@ -95,6 +94,7 @@ class DoctorProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
 
 
   void filterBySearchQuery(String query) {

@@ -17,14 +17,11 @@ class MedicineOrderService {
 
       List data = decoded['orders'];
 
-      return data
-          .map((e) => MedicineOrderModal.fromJson(e))
-          .toList();
+      return data.map((e) => MedicineOrderModal.fromJson(e)).toList();
     } else {
       throw Exception("Error ${response.statusCode}");
     }
   }
-
 
   Future<void> createMedicineOrder(Map<String, dynamic> data) async {
     var response = await http.post(

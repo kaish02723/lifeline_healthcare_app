@@ -36,7 +36,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProfileProvider>(context);
-    var user = provider.user; // Provider se user data
+    var user = provider.user;
     print("PROFILE IMAGE URL : ${user?.picture}");
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
