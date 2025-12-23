@@ -9,14 +9,14 @@ import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-class UsersDetails extends StatefulWidget {
-  const UsersDetails({super.key});
+class CompleteProfileScreen extends StatefulWidget {
+  const CompleteProfileScreen({super.key});
 
   @override
-  State<UsersDetails> createState() => _UsersDetailsState();
+  State<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
 }
 
-class _UsersDetailsState extends State<UsersDetails> {
+class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserDetailProvider>(context, listen: false);

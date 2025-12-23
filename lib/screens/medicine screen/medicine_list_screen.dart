@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:lifeline_healthcare_app/config/test_styles.dart';
-import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
 import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_category_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +23,7 @@ class AllMedicinesScreen extends StatelessWidget {
     final provider = context.watch<ProductProvider>();
     final Category? selectedCategory = provider.selectedCategory;
     final products = provider.filteredProducts;
-    final cart = context.watch<CartDataProvider>();
+    final cart = context.watch<CartProvider>();
 
     return Scaffold(
       backgroundColor: isDark ? Colors.black : Colors.white,
