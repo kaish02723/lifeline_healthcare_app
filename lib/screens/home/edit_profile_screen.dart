@@ -76,7 +76,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor:
                       isDark ? AppColors.secondaryDark : AppColors.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(7),
                   ),
                 ),
                 onPressed: () async {
