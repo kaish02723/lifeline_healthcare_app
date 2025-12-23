@@ -289,6 +289,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         centerTitle: true,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 13),
