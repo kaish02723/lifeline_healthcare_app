@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../../models/medicine/medicine_product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/medicine_models/medicine_product_model.dart';
 
 class ProductProvider with ChangeNotifier {
   ///our api
@@ -29,7 +30,7 @@ class ProductProvider with ChangeNotifier {
       notifyListeners();
 
       final res =
-      await http.get(Uri.parse('$_baseUrl/medicine/getAllMedicine'));
+      await http.get(Uri.parse('$_baseUrl/medicine_models/getAllMedicine'));
 
       if (res.statusCode == 200) {
         final List data = jsonDecode(res.body);
@@ -125,7 +126,7 @@ class ProductProvider with ChangeNotifier {
       hints.add(categoryValues.reverse[cat]!);
     }
 
-    /// Few medicine names
+    /// Few medicine_models names
     for (final p in _products.take(8)) {
       if (p.medName != null && p.medName!.isNotEmpty) {
         hints.add(p.medName!);

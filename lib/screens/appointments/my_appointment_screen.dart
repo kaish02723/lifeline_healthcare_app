@@ -35,6 +35,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
               //dividerColor: Colors.white,
               unselectedLabelStyle: TextStyle(color: Colors.white60),
               labelColor: Colors.white,
+              indicatorColor: Colors.amber,
               tabs: [
                 Tab(text: "Book Video Consultation"),
                 Tab(text: "Book In-clinic Appointment"),
@@ -42,7 +43,7 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
             ),
           ),
           body: TabBarView(
-            children: [BookVideoConsultation(), BookInclinicAppointment()],
+            children: [BookVideoConsultation(), InClinicBookedAppointment()],
           ),
         ),
       ),

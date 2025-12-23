@@ -6,16 +6,21 @@ import 'package:lifeline_healthcare_app/providers/media_provider/media_picker_pr
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:provider/provider.dart';
 
+<<<<<<< HEAD:lib/screens/user_profile/complete_profile_screen.dart
 import '../../providers/user_detail/User_profile_provider.dart';
 
 class UsersDetails extends StatefulWidget {
   const UsersDetails({super.key});
+=======
+class CompleteProfileScreen extends StatefulWidget {
+  const CompleteProfileScreen({super.key});
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633:lib/screens/auth/complete_profile_screen.dart
 
   @override
-  State<UsersDetails> createState() => _UsersDetailsState();
+  State<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
 }
 
-class _UsersDetailsState extends State<UsersDetails> {
+class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProfileProvider>(context, listen: false);

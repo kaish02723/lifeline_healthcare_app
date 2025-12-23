@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:lifeline_healthcare_app/models/medicine/medicine_order_modal.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../models/medicine_models/medicine_order_modal.dart';
 
 class MedicineOrderService {
   final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';

@@ -4,7 +4,7 @@ import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:lifeline_healthcare_app/config/test_styles.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/medicine/medicine_product_model.dart';
+import '../../../models/medicine_models/medicine_product_model.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
 import '../../../widgets/medicine_listCard.dart';

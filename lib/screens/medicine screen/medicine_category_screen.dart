@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/medicine/medicine_product_model.dart';
+import '../../../models/medicine_models/medicine_product_model.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
 import 'medicine_cart_screen.dart';
@@ -100,7 +100,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
             textInputAction: TextInputAction.search,
             onSubmitted: _onSearchSubmit,
             decoration: const InputDecoration(
-              hintText: "Search medicine..",
+              hintText: "Search medicine_models..",
               prefixIcon: Icon(Icons.search),
               border: InputBorder.none,
             ),

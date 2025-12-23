@@ -4,7 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+<<<<<<< HEAD
 import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
+=======
+import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_book_diagnostic_screen.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/book_in_clinic_appointment.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
@@ -39,6 +45,8 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
     final w = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final userDetailProvider = Provider.of<GetUserDetailProvider>(context);
+    final userAddress = userDetailProvider.user?.address;
 
     return Scaffold(
       backgroundColor: isDark ? Color(0xff121212) : Color(0xFFF2F2F2),
@@ -48,6 +56,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
           icon: Icon(CupertinoIcons.back, color: Colors.white),
         ),
         backgroundColor: const Color(0xFF00796B),
+        foregroundColor: Colors.white,
         title: const Text(
           "Find Doctors",
           style: TextStyle(color: Colors.white),
@@ -55,8 +64,21 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: w * 0.04),
-            child: const Center(
-              child: Text("Bangalore", style: TextStyle(color: Colors.white)),
+            child: Center(
+              child: Row(
+                spacing: 3,
+                children: [
+                  Icon(Icons.location_on_outlined, size: 17),
+                  Text(
+                    '$userAddress',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -222,18 +244,20 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
             padding: EdgeInsets.all(w * 0.04),
             margin: EdgeInsets.only(bottom: h * 0.02),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.white.withOpacity(0.85),
+              color:
+                  isDark
+                      ? Colors.white.withOpacity(0.05)
+                      : Colors.white.withOpacity(0.85),
               borderRadius: BorderRadius.circular(w * 0.04),
               border: Border.all(
                 color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.grey.withOpacity(0.2),
+                  color:
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: Offset(2, 3),
                 ),
@@ -252,8 +276,8 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                         fit: BoxFit.cover,
                         imageUrl:
                             doctor.image != null && doctor.image!.isNotEmpty
-                            ? doctor.image!
-                            : "https://via.placeholder.com/150",
+                                ? doctor.image!
+                                : "https://via.placeholder.com/150",
                       ),
                     ),
                     SizedBox(width: w * 0.04),
@@ -333,7 +357,12 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                       child: GestureDetector(
                         onTap: () {
                           HapticFeedback.selectionClick();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SlotBookingScreen(),));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SlotBookingScreen(),
+                            ),
+                          );
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: h * 0.018),

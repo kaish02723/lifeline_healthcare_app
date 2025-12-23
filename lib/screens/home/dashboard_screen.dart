@@ -1,28 +1,42 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/my_appointment_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
+<<<<<<< HEAD
 import 'package:lifeline_healthcare_app/screens/user_profile/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/test/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/test/patient_my_labtest_screen.dart';
 import 'package:lifeline_healthcare_app/screens/surgery/patient_my_surgery_screen.dart';
+=======
+import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
+import 'package:lifeline_healthcare_app/screens/patient/patient_my_surgery_screen.dart';
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
+import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_footer.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/offer_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../providers/rating_provider/app_rating_review_provider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
 import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
 import '../../widgets/dashboard_widgets/show_rate_us_bottom_sheet.dart';
 import '../../widgets/dashboard_widgets/top_feature_card.dart';
+<<<<<<< HEAD
+=======
+import '../../widgets/dashboard_widgets/top_rating_card.dart';
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
 import '../medicine screen/medicine_category_screen.dart';
 import '../medicine screen/medicine_order_detail_screen.dart';
 import 'notification_screen.dart';
@@ -50,8 +64,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       listen: false,
     ).getProfile(context);
 
-    Provider.of<TopRatingProvider>(context, listen: false)
-        .getTopRatings();
+    var rating = Provider.of<TopRatingProvider>(context, listen: false);
+    rating.fetchTopReviews();
+    rating.fetchAverageRating();
     startOfferAutoScroll(context);
   }
 
@@ -63,7 +78,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     var provider = Provider.of<UserProfileProvider>(context);
+=======
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    var provider = Provider.of<GetUserDetailProvider>(context);
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
     var userData = provider.user;
     var dashBoardProvider = Provider.of<DashBoardProvider>(context);
 
@@ -91,9 +111,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   },
                   child: Row(
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 32,
+<<<<<<< HEAD
                         // backgroundImage: ,
+=======
+                        backgroundColor: AppColors.primary.withOpacity(0.15),
+                        backgroundImage:
+                            (userData?.picture != null &&
+                                    userData!.picture!.isNotEmpty)
+                                ? NetworkImage(
+                                  userData.picture!.startsWith("http")
+                                      ? userData.picture!
+                                      : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
+                                )
+                                : null,
+                        child:
+                            (userData?.picture == null ||
+                                    userData!.picture!.isEmpty)
+                                ? Icon(
+                                  Icons.person,
+                                  size: 32,
+                                  color:
+                                      isDark
+                                          ? AppColors.iconDark
+                                          : AppColors.icon,
+                                )
+                                : null,
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -243,6 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onTap: () => _scaffoldKey.currentState!.openDrawer(),
             child: CircleAvatar(
               backgroundColor: Colors.white,
+<<<<<<< HEAD
               radius: 22,
               backgroundImage: (userData?.picture != null &&
                   userData!.picture!.isNotEmpty)
@@ -256,12 +302,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   userData!.picture!.isEmpty)
                   ? const Icon(Icons.person, color: Colors.grey)
                   : null,
+=======
+              backgroundImage:
+                  (userData?.picture != null && userData!.picture!.isNotEmpty)
+                      ? CachedNetworkImageProvider(
+                        userData.picture!.startsWith("http")
+                            ? userData.picture!
+                            : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
+                      )
+                      : null,
+              child:
+                  (userData?.picture == null || userData!.picture!.isEmpty)
+                      ? Icon(
+                        Icons.person,
+                        color: isDark ? AppColors.iconDark : AppColors.icon,
+                      )
+                      : null,
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
             ),
           ),
         ),
 
         centerTitle: true,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 13),
@@ -559,52 +623,142 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
+          Consumer<TopRatingProvider>(
+            builder: (context, provider, _) {
+              if (provider.isLoadingTopReviews || provider.isLoadingAverage) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
 
-          Container(
-            width: double.infinity,
-            color: Theme.of(context).canvasColor,
-            child: Column(
-              children: [
-                const SizedBox(height: 15),
-                Image.asset('images/app_logo.png', width: 100, height: 100),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Crafted with  ',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+              if (provider.averageData == null && provider.topReviews.isEmpty) {
+                return const SizedBox();
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // if (provider.averageData != null) ...[
+                  //   Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  //     child: RatingSummaryCard(),
+                  //   ),
+                  //   const SizedBox(height: 16),
+                  // ],
+
+                  if (provider.topReviews.isNotEmpty)
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+                      child: Text(
+                        "What users say about us 💬",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                    // Image.network(
-                    //   'https://pngimg.com/d/plus_PNG119.png',
-                    //   width: 15,
-                    //   height: 15,
-                    // ),
-                    Text(
-                      '  in India',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+
+                  if (provider.topReviews.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Center(
+                        child: Text(
+                          "No feedback available yet",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 7),
-                Text(
-                  'Powered by',
-                  style: TextStyle(fontSize: 11, color: Colors.grey),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Lifeline Healthcare',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Our vision is to help mankind live healthier,  longer lives by making quality healthcare,    accessible, affordable and convenient.',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                SizedBox(height: 15),
-              ],
-            ),
+
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: provider.topReviews.length,
+                    itemBuilder: (context, index) {
+                      final review = provider.topReviews[index];
+                      final rating = review.rating ?? 0;
+
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).shadowColor.withOpacity(0.05),
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Row(
+                                  children: List.generate(5, (i) {
+                                    if (i < rating.floor()) {
+                                      return const Icon(
+                                        Icons.star,
+                                        color: AppColors.golden,
+                                        size: 18,
+                                      );
+                                    } else if (i < rating && rating - i >= 0.5) {
+                                      return const Icon(
+                                        Icons.star_half,
+                                        color: AppColors.golden,
+                                        size: 18,
+                                      );
+                                    } else {
+                                      return const Icon(
+                                        Icons.star_border,
+                                        color: AppColors.golden,
+                                        size: 18,
+                                      );
+                                    }
+                                  }),
+                                ),
+                                const Spacer(),
+                                if (review.createdAt != null)
+                                  Text(
+                                    review.createdAt!.split('T').first,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.color
+                                          ?.withOpacity(0.6),
+                                    ),
+                                  ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Text(
+                              review.feedback ?? "No feedback provided",
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 1.4,
+                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
           ),
+
+          const SizedBox(height: 30),
+          DashboardFooter()
         ],
       ),
     );
@@ -618,110 +772,110 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
   }
 
-  void languageBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: false,
-      enableDrag: false,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        String tempSelected = selectedLanguage;
-
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            return Container(
-              height: 300,
-              padding: const EdgeInsets.all(18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 45,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 15),
-
-                  Center(
-                    child: Text(
-                      "Choose Language",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff00796B),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  /// ENGLISH
-                  RadioListTile(
-                    title: Text("English"),
-                    value: "English",
-                    groupValue: tempSelected,
-                    activeColor: Color(0xff00796B),
-                    onChanged: (value) {
-                      setSheetState(() => tempSelected = value.toString());
-                    },
-                  ),
-
-                  /// HINDI
-                  RadioListTile(
-                    title: Text("Hindi"),
-                    value: "Hindi",
-                    groupValue: tempSelected,
-                    activeColor: Color(0xff00796B),
-                    onChanged: (value) {
-                      setSheetState(() => tempSelected = value.toString());
-                    },
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  /// Continue Button
-                  GestureDetector(
-                    onTap: () {
-                      setState(() => selectedLanguage = tempSelected);
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        gradient: const LinearGradient(
-                          colors: [Color(0xff00796B), Color(0xff26A69A)],
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Continue",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  // void languageBottomSheet() {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isDismissible: false,
+  //     enableDrag: false,
+  //     backgroundColor: Colors.white,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (context) {
+  //       String tempSelected = selectedLanguage;
+  //
+  //       return StatefulBuilder(
+  //         builder: (context, setSheetState) {
+  //           return Container(
+  //             height: 300,
+  //             padding: const EdgeInsets.all(18),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Center(
+  //                   child: Container(
+  //                     width: 45,
+  //                     height: 4,
+  //                     decoration: BoxDecoration(
+  //                       color: Colors.grey,
+  //                       borderRadius: BorderRadius.circular(5),
+  //                     ),
+  //                   ),
+  //                 ),
+  //
+  //                 const SizedBox(height: 15),
+  //
+  //                 Center(
+  //                   child: Text(
+  //                     "Choose Language",
+  //                     style: TextStyle(
+  //                       fontSize: 20,
+  //                       fontWeight: FontWeight.w600,
+  //                       color: Color(0xff00796B),
+  //                     ),
+  //                   ),
+  //                 ),
+  //
+  //                 const SizedBox(height: 20),
+  //
+  //                 /// ENGLISH
+  //                 RadioListTile(
+  //                   title: Text("English"),
+  //                   value: "English",
+  //                   groupValue: tempSelected,
+  //                   activeColor: Color(0xff00796B),
+  //                   onChanged: (value) {
+  //                     setSheetState(() => tempSelected = value.toString());
+  //                   },
+  //                 ),
+  //
+  //                 /// HINDI
+  //                 RadioListTile(
+  //                   title: Text("Hindi"),
+  //                   value: "Hindi",
+  //                   groupValue: tempSelected,
+  //                   activeColor: Color(0xff00796B),
+  //                   onChanged: (value) {
+  //                     setSheetState(() => tempSelected = value.toString());
+  //                   },
+  //                 ),
+  //
+  //                 const SizedBox(height: 10),
+  //
+  //                 /// Continue Button
+  //                 GestureDetector(
+  //                   onTap: () {
+  //                     setState(() => selectedLanguage = tempSelected);
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Container(
+  //                     height: 50,
+  //                     decoration: BoxDecoration(
+  //                       borderRadius: BorderRadius.circular(12),
+  //                       gradient: const LinearGradient(
+  //                         colors: [Color(0xff00796B), Color(0xff26A69A)],
+  //                       ),
+  //                     ),
+  //                     child: const Center(
+  //                       child: Text(
+  //                         "Continue",
+  //                         style: TextStyle(
+  //                           color: Colors.white,
+  //                           fontSize: 17,
+  //                           fontWeight: FontWeight.w600,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   void _showComingSoonDialog(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;

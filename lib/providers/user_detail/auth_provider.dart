@@ -35,6 +35,14 @@ class AuthProvider with ChangeNotifier {
 
   String? userId;
   String? token;
+  // String? phone_no;
+  //
+  // Future<void> savePhoneNumber(String phone) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   await pref.setString('phone_no', phoneController.text);
+  //   phone_no = phone;
+  //   notifyListeners();
+  // }
 
   Future<void> saveUserId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,8 +88,11 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode({"phone": "+91${phoneController.text}"}),
       );
 
+<<<<<<< HEAD:lib/providers/user_detail/auth_provider.dart
       // print(res.body);
       // print(res.request?.headers);
+=======
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633:lib/providers/auth_provider.dart
 
       final body = jsonDecode(res.body);
 
@@ -160,8 +171,10 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode == 200 &&
           body["message"] == "OTP verified successfully") {
         String id = body["user"]["id"].toString();
+        // String phone=body['user']['phone'].toString();
         String jwt = body["token"];
 
+        // await savePhoneNumber(phone);
         await saveToken(jwt);
         await saveUserId(id);
 
@@ -182,7 +195,14 @@ class AuthProvider with ChangeNotifier {
         if (isProfileComplete) {
           Navigator.pushReplacementNamed(context, '/dashboard');
         } else {
+<<<<<<< HEAD:lib/providers/user_detail/auth_provider.dart
           Navigator.pushReplacementNamed(context, '/create_profile');
+=======
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => CompleteProfileScreen()),
+          );
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633:lib/providers/auth_provider.dart
         }
       } else {
         ScaffoldMessenger.of(

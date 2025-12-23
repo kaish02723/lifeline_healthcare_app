@@ -5,7 +5,12 @@ import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
+<<<<<<< HEAD
 import 'package:lifeline_healthcare_app/providers/media_provider/media_picker_provider.dart';
+=======
+import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_provider.dart';
+import 'package:lifeline_healthcare_app/providers/media_picker_provider.dart';
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicineCart_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/product_provider.dart';
@@ -44,8 +49,12 @@ void main() {
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => TopRatingProvider(),),
         ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),),
+<<<<<<< HEAD
         ChangeNotifierProvider(create: (context) => UserProfileProvider(),)
 
+=======
+        ChangeNotifierProvider(create: (context) => CancelTestProvider(),)
+>>>>>>> dc42de5c0a28d2d5e355c77b180911aace99f633
       ],
       child: MyApp(),
     ),
