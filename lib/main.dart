@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
-import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
-import 'package:lifeline_healthcare_app/providers/media_picker_provider.dart';
+import 'package:lifeline_healthcare_app/providers/media_provider/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicineCart_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/product_provider.dart';
 import 'package:lifeline_healthcare_app/providers/rating_provider/app_rating_review_provider.dart';
 import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
-import 'package:lifeline_healthcare_app/providers/surgery_provider.dart';
-import 'package:lifeline_healthcare_app/providers/theme_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
+import 'package:lifeline_healthcare_app/providers/surgery_provider/surgery_provider.dart';
+import 'package:lifeline_healthcare_app/providers/theme_provider/theme_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
+import 'package:lifeline_healthcare_app/screens/user_profile/complete_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:lifeline_healthcare_app/screens/splash/splash_screen.dart';
@@ -28,8 +28,6 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => PopularTestProvider()),
-        ChangeNotifierProvider(create: (context) => UserDetailProvider()),
-        ChangeNotifierProvider(create: (context) => GetUserDetailProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => MediaPickerProvider()),
         ChangeNotifierProvider(create: (context) => BookTestProvider()),
@@ -45,7 +43,9 @@ void main() {
         ChangeNotifierProvider(create: (context) => ProductProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => TopRatingProvider(),),
-        ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),)
+        ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),),
+        ChangeNotifierProvider(create: (context) => UserProfileProvider(),)
+
       ],
       child: MyApp(),
     ),
@@ -93,6 +93,7 @@ class MyApp extends StatelessWidget {
                 '/phone_auth_screen': (context) => const PhoneAuthScreen(),
                 '/dashboard': (context) => const DashboardScreen(),
                 '/splash_screen': (context) => const SplashScreen(),
+                '/create_profile':(context)=> const UsersDetails(),
               },
               home: SplashScreen(),
             );

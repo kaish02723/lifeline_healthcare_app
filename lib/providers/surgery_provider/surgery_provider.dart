@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifeline_healthcare_app/core/utils/services/surgery_service.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../models/surgery_model.dart';
+import '../../models/surgery/surgery_model.dart';
+import '../../services/surgery_service.dart';
 
 class SurgeryProvider with ChangeNotifier {
   var testNameController = TextEditingController();
@@ -21,10 +19,10 @@ class SurgeryProvider with ChangeNotifier {
 
   Future<void> getSurgeryDataProvider(BuildContext context) async {
     var authProvider=Provider.of<AuthProvider>(context,listen: false);
-    var user_Id=authProvider.userId;
+    var userId=authProvider.userId;
 
     SurgeryService api = SurgeryService();
-    await api.getSurgeryData(user_Id??'');
+    await api.getSurgeryData(userId??'');
 
     surgeryList = api.getSurgeryList;
     notifyListeners();

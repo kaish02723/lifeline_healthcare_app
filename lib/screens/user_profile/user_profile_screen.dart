@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
 import 'package:provider/provider.dart';
-import '../../providers/user_detail/get_userdetail_provider.dart';
+import '../../providers/user_detail/User_profile_provider.dart';
 import 'edit_profile_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -21,17 +19,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     if (!isCalled) {
       // to avoid calling multiple times
-      Provider.of<GetUserDetailProvider>(
+      Provider.of<UserProfileProvider>(
         context,
         listen: false,
-      ).getUserDetail(context);
+      ).getProfile(context);
       isCalled = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<GetUserDetailProvider>(context);
+    var provider = Provider.of<UserProfileProvider>(context);
     var user = provider.user; // Provider se user data
     print("PROFILE IMAGE URL : ${user?.picture}");
 
@@ -46,12 +44,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           IconButton(
             onPressed: () {
               if (user != null) {
-                final provider = Provider.of<GetUserDetailProvider>(
+                final provider = Provider.of<UserProfileProvider>(
                   context,
                   listen: false,
                 );
 
-                provider.fillUserData();
+                provider.fillFormData();
 
                 Navigator.push(
                   context,
@@ -81,12 +79,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: CircleAvatar(
                           radius: 60,
                           backgroundColor: Colors.teal.shade100,
-                          backgroundImage: (user.picture != null && user.picture!.isNotEmpty)
-                              ? CachedNetworkImageProvider(
-                            user.picture!.startsWith("http")
-                                ? user.picture!
-                                : "https://phone-auth-with-jwt-4.onrender.com${user.picture!}",
-                          )
+                          backgroundImage:
+                          (user.picture != null && user.picture!.isNotEmpty)
+                              ? NetworkImage(user.picture!)
                               : null,
                           child: (user.picture == null || user.picture!.isEmpty)
                               ? const Icon(

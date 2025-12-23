@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:lifeline_healthcare_app/models/doctor_model.dart';
+import 'package:lifeline_healthcare_app/models/doctors/doctor_model.dart';
 
 class DoctorProvider with ChangeNotifier {
   final String baseUrl = "https://phone-auth-with-jwt-4.onrender.com";

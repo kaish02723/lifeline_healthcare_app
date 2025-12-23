@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../help_support_screen.dart';
 
 class FollowUpScreen extends StatelessWidget {
   const FollowUpScreen({Key? key}) : super(key: key);

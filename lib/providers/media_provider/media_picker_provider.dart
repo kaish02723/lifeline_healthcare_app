@@ -77,25 +77,31 @@ class MediaPickerProvider with ChangeNotifier {
     }
   }
 
-  Future<String?> uploadImage(XFile file,BuildContext context) async {
-    var authProvider=Provider.of<AuthProvider>(context,listen: false);
-    var userId=authProvider.userId;
+  Future<String?> uploadImage(XFile file, BuildContext context) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final token = await authProvider.getToken();
 
-    final url = Uri.parse("https://phone-auth-with-jwt-4.onrender.com/userProfile/create/$userId");
+    final url = Uri.parse(
+      "https://phone-auth-with-jwt-4.onrender.com/userProfile/upload",
+    );
 
-    var request = http.MultipartRequest("POST", url);
+    final request = http.MultipartRequest("POST", url);
+
+    request.headers['Authorization'] = 'Bearer $token';
 
     request.files.add(
       await http.MultipartFile.fromPath("image", file.path),
     );
 
-    var response = await request.send();
+    final response = await request.send();
 
     if (response.statusCode == 200) {
       final res = await http.Response.fromStream(response);
       final data = jsonDecode(res.body);
       return data["imageUrl"];
     }
+
     return null;
   }
+
 }

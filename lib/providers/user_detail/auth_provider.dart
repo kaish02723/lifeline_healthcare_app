@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/auth/verify_otp_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lifeline_healthcare_app/screens/auth/complete_profile_screen.dart';
+
+import 'User_profile_provider.dart';
 
 class AuthProvider with ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
@@ -80,14 +80,13 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode({"phone": "+91${phoneController.text}"}),
       );
 
-      print(res.body);
-      print(res.request?.headers);
+      // print(res.body);
+      // print(res.request?.headers);
 
       final body = jsonDecode(res.body);
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         startTimer();
-
         if (!context.mounted) return;
         Navigator.push(
           context,
@@ -101,7 +100,7 @@ class AuthProvider with ChangeNotifier {
         );
       }
     } catch (e) {
-      print("SEND OTP ERROR: $e");
+      // print("SEND OTP ERROR: $e");
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
@@ -129,7 +128,9 @@ class AuthProvider with ChangeNotifier {
         );
       }
     } catch (e) {
-      print("RESEND ERROR: $e");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
     }
   }
 
@@ -138,7 +139,7 @@ class AuthProvider with ChangeNotifier {
     BuildContext context,
   ) async {
     try {
-      var userDetailProvider = Provider.of<GetUserDetailProvider>(
+      var provider = Provider.of<UserProfileProvider>(
         context,
         listen: false,
       );
@@ -149,12 +150,12 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode(data),
       );
 
-      print(response.body);
-      print(response.request?.headers);
+      // print(response.body);
+      // print(response.request?.headers);
 
       final body = jsonDecode(response.body);
 
-      print("VERIFY RESPONSE: $body");
+      // print("VERIFY RESPONSE: $body");
 
       if (response.statusCode == 200 &&
           body["message"] == "OTP verified successfully") {
@@ -166,8 +167,8 @@ class AuthProvider with ChangeNotifier {
 
         otp.clear();
 
-        await userDetailProvider.getUserDetail(context);
-        var user = userDetailProvider.user;
+        await provider.getProfile(context);
+        var user = provider.user;
 
         bool isProfileComplete =
             user != null &&
@@ -189,7 +190,10 @@ class AuthProvider with ChangeNotifier {
         ).showSnackBar(const SnackBar(content: Text("Invalid OTP")));
       }
     } catch (e) {
-      print("VERIFY OTP ERROR: $e");
+      // print("VERIFY OTP ERROR: $e");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
     }
   }
 

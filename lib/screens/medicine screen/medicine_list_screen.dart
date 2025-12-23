@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:lifeline_healthcare_app/config/test_styles.dart';
-import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_category_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/medicine/medicine_product_model.dart';
@@ -10,6 +9,7 @@ import '../../../providers/medicine_provider/medicineCart_provider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
 import '../../../widgets/medicine_listCard.dart';
 import 'medicine_cart_screen.dart';
+import 'medicine_category_screen.dart';
 import 'medicine_details_screen.dart';
 
 class AllMedicinesScreen extends StatelessWidget {

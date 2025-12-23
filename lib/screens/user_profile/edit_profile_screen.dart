@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
@@ -26,7 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<GetUserDetailProvider>(context);
+    var provider = Provider.of<UserProfileProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -49,15 +51,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   radius: 55,
                   backgroundColor: Colors.grey.shade300,
                   backgroundImage:
-                      imageFile != null ? FileImage(imageFile!) : null,
-                  child:
-                      imageFile == null
-                          ? Icon(
-                            Icons.camera_alt,
-                            size: 32,
-                            color: Colors.black54,
-                          )
-                          : null,
+                  imageFile != null
+                      ? FileImage(imageFile!)
+                      : provider.user?.picture != null
+                      ? NetworkImage(provider.user!.picture!)
+                      : null,
                 ),
               ),
             ),
@@ -66,7 +64,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             // ------------------ NAME ------------------
             TextField(
-              controller: provider.updateNameController,
+              controller: provider.nameController,
               decoration: InputDecoration(
                 labelText: "Name",
                 border: OutlineInputBorder(),
@@ -77,7 +75,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             // ------------------ EMAIL ------------------
             TextField(
-              controller: provider.updateEmailController,
+              controller: provider.emailController,
               decoration: InputDecoration(
                 labelText: "Email",
                 border: OutlineInputBorder(),
@@ -108,7 +106,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             // ------------------ DOB ------------------
             TextField(
-              controller: provider.updateDobController,
+              controller: provider.dobController,
               readOnly: true,
               decoration: InputDecoration(
                 labelText: "Date of Birth",
@@ -124,7 +122,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             // ------------------ ADDRESS ------------------
             TextField(
-              controller: provider.updateAddressController,
+              controller: provider.addressController,
               maxLines: 2,
               decoration: InputDecoration(
                 labelText: "Address",
@@ -146,31 +144,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  String? imageUrl;
-
+                  // 🔍 DEBUG LOGS (YAHI LAGANA HAI)
+                  print("SAVE CLICKED");
+                  print("NAME: ${provider.nameController.text}");
+                  print("EMAIL: ${provider.emailController.text}");
+                  // upload image first (if selected)
                   if (imageFile != null) {
-                    imageUrl =
                     await provider.uploadProfileImage(imageFile!, context);
                   }
-
+                  //  update profile (WITHOUT picture)
                   Map<String, dynamic> data = {
-                    "name": provider.updateNameController.text,
-                    "email": provider.updateEmailController.text,
+                    "name": provider.nameController.text,
+                    "email": provider.emailController.text,
                     "gender": provider.updateGender,
-                    "date_of_birth": provider.updateDobController.text,
-                    "address": provider.updateAddressController.text,
+                    "date_of_birth": provider.dobController.text,
+                    "address": provider.addressController.text,
                   };
-
-                  if (imageUrl != null && imageUrl.isNotEmpty) {
-                    data["picture"] = imageUrl;
-                  }
-
-                  provider.updateUserProfile(context, data);
+                  await provider.updateProfile(context, data);
+                  //  go back
+                  Navigator.pop(context);
                 },
-
                 child: Text("SAVE CHANGES"),
               ),
             ),
+
           ],
         ),
       ),

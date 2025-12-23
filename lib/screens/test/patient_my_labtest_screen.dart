@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
+import 'package:lifeline_healthcare_app/screens/test/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
 

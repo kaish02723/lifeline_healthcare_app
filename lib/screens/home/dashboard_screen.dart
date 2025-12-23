@@ -6,15 +6,12 @@ import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/my_appointment_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
-import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_category_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
-import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
-import 'package:lifeline_healthcare_app/screens/home/medicine%20screen/medicine_order_detail_screen.dart';
+import 'package:lifeline_healthcare_app/screens/user_profile/user_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_lab_test_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_medicine_category_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_my_labtest_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_my_surgery_screen.dart';
+import 'package:lifeline_healthcare_app/screens/test/patient_lab_test_screen.dart';
+import 'package:lifeline_healthcare_app/screens/test/patient_my_labtest_screen.dart';
+import 'package:lifeline_healthcare_app/screens/surgery/patient_my_surgery_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/offer_banner.dart';
@@ -22,10 +19,12 @@ import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../providers/rating_provider/app_rating_review_provider.dart';
-import '../../providers/user_detail/get_userdetail_provider.dart';
+import '../../providers/user_detail/User_profile_provider.dart';
 import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
 import '../../widgets/dashboard_widgets/show_rate_us_bottom_sheet.dart';
 import '../../widgets/dashboard_widgets/top_feature_card.dart';
+import '../medicine screen/medicine_category_screen.dart';
+import '../medicine screen/medicine_order_detail_screen.dart';
 import 'notification_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -46,10 +45,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   languageBottomSheet();
     // });
-    Provider.of<GetUserDetailProvider>(
+    Provider.of<UserProfileProvider>(
       context,
       listen: false,
-    ).getUserDetail(context);
+    ).getProfile(context);
 
     Provider.of<TopRatingProvider>(context, listen: false)
         .getTopRatings();
@@ -64,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<GetUserDetailProvider>(context);
+    var provider = Provider.of<UserProfileProvider>(context);
     var userData = provider.user;
     var dashBoardProvider = Provider.of<DashBoardProvider>(context);
 
@@ -94,9 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       const CircleAvatar(
                         radius: 32,
-                        backgroundImage: NetworkImage(
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
-                        ),
+                        // backgroundImage: ,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -244,14 +241,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () => _scaffoldKey.currentState!.openDrawer(),
-            child: const CircleAvatar(
+            child: CircleAvatar(
               backgroundColor: Colors.white,
-              backgroundImage: NetworkImage(
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s',
-              ),
+              radius: 22,
+              backgroundImage: (userData?.picture != null &&
+                  userData!.picture!.isNotEmpty)
+                  ? NetworkImage(
+                userData.picture!.startsWith("http")
+                    ? userData.picture!
+                    : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
+              )
+                  : null,
+              child: (userData?.picture == null ||
+                  userData!.picture!.isEmpty)
+                  ? const Icon(Icons.person, color: Colors.grey)
+                  : null,
             ),
           ),
         ),
+
         centerTitle: true,
         title: Row(
           children: [

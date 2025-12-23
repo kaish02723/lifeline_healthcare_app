@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/appointment_book_diagnostic_screen.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/book_in_clinic_appointment.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/doctors_detail_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/doctor_model.dart';
+import '../../models/doctors/doctor_model.dart';
 
 class DoctorFindConsultScreen extends StatefulWidget {
   const DoctorFindConsultScreen({super.key});

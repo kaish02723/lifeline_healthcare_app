@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lifeline_healthcare_app/models/labtest_models/my_labtest_model.dart';
-import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class BookTestProvider with ChangeNotifier {

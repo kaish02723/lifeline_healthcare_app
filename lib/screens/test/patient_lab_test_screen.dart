@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_book_test_screen.dart';
+import 'package:lifeline_healthcare_app/screens/test/patient_book_test_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
 
