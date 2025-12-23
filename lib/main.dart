@@ -22,8 +22,11 @@ import 'package:lifeline_healthcare_app/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'config/app_theme_colors.dart';
+import 'core/utils/services/notification_service.dart';
 
-void main() {
+void main() async{
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await NotificationService.init();
   runApp(
     MultiProvider(
       providers: [

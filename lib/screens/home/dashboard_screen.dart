@@ -613,7 +613,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   //   ),
                   //   const SizedBox(height: 16),
                   // ],
-
                   if (provider.topReviews.isNotEmpty)
                     const Padding(
                       padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -646,14 +645,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       final rating = review.rating ?? 0;
 
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).shadowColor.withOpacity(0.05),
+                              color: Theme.of(
+                                context,
+                              ).shadowColor.withOpacity(0.05),
                               blurRadius: 6,
                               offset: const Offset(0, 3),
                             ),
@@ -672,7 +676,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         color: AppColors.golden,
                                         size: 18,
                                       );
-                                    } else if (i < rating && rating - i >= 0.5) {
+                                    } else if (i < rating &&
+                                        rating - i >= 0.5) {
                                       return const Icon(
                                         Icons.star_half,
                                         color: AppColors.golden,
@@ -710,7 +715,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 height: 1.4,
-                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.color,
                               ),
                             ),
                           ],
@@ -724,7 +732,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
 
           const SizedBox(height: 30),
-          DashboardFooter()
+          DashboardFooter(),
         ],
       ),
     );
