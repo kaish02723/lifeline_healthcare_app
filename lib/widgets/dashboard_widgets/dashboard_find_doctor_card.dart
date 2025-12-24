@@ -1,5 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/doctor_provider/doctor_provider.dart';
+import '../../screens/doctor/doctor_find_consult_screen.dart';
+import '../../screens/doctor/find_doctor_screen.dart';
 
 class HealthCategoryItem extends StatelessWidget {
   final String title;
@@ -29,38 +34,56 @@ class HealthCategoryItem extends StatelessWidget {
             ? Colors.grey.shade300
             : Colors.grey.shade700);
 
-    return Column(
-      children: [
-        Container(
-          width: size,
-          height: size,
-          padding: EdgeInsets.all(size * 0.15),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: bColor, width: 0.8),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black.withOpacity(0.05)
-                    : Colors.black.withOpacity(0.3),
-                blurRadius: 6,
-                offset: const Offset(2, 3),
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+
+        final provider =
+        Provider.of<DoctorProvider>(context, listen: false);
+
+        final speciality =
+            categoryToSpeciality[title] ?? "All";
+
+        provider.filterBySpeciality(speciality);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => FindDoctor()),
+        );
+      },
+      child: Column(
+        children: [
+          Container(
+            width: size,
+            height: size,
+            padding: EdgeInsets.all(size * 0.15),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: bColor, width: 0.8),
+              boxShadow: [
+                BoxShadow(
+                  color:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black.withOpacity(0.05)
+                          : Colors.black.withOpacity(0.3),
+                  blurRadius: 6,
+                  offset: const Offset(2, 3),
+                ),
+              ],
+            ),
+            child: CachedNetworkImage(imageUrl: imagePath, fit: BoxFit.contain),
           ),
-          child: CachedNetworkImage(imageUrl: imagePath, fit: BoxFit.contain),
-        ),
-        SizedBox(height: size * 0.08),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 13,
-            color: Theme.of(context).textTheme.bodyMedium!.color,
+          SizedBox(height: size * 0.08),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              color: Theme.of(context).textTheme.bodyMedium!.color,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -101,3 +124,37 @@ final List<Map<String, String>> healthCategories = [
     'image': 'https://cdn-icons-png.flaticon.com/512/2044/2044562.png',
   },
 ];
+
+final Map<String, String> categoryToSpeciality = {
+  "Skin & Hair": "Dermatology",
+  "Heart": "Cardiology",
+  "Dental": "Dental",
+  "Eye Care": "Ophthalmology",
+  "ENT": "ENT",
+  "Bone & Joint": "Orthopaedics",
+  "Diabetes": "Endocrinology",
+  "Kidney": "Nephrology",
+};
+
+String mapCategoryToSpeciality(String title) {
+  switch (title) {
+    case 'Skin & Hair':
+      return 'Dermatology';
+    case 'Heart':
+      return 'Cardiology';
+    case 'Dental':
+      return 'Dental';
+    case 'Eye Care':
+      return 'Ophthalmology';
+    case 'ENT':
+      return 'ENT';
+    case 'Bone & Joint':
+      return 'Orthopaedics';
+    case 'Diabetes':
+      return 'Endocrinology';
+    case 'Kidney':
+      return 'Nephrology';
+    default:
+      return 'All';
+  }
+}

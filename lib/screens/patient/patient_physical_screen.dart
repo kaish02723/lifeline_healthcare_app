@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/physical_summary_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/doctor_provider.dart';
+import '../../providers/doctor_provider/doctor_provider.dart';
 
 class PhysicalAppointmentScreen extends StatelessWidget {
   static const Color primary = Color(0xFF00796B);

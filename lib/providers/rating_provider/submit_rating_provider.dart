@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../models/rating_model/submit_rating_model.dart';
-import '../auth_provider.dart';
+import '../user_detail/auth_provider.dart';
 
 class SubmitRatingProvider with ChangeNotifier {
   bool isLoading = false;

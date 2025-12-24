@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/models/user_model.dart';
-import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
-import 'package:lifeline_healthcare_app/screens/home/user_profile_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'auth_provider.dart';
 
 class GetUserDetailProvider with ChangeNotifier {
   final TextEditingController updateNameController = TextEditingController();

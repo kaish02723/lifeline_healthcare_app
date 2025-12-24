@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/surgery_model.dart';
+import '../../../models/surgery/surgery_model.dart';
 
 class SurgeryService {
   final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';

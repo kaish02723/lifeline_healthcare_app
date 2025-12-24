@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/auth_provider.dart';
+import '../../providers/user_detail/auth_provider.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String phone;
@@ -218,12 +218,17 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 ),
                               ),
                               child: Center(
-                                child: Text(
-                                  "Verify OTP",
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                child: GestureDetector(
+                                  onTap: () {
+
+                                  },
+                                  child: Text(
+                                    "Verify OTP",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -231,7 +236,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           ),
                         ),
                         // ==========================================================================
-
                         const SizedBox(height: 15),
                       ],
                     ),

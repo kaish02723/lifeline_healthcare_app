@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../config/app_theme_colors.dart';
 import '../../../config/color.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
-import '../../../providers/user_detail/get_userdetail_provider.dart';
+import '../../providers/user_detail/User_profile_provider.dart';
 import 'medicine_checkout_screen.dart';
 
 class MedicineCart extends StatelessWidget {
@@ -18,7 +18,7 @@ class MedicineCart extends StatelessWidget {
     final cart = context.watch<CartProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    var provider = Provider.of<GetUserDetailProvider>(context);
+    var provider = Provider.of<UserProfileProvider>(context);
     var userData = provider.user;
 
     return Scaffold(

@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/config/app_theme.dart';
-import 'package:lifeline_healthcare_app/providers/theme_provider.dart';
+import 'package:lifeline_healthcare_app/providers/theme_provider/theme_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/terms_and_policy_screen.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/user_detail/auth_provider.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});

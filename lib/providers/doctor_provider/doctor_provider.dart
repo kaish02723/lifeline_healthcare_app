@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:lifeline_healthcare_app/models/doctor_model.dart';
+import 'package:lifeline_healthcare_app/models/doctors/doctor_model.dart';
 
 class DoctorProvider with ChangeNotifier {
   final String baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
@@ -55,7 +55,7 @@ class DoctorProvider with ChangeNotifier {
     "Dermatology": ["Dermatologist", "Dermatology", "Skin"],
     "Orthopaedics": ["Orthopedic", "Orthopaedics", "Ortho"],
     "Pediatrics": ["Pediatrician", "Pediatrics", "Child"],
-    "Sexology": ["Sexologist", "Sexology"],
+    "Sexology": ["Sexologist", "Sexology","sexlogy"],
     "Neurology": ["Neurologist", "Neurology"],
     "Gastroenterology": ["Gastroenterologist", "Gastroenterology"],
     "Endocrinology": ["Endocrinologist", "Endocrinology"],
@@ -77,7 +77,6 @@ class DoctorProvider with ChangeNotifier {
   }
 
   void filterBySpeciality(String speciality) {
-    print("FILTER APPLY: $speciality");
     selectedSpeciality = speciality;
 
     if (speciality == "All") {
@@ -95,6 +94,7 @@ class DoctorProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
 
 
   void filterBySearchQuery(String query) {

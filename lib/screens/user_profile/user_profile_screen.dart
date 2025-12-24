@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/user_detail/User_profile_provider.dart';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +24,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!isCalled) {
-      context.read<GetUserDetailProvider>().getUserDetail(context);
+      // to avoid calling multiple times
+      Provider.of<UserProfileProvider>(
+        context,
+        listen: false,
+      ).getProfile(context);
       isCalled = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<GetUserDetailProvider>();
-    final user = provider.user;
+    var provider = Provider.of<UserProfileProvider>(context);
+    var user = provider.user;
+    print("PROFILE IMAGE URL : ${user?.picture}");
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -42,17 +51,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed:
-                user == null
-                    ? null
-                    : () {
-                      provider.fillUserData();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => EditProfileScreen()),
-                      );
-                    },
+            onPressed: () {
+              if (user != null) {
+                final provider = Provider.of<UserProfileProvider>(
+                  context,
+                  listen: false,
+                );
+
+                provider.fillFormData();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => EditProfileScreen()),
+                );
+              }
+            },
+            icon: const Icon(Icons.edit, color: Colors.white),
           ),
         ],
       ),
@@ -66,8 +80,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
+                    SizedBox(height: 20),
+                    Center(
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.teal.shade100,
+                          backgroundImage:
+                          (user.picture != null && user.picture!.isNotEmpty)
+                              ? NetworkImage(user.picture!)
+                              : null,
+                          child: (user.picture == null || user.picture!.isEmpty)
+                              ? const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.grey,
+                          )
+                              : null,
+                        ),
+                      ),
+
+                    ),
+
+                    SizedBox(height: 10),
+
+                    Text(
+                      user.name ?? "Not set",
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
                     const SizedBox(height: 20),
-                    _profileHeader(context, user),
+                    // _profileHeader(context, user),
                     const SizedBox(height: 20),
 
                     _infoCard(
@@ -103,48 +149,48 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Widget _profileHeader(BuildContext context, user) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-      child: SizedBox(
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 55,
-              backgroundColor: AppColors.primary.withOpacity(0.15),
-              backgroundImage:
-                  (user.picture != null && user.picture!.isNotEmpty)
-                      ? CachedNetworkImageProvider(
-                        user.picture!.startsWith("http")
-                            ? user.picture!
-                            : "https://phone-auth-with-jwt-4.onrender.com${user.picture!}",
-                      )
-                      : null,
-              child:
-                  (user.picture == null || user.picture!.isEmpty)
-                      ? Icon(
-                        Icons.person,
-                        size: 60,
-                        color: isDark ? AppColors.iconDark : AppColors.icon,
-                      )
-                      : null,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              user.name ?? "Not set",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.textDark : AppColors.text,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _profileHeader(BuildContext context, user) {
+  //   final isDark = Theme.of(context).brightness == Brightness.dark;
+  //
+  //   return BackdropFilter(
+  //     filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+  //     child: SizedBox(
+  //       child: Column(
+  //         children: [
+  //           CircleAvatar(
+  //             radius: 55,
+  //             backgroundColor: AppColors.primary.withOpacity(0.15),
+  //             backgroundImage:
+  //                 (user.picture != null && user.picture!.isNotEmpty)
+  //                     ? CachedNetworkImageProvider(
+  //                       user.picture!.startsWith("http")
+  //                           ? user.picture!
+  //                           : "https://phone-auth-with-jwt-4.onrender.com${user.picture!}",
+  //                     )
+  //                     : null,
+  //             child:
+  //                 (user.picture == null || user.picture!.isEmpty)
+  //                     ? Icon(
+  //                       Icons.person,
+  //                       size: 60,
+  //                       color: isDark ? AppColors.iconDark : AppColors.icon,
+  //                     )
+  //                     : null,
+  //           ),
+  //           const SizedBox(height: 12),
+  //           Text(
+  //             user.name ?? "Not set",
+  //             style: TextStyle(
+  //               fontSize: 18,
+  //               fontWeight: FontWeight.bold,
+  //               color: isDark ? AppColors.textDark : AppColors.text,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _infoCard(
     BuildContext context, {
