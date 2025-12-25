@@ -53,5 +53,4 @@ class CancelTestProvider with ChangeNotifier {
       );
     }
   }
-
 }

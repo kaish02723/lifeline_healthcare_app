@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../models/doctor_model.dart';
+import '../../models/doctors/doctor_model.dart';
 
 class DoctorDetailScreen extends StatelessWidget {
   final DoctorModel doctor;

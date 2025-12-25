@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import '../../core/utils/services/notification_service.dart';
+
 class NotificationGlassScreen extends StatelessWidget {
   const NotificationGlassScreen({super.key});
 
@@ -17,8 +19,10 @@ class NotificationGlassScreen extends StatelessWidget {
         centerTitle: true,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Icon(Icons.arrow_back,
-              color: isDark ? Colors.white : Colors.black),
+          child: Icon(
+            Icons.arrow_back,
+            color: isDark ? Colors.white : Colors.black,
+          ),
         ),
         title: Text(
           "Notification",
@@ -36,9 +40,10 @@ class NotificationGlassScreen extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: isDark
-                    ? [Colors.black, Colors.grey.shade900]
-                    : [Colors.teal.shade50, Colors.white],
+                colors:
+                    isDark
+                        ? [Colors.black, Colors.grey.shade900]
+                        : [Colors.teal.shade50, Colors.white],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -62,13 +67,25 @@ class NotificationGlassScreen extends StatelessWidget {
               ),
             ],
           ),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: () {
+          //       NotificationService.showNotification();
+          //     },
+          //     child: const Text("Show Notification"),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  Widget _glassTile(bool isDark,
-      {required String title, required String time, required String msg}) {
+  Widget _glassTile(
+    bool isDark, {
+    required String title,
+    required String time,
+    required String msg,
+  }) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: BackdropFilter(
@@ -77,11 +94,9 @@ class NotificationGlassScreen extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 18),
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color:
-            (isDark ? Colors.white10 : Colors.white.withOpacity(0.4)),
+            color: (isDark ? Colors.white10 : Colors.white.withOpacity(0.4)),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                color: Colors.white.withOpacity(0.4), width: 1),
+            border: Border.all(color: Colors.white.withOpacity(0.4), width: 1),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,36 +105,40 @@ class NotificationGlassScreen extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Text(title,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color:
-                                    isDark ? Colors.white : Colors.black,
-                                  ))),
-                          Text(time,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: isDark
-                                      ? Colors.white70
-                                      : Colors.black54)),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Text(msg,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          time,
                           style: TextStyle(
-                            fontSize: 13.5,
-                            color: isDark
-                                ? Colors.white70
-                                : Colors.black87,
-                          )),
-                    ]),
-              )
+                            fontSize: 12,
+                            color: isDark ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      msg,
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        color: isDark ? Colors.white70 : Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

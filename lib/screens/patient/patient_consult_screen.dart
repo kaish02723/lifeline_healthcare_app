@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/screens/home/help_support_screen.dart';
 import 'package:provider/provider.dart';
-import '../../providers/doctor_provider.dart';
+import '../../providers/doctor_provider/doctor_provider.dart';
 import '../doctor/doctor_find_consult_screen.dart';
 import '../medicine screen/patient_know_more_screen.dart';
 

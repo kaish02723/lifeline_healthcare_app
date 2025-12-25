@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/doctor_provider.dart';
+import '../../providers/doctor_provider/doctor_provider.dart';
 
 class PhysicalSummaryScreen extends StatefulWidget {
   const PhysicalSummaryScreen({super.key});

@@ -4,16 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lifeline_healthcare_app/providers/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
-import 'package:lifeline_healthcare_app/screens/appointments/appointment_book_diagnostic_screen.dart';
-import 'package:lifeline_healthcare_app/screens/appointments/book_in_clinic_appointment.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/doctors_detail_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/doctor_model.dart';
+import '../../models/doctors/doctor_model.dart';
 
 class DoctorFindConsultScreen extends StatefulWidget {
   const DoctorFindConsultScreen({super.key});
@@ -41,7 +39,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
     final w = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final userDetailProvider = Provider.of<GetUserDetailProvider>(context);
+    final userDetailProvider = Provider.of<UserProfileProvider>(context);
     final userAddress = userDetailProvider.user?.address;
 
     return Scaffold(
@@ -103,7 +101,12 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 230),
-                        child: Text("No doctors found"),
+                        child: Text(
+                          "No doctors available for this speciality",
+                          style: TextStyle(
+                            color: isDark ? Colors.redAccent : Colors.grey,
+                          ),
+                        ),
                       ),
                     );
                   }

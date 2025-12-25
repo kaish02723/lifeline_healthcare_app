@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../config/color.dart';
 import '../../../config/app_theme_colors.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
-import '../../../providers/user_detail/get_userdetail_provider.dart';
+import '../../providers/user_detail/User_profile_provider.dart';
 
 class MedicineCheckoutScreen extends StatefulWidget {
   const MedicineCheckoutScreen({super.key});
@@ -24,7 +24,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final glass = theme.extension<AppThemeColors>()!;
-    var provider = Provider.of<GetUserDetailProvider>(context);
+    var provider = Provider.of<UserProfileProvider>(context);
     var userData = provider.user;
 
     return Scaffold(

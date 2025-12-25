@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:lifeline_healthcare_app/providers/auth_provider.dart';
-import 'package:lifeline_healthcare_app/providers/media_picker_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/user_detail_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
+import 'package:lifeline_healthcare_app/providers/media_provider/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import '../../providers/user_detail/User_profile_provider.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   const CompleteProfileScreen({super.key});
@@ -19,7 +18,7 @@ class CompleteProfileScreen extends StatefulWidget {
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<UserDetailProvider>(context, listen: false);
+    var provider = Provider.of<UserProfileProvider>(context, listen: false);
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
     var mediaProvider = Provider.of<MediaPickerProvider>(context);
 
@@ -232,7 +231,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   const SizedBox(height: 18),
                   // Date Picker
                   TextFormField(
-                    controller: provider.dateController,
+                    controller: provider.dobController,
                     readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Date of Birth",
@@ -254,7 +253,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                             lastDate: DateTime.now(),
                           );
                           if (picked != null) {
-                            provider.dateController.text =
+                            provider.dobController.text =
                                 "${picked.day}/${picked.month}/${picked.year}";
                           }
                         },
@@ -297,7 +296,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       ),
                       onPressed: () async {
                         if (mediaProvider.formKey.currentState!.validate()) {
-                          if (provider.dateController.text.isEmpty) {
+                          if (provider.dobController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
@@ -315,19 +314,23 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                               context,
                             );
                           }
+                          if (imageUrl != null) {
+                                mediaProvider.profileImageUrl = imageUrl;
+                                 mediaProvider.notifyListeners();
+                          }
 
                           var data = {
                             "name": provider.nameController.text.trim(),
                             "email": provider.emailController.text.trim(),
                             "gender": provider.genderController.text.trim(),
                             "date_of_birth":
-                                provider.dateController.text.trim(),
+                                provider.dobController.text.trim(),
                             "address": "anywhere",
                             "picture": imageUrl,
                           };
 
                           String? userId = authProvider.userId;
-                          provider.completeProfile(userId!, data, context);
+                          provider.createProfile(context, data);
                         }
                       },
                       child: const Text(
