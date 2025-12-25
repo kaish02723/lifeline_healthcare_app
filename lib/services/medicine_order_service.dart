@@ -30,6 +30,9 @@ class MedicineOrderService {
       body: jsonEncode(data),
     );
 
+    print(response.body);
+    print(response.request?.headers);
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       print("Order Confirmed");
       print(response.body);

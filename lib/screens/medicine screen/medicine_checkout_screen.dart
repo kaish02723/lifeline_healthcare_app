@@ -1,12 +1,15 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/color.dart';
 import '../../../config/app_theme_colors.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
+import '../../providers/medicine_provider/medicine_order_provider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
+import '../../services/medicine_order_service.dart';
 
 class MedicineCheckoutScreen extends StatefulWidget {
   const MedicineCheckoutScreen({super.key});
@@ -88,10 +91,49 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        onPressed: () {
-                          if (selectedPayment == 'COD') {
-                          } else {}
+                        onPressed: () async {
+                          if (cart.items.isEmpty) return;
+
+                          final orderProvider =
+                          Provider.of<MedicineOrderProvider>(context, listen: false);
+                          final authProvider=Provider.of<AuthProvider>(context,listen: false);
+                          final userId=authProvider.userId;
+
+                          try {
+                            await orderProvider.createFullOrder(
+                              order: {
+                                "user_id": userId,
+                                "orderCode": orderProvider.generateOrderCode(),
+                                "total_amount": cart.totalAmount,
+                                "paymentMethod": selectedPayment,
+                                "orderStatus": "processing",
+                              },
+                              items: cart.items.map((e) {
+                                return {
+                                  "productId": e.product.medId,
+                                  "name": e.product.medName,
+                                  "price": e.product.medPrice,
+                                  "qty": e.quantity,
+                                };
+                              }).toList(),
+                            );
+
+                            await cart.clearCart();
+
+                            await orderProvider.getMedicine();
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Order placed successfully")),
+                            );
+
+                            Navigator.pushReplacementNamed(context, '/orders');
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Order failed: $e")),
+                            );
+                          }
                         },
+
                         child: Text(
                           selectedPayment == 'COD'
                               ? "Place Order"
