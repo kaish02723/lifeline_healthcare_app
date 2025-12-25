@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../core/utils/local_database/cart_db.dart';
 import '../models/medicine_models/cart_item_model.dart';
 import '../models/medicine_models/medicine_product_model.dart';
-import 'medicine_provider/medicineCart_provider.dart';
 
 class CartDataProvider with ChangeNotifier {
   List<CartItemModel> _items = [];
@@ -16,42 +15,35 @@ class CartDataProvider with ChangeNotifier {
 
   double get totalAmount => _items.fold(
     0.0,
-        (sum, item) => sum + (item.product.medPrice ?? 0.0) * item.quantity,
+    (sum, item) => sum + (item.product.medPrice ?? 0.0) * item.quantity,
   );
-
 
   Future<void> loadCart() async {
     final data = await CartDB.getAll();
 
-    _items = data.map((e) {
-      return CartItemModel(
-        product: ProductModel(
-          medId: e['productId'] as int,
-          medName: e['name'] as String,
-          medImage: e['image'] as String?,
-          medPrice: (e['price'] as num).toInt(), // FIX
-        ),
-        quantity: e['quantity'] as int,
-      );
-    }).toList();
+    _items =
+        data.map((e) {
+          return CartItemModel(
+            product: ProductModel(
+              medId: e['productId'] as int,
+              medName: e['name'] as String,
+              medImage: e['image'] as String?,
+              medPrice: (e['price'] as num).toInt(), // FIX
+            ),
+            quantity: e['quantity'] as int,
+          );
+        }).toList();
 
     notifyListeners();
   }
 
-
-
-
   /// ADD
   Future<void> addToCart(ProductModel product) async {
-    final index =
-    _items.indexWhere((i) => i.product.medId == product.medId);
+    final index = _items.indexWhere((i) => i.product.medId == product.medId);
 
     if (index >= 0) {
       _items[index].quantity++;
-      await CartDB.updateQty(
-        product.medId!,
-        _items[index].quantity,
-      );
+      await CartDB.updateQty(product.medId!, _items[index].quantity);
     } else {
       _items.add(CartItemModel(product: product));
       await CartDB.insert({
@@ -66,32 +58,23 @@ class CartDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// INCREASE
   Future<void> increaseQuantity(int productId) async {
-    final index =
-    _items.indexWhere((i) => i.product.medId == productId);
+    final index = _items.indexWhere((i) => i.product.medId == productId);
     if (index == -1) return;
 
     _items[index].quantity++;
-    await CartDB.updateQty(
-      productId,
-      _items[index].quantity,
-    );
+    await CartDB.updateQty(productId, _items[index].quantity);
     notifyListeners();
   }
 
   /// DECREASE
   Future<void> decreaseQuantity(int productId) async {
-    final index =
-    _items.indexWhere((i) => i.product.medId == productId);
+    final index = _items.indexWhere((i) => i.product.medId == productId);
     if (index == -1) return;
 
     if (_items[index].quantity > 1) {
       _items[index].quantity--;
-      await CartDB.updateQty(
-        productId,
-        _items[index].quantity,
-      );
+      await CartDB.updateQty(productId, _items[index].quantity);
     } else {
       _items.removeAt(index);
       await CartDB.delete(productId);

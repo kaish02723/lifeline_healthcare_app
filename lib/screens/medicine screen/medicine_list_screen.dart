@@ -8,6 +8,7 @@ import '../../../providers/medicine_provider/medicineCart_provider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
 import '../../../widgets/medicine_listCard.dart';
 import '../../models/medicine_models/medicine_product_model.dart';
+import '../../providers/CartProvider.dart';
 import 'medicine_cart_screen.dart';
 import 'medicine_category_screen.dart';
 import 'medicine_details_screen.dart';
@@ -23,7 +24,7 @@ class AllMedicinesScreen extends StatelessWidget {
     final provider = context.watch<ProductProvider>();
     final Category? selectedCategory = provider.selectedCategory;
     final products = provider.filteredProducts;
-    final cart = context.watch<CartProvider>();
+    final cart = context.watch<CartDataProvider>();
 
     return Scaffold(
       backgroundColor: isDark ? Colors.black : Colors.white,
@@ -39,13 +40,21 @@ class AllMedicinesScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineCategoryScreen(),));
-          }, icon: Icon(
-            CupertinoIcons.search,
-            size: 26,
-            color: isDark ? Colors.white : Colors.black,
-          ),),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MedicineCategoryScreen(),
+                ),
+              );
+            },
+            icon: Icon(
+              CupertinoIcons.search,
+              size: 26,
+              color: isDark ? Colors.white : Colors.black,
+            ),
+          ),
 
           const SizedBox(width: 12),
           IconButton(
@@ -57,9 +66,7 @@ class AllMedicinesScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const MedicineCart(),
-                ),
+                MaterialPageRoute(builder: (_) => const MedicineCart()),
               );
             },
           ),
@@ -86,11 +93,12 @@ class AllMedicinesScreen extends StatelessWidget {
                 ),
                 Text(
                   "Saran",
-                  style: AppTextStyle.h4.copyWith(
-                    color: AppColors.secondary,
-                  ),
+                  style: AppTextStyle.h4.copyWith(color: AppColors.secondary),
                 ),
-                const Icon(Icons.keyboard_arrow_down, color: AppColors.secondary),
+                const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: AppColors.secondary,
+                ),
               ],
             ),
 
@@ -110,61 +118,68 @@ class AllMedicinesScreen extends StatelessWidget {
 
             /// PRODUCT LIST
             Expanded(
-              child: provider.isLoading
-                  ? const Center(child: CupertinoActivityIndicator())
-                  : products.isEmpty
-                  ? const Center(child: Text("No medicines found"))
-                  : ListView.separated(
-                itemCount: products.length,
-                separatorBuilder: (_, __) =>
-                const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    final isInCart = cart.isInCart(product.medId!);
-                    return MedicineListCard(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => MedicineDetailsScreen(
-                              productId: product.medId!.toInt(),
+              child:
+                  provider.isLoading
+                      ? const Center(child: CupertinoActivityIndicator())
+                      : products.isEmpty
+                      ? const Center(child: Text("No medicines found"))
+                      : ListView.separated(
+                        itemCount: products.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final product = products[index];
+                          final isInCart = cart.isInCart(product.medId!);
+                          return MedicineListCard(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => MedicineDetailsScreen(
+                                        productId: product.medId!.toInt(),
+                                      ),
+                                ),
+                              );
+                            },
+                            imageUrl: product.medImage ?? '',
+                            title: product.medName ?? '',
+                            subtitle: product.medBrandName ?? '',
+                            rating: provider.rating(product).toString(),
+                            price: "${provider.price(product)}",
+                            discount: "${provider.discount(product)}",
+                            actionButton: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    isInCart
+                                        ? Colors.white
+                                        : AppColors.secondary,
+                                side: BorderSide(color: AppColors.secondary),
+                              ),
+                              onPressed: () {
+                                if (isInCart) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const MedicineCart(),
+                                    ),
+                                  );
+                                } else {
+                                  cart.addToCart(product);
+                                }
+                              },
+                              child: Text(
+                                isInCart ? "Go to Cart" : "Add to Cart",
+                                style: TextStyle(
+                                  color:
+                                      isInCart
+                                          ? AppColors.secondary
+                                          : Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      imageUrl: product.medImage ?? '',
-                      title: product.medName ?? '',
-                      subtitle: product.medBrandName ?? '',
-                      rating: provider.rating(product).toString(),
-                      price: "${provider.price(product)}",
-                      discount: "${provider.discount(product)}",
-                      actionButton:ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isInCart
-                              ? Colors.white
-                              : AppColors.secondary,
-                          side: BorderSide(color: AppColors.secondary),
-                        ),
-                        onPressed: () {
-                          if (isInCart) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const MedicineCart()),
-                            );
-                          } else {
-                            cart.addToCart(product);
-                          }
+                          );
                         },
-                        child: Text(
-                          isInCart ? "Go to Cart" : "Add to Cart",
-                          style: TextStyle(
-                            color: isInCart ? AppColors.secondary : Colors.white,
-                          ),
-                        ),
                       ),
-                    );
-                  }
-              ),
             ),
           ],
         ),

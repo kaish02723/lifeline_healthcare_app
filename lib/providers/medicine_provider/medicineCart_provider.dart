@@ -13,13 +13,10 @@ class CartItem {
 class CartProvider with ChangeNotifier {
   final Map<int, CartItem> _items = {};
 
-  /// GET ALL ITEMS
   List<CartItem> get items => _items.values.toList();
 
-  /// ITEM COUNT
   int get itemCount => _items.length;
 
-  /// TOTAL AMOUNT
   double get totalAmount {
     double total = 0;
     for (var item in _items.values) {
@@ -28,7 +25,6 @@ class CartProvider with ChangeNotifier {
     return total;
   }
 
-  /// ADD TO CART
   void addToCart(ProductModel product) {
     final id = product.medId!;
 
@@ -41,12 +37,10 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ///Go to cart
   bool isInCart(int productId) {
     return items.any((item) => item.product.medId == productId);
   }
 
-  /// INCREASE QUANTITY
   void increaseQuantity(int productId) {
     if (_items.containsKey(productId)) {
       _items[productId]!.quantity++;
@@ -54,7 +48,6 @@ class CartProvider with ChangeNotifier {
     }
   }
 
-  /// DECREASE QUANTITY
   void decreaseQuantity(int productId) {
     if (!_items.containsKey(productId)) return;
 
@@ -67,7 +60,6 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// CLEAR CART
   void clearCart() {
     _items.clear();
     notifyListeners();

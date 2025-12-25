@@ -33,7 +33,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
   void initState() {
     super.initState();
     context.read<ProductProvider>().fetchAllMedicines();
-    _loadRecentSearches(); //load recent search
+    _loadRecentSearches();
   }
 
   void _onSearchSubmit(String value) {
@@ -64,7 +64,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
   Future<void> _saveRecentSearch(String value) async {
     final prefs = await SharedPreferences.getInstance();
 
-    recentSearches.remove(value); // duplicate hatao
+    recentSearches.remove(value);
     recentSearches.insert(0, value);
 
     if (recentSearches.length > 6) {
