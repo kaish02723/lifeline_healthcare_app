@@ -207,17 +207,17 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           fontSize: 13,
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CompleteProfileScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text('Skip'),
-                      ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => CompleteProfileScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text('Skip'),
+                      // ),
                     ],
                   ),
                 ),

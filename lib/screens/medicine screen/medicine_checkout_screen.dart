@@ -95,27 +95,48 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                           if (cart.items.isEmpty) return;
 
                           final orderProvider =
-                          Provider.of<MedicineOrderProvider>(context, listen: false);
-                          final authProvider=Provider.of<AuthProvider>(context,listen: false);
-                          final userId=authProvider.userId;
+                              Provider.of<MedicineOrderProvider>(
+                                context,
+                                listen: false,
+                              );
+                          final authProvider = Provider.of<AuthProvider>(
+                            context,
+                            listen: false,
+                          );
+                          final userId = authProvider.userId;
+
+                          print("USER DATA: $userData");
+                          print("USER NAME: ${userData?.name}");
 
                           try {
+                            final orderCode = orderProvider.generateOrderCode();
+
                             await orderProvider.createFullOrder(
                               order: {
+                                "order_code": orderCode,
                                 "user_id": userId,
-                                "orderCode": orderProvider.generateOrderCode(),
+                                "name": userData?.name ?? "Guest",
                                 "total_amount": cart.totalAmount,
-                                "paymentMethod": selectedPayment,
-                                "orderStatus": "processing",
+                                "payment_status":
+                                    selectedPayment == "COD"
+                                        ? "pending"
+                                        : "paid",
+                                "order_status": "processing",
+                                "delivery_date":
+                                    DateTime.now()
+                                        .add(const Duration(days: 3))
+                                        .toIso8601String()
+                                        .split('T')
+                                        .first,
                               },
-                              items: cart.items.map((e) {
-                                return {
-                                  "productId": e.product.medId,
-                                  "name": e.product.medName,
-                                  "price": e.product.medPrice,
-                                  "qty": e.quantity,
-                                };
-                              }).toList(),
+                              items:
+                                  cart.items.map((e) {
+                                    return {
+                                      "medicine_id": e.product.medId,
+                                      "quantity": e.quantity,
+                                      "price": e.product.medPrice,
+                                    };
+                                  }).toList(),
                             );
 
                             await cart.clearCart();
@@ -123,7 +144,9 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                             await orderProvider.getMedicine();
 
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Order placed successfully")),
+                              const SnackBar(
+                                content: Text("Order placed successfully"),
+                              ),
                             );
 
                             Navigator.pushReplacementNamed(context, '/orders');

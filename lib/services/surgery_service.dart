@@ -48,8 +48,8 @@ class SurgeryService {
       body: jsonEncode(data),
     );
 
-    print("Response Body: ${response.body}");
-    print("Headers Sent: ${response.request?.headers}");
+    // print("Response Body: ${response.body}");
+    // print("Headers Sent: ${response.request?.headers}");
 
     if (response.statusCode == 201) {
       var jsonBody = jsonDecode(response.body);
