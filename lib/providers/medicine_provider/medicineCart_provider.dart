@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../models/medicine/medicine_product_model.dart';
+import 'package:flutter/material.dart';
+
+import '../../models/medicine_models/medicine_product_model.dart';
 
 class CartItem {
   final ProductModel product;
   int quantity;
 
-  CartItem({
-    required this.product,
-    this.quantity = 1,
-  });
+  CartItem({required this.product, this.quantity = 1});
 }
 
 class CartProvider with ChangeNotifier {
@@ -46,7 +45,6 @@ class CartProvider with ChangeNotifier {
   bool isInCart(int productId) {
     return items.any((item) => item.product.medId == productId);
   }
-
 
   /// INCREASE QUANTITY
   void increaseQuantity(int productId) {

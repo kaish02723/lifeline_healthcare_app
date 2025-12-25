@@ -30,7 +30,10 @@ class ProductProvider with ChangeNotifier {
       notifyListeners();
 
       final res =
-      await http.get(Uri.parse('$_baseUrl/medicine_models/getAllMedicine'));
+      await http.get(Uri.parse('$_baseUrl/medicine/getAllMedicine'));
+
+      print(res.body);
+      print(res.request?.headers);
 
       if (res.statusCode == 200) {
         final List data = jsonDecode(res.body);

@@ -212,7 +212,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => UsersDetails(),
+                              builder: (context) => CompleteProfileScreen(),
                             ),
                           );
                         },

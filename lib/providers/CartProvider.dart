@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../core/utils/local_database/cart_db.dart';
-import '../models/medicine/medicine_product_model.dart';
+import '../models/medicine_models/cart_item_model.dart';
+import '../models/medicine_models/medicine_product_model.dart';
 import 'medicine_provider/medicineCart_provider.dart';
 
 class CartDataProvider with ChangeNotifier {
@@ -19,7 +20,6 @@ class CartDataProvider with ChangeNotifier {
   );
 
 
-  /// LOAD FROM DB (CALL IN initState)
   Future<void> loadCart() async {
     final data = await CartDB.getAll();
 
