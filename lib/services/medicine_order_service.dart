@@ -10,7 +10,7 @@ class MedicineOrderService {
   List<MedicineOrderModal> getMedicineOrdersList = [];
 
   Future<List<MedicineOrderModal>> getMedicineData() async {
-    var response = await http.get(Uri.parse('$baseUrl/order'));
+    var response = await http.get(Uri.parse('$baseUrl/med-order'));
 
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
@@ -25,7 +25,7 @@ class MedicineOrderService {
 
   Future<void> createMedicineOrder(Map<String, dynamic> data) async {
     var response = await http.post(
-      Uri.parse('$baseUrl/order/create'),
+      Uri.parse('$baseUrl/med-order/create'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(data),
     );

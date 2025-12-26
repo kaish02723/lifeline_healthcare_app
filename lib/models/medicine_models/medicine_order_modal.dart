@@ -34,41 +34,39 @@ class MedicineOrderModal {
       orderId: data['order_id'],
       orderCode: data['order_code'],
       userId: data['user_id'],
-      totalAmount: data['total_amount'],
+
+      totalAmount: data['total_amount']?.toString(),
       paymentStatus: data['payment_status'],
       orderStatus: data['order_status'],
-      orderedAt: DateTime.parse(data['ordered_at']),
-      deliveryDate: DateTime.parse(data['delivery_date']),
-      rating: data['rating'] == null
-          ? null
-          : double.parse(data['rating'].toString()),
+
+      orderedAt:
+          data['ordered_at'] != null
+              ? DateTime.parse(data['ordered_at'])
+              : null,
+
+      deliveryDate:
+          data['delivery_date'] != null
+              ? DateTime.parse(data['delivery_date'])
+              : null,
+
+      rating:
+          data['rating'] == null
+              ? null
+              : double.parse(data['rating'].toString()),
+
       review: data['review'],
-      updatedAt: DateTime.parse(data['updated_at']),
+
+      updatedAt:
+          data['updated_at'] != null
+              ? DateTime.parse(data['updated_at'])
+              : null,
+
       cancelReason: data['cancel_reason'],
-      cancelledAt: data['cancelled_at'] == null
-          ? null
-          : DateTime.parse(data['cancelled_at']),
-    );
-  }
-}
 
-class OrderResponse {
-  bool success;
-  List<MedicineOrderModal> orders;
-
-  OrderResponse({
-    required this.success,
-    required this.orders,
-  });
-
-  factory OrderResponse.fromJson(Map<String, dynamic> json) {
-    return OrderResponse(
-      success: json['success'],
-      orders: List<MedicineOrderModal>.from(
-        json['orders'].map(
-              (x) => MedicineOrderModal.fromJson(x),
-        ),
-      ),
+      cancelledAt:
+          data['cancelled_at'] != null
+              ? DateTime.parse(data['cancelled_at'])
+              : null,
     );
   }
 }

@@ -19,8 +19,6 @@ class MedicineCheckoutScreen extends StatefulWidget {
 }
 
 class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
-  String selectedPayment = 'COD';
-
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartDataProvider>();
@@ -29,6 +27,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
     final glass = theme.extension<AppThemeColors>()!;
     var provider = Provider.of<UserProfileProvider>(context);
     var userData = provider.user;
+    final orderProvider = Provider.of<MedicineOrderProvider>(context);
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
@@ -94,11 +93,6 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                         onPressed: () async {
                           if (cart.items.isEmpty) return;
 
-                          final orderProvider =
-                              Provider.of<MedicineOrderProvider>(
-                                context,
-                                listen: false,
-                              );
                           final authProvider = Provider.of<AuthProvider>(
                             context,
                             listen: false,
@@ -115,10 +109,9 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                               order: {
                                 "order_code": orderCode,
                                 "user_id": userId,
-                                "name": userData?.name ?? "Guest",
                                 "total_amount": cart.totalAmount,
                                 "payment_status":
-                                    selectedPayment == "COD"
+                                    orderProvider.selectedPayment == "COD"
                                         ? "pending"
                                         : "paid",
                                 "order_status": "processing",
@@ -133,6 +126,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                                   cart.items.map((e) {
                                     return {
                                       "medicine_id": e.product.medId,
+                                      "name": e.product.medName,
                                       "quantity": e.quantity,
                                       "price": e.product.medPrice,
                                     };
@@ -144,21 +138,40 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                             await orderProvider.getMedicine();
 
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Order placed successfully"),
+                              SnackBar(
+                                backgroundColor: Colors.green.shade900,
+                                showCloseIcon: true,
+                                behavior: SnackBarBehavior.floating,
+                                closeIconColor: Colors.white,
+                                content: Text(
+                                  "Order placed successfully",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             );
 
-                            Navigator.pushReplacementNamed(context, '/orders');
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/dashboard',
+                            );
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Order failed: $e")),
+                              SnackBar(
+                                backgroundColor: Colors.red.shade900,
+                                showCloseIcon: true,
+                                behavior: SnackBarBehavior.floating,
+                                closeIconColor: Colors.white,
+                                content: Text(
+                                  "Order failed: $e",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                             );
                           }
                         },
 
                         child: Text(
-                          selectedPayment == 'COD'
+                          orderProvider.selectedPayment == 'COD'
                               ? "Place Order"
                               : "Pay & Place Order",
                           style: const TextStyle(
@@ -288,7 +301,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
               children: [
                 RadioListTile(
                   value: 'COD',
-                  groupValue: selectedPayment,
+                  groupValue: orderProvider.selectedPayment,
                   activeColor:
                       isDark ? AppColors.primaryDark : AppColors.primary,
                   title: Text(
@@ -297,11 +310,13 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                       color: isDark ? AppColors.textDark : AppColors.text,
                     ),
                   ),
-                  onChanged: (v) => setState(() => selectedPayment = v!),
+                  onChanged: (value) {
+                    orderProvider.changePaymentMethod(value!);
+                  },
                 ),
                 RadioListTile(
                   value: 'ONLINE',
-                  groupValue: selectedPayment,
+                  groupValue: orderProvider.selectedPayment,
                   activeColor:
                       isDark ? AppColors.primaryDark : AppColors.primary,
                   title: Text(
@@ -310,7 +325,9 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                       color: isDark ? AppColors.textDark : AppColors.text,
                     ),
                   ),
-                  onChanged: (v) => setState(() => selectedPayment = v!),
+                  onChanged: (value) {
+                    orderProvider.changePaymentMethod(value!);
+                  },
                 ),
               ],
             ),

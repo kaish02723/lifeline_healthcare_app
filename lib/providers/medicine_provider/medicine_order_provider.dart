@@ -9,6 +9,14 @@ class MedicineOrderProvider with ChangeNotifier {
   final MedicineOrderService service = MedicineOrderService();
   List<MedicineOrderModal> ordersDetailList = [];
 
+  //medicine checkout screen
+  String selectedPayment = 'COD';
+
+  changePaymentMethod(String value) {
+    selectedPayment = value;
+    notifyListeners();
+  }
+
   Future<void> getMedicine() async {
     ordersDetailList = await service.getMedicineData();
     notifyListeners();
@@ -18,11 +26,7 @@ class MedicineOrderProvider with ChangeNotifier {
     required Map<String, dynamic> order,
     required List<Map<String, dynamic>> items,
   }) async {
-
-    final data = {
-      "order": order,
-      "items": items,
-    };
+    final data = {"order": order, "items": items};
 
     await service.createMedicineOrder(data);
   }

@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import '../../core/utils/services/notification_service.dart';
 
 class NotificationGlassScreen extends StatelessWidget {
   const NotificationGlassScreen({super.key});
@@ -67,14 +66,6 @@ class NotificationGlassScreen extends StatelessWidget {
               ),
             ],
           ),
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: () {
-          //       NotificationService.showNotification();
-          //     },
-          //     child: const Text("Show Notification"),
-          //   ),
-          // ),
         ],
       ),
     );

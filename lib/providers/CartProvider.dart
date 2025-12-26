@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/utils/local_database/cart_db.dart';
+import '../services/cart_db.dart';
 import '../models/medicine_models/cart_item_model.dart';
 import '../models/medicine_models/medicine_product_model.dart';
 
