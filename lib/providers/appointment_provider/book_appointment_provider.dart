@@ -23,4 +23,31 @@ class BookAppointmentProvider with ChangeNotifier {
       isLoading = false;
       notifyListeners();
    }
+   Future<bool> createAppointment({
+      required int doctorId,
+      required String slotDate,
+      required String startTime,
+      required String endTime,
+      required String type,
+   }) async {
+      isLoading = true;
+      notifyListeners();
+
+      final success = await service.bookAppointment(
+         doctorId: doctorId,
+         slotDate: slotDate,
+         startTime: startTime,
+         endTime: endTime,
+         type: type,
+      );
+
+      if (success) {
+         await getBookAppointmentAll(); // refresh list
+      }
+
+      isLoading = false;
+      notifyListeners();
+      return success;
+   }
 }
+
