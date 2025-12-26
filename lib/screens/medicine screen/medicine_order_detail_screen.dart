@@ -13,7 +13,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<MedicineOrderProvider>(context,listen: false).getMedicine();
+    Provider.of<MedicineOrderProvider>(context, listen: false).getMedicine();
   }
 
   // Rating Bar Method

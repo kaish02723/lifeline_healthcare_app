@@ -6,36 +6,39 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/medicine_models/medicine_product_model.dart';
 
 class ProductProvider with ChangeNotifier {
-  ///our api
   final String _baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
 
-  /// STATE
   List<ProductModel> _products = [];
   Category? _selectedCategory;
   String _searchQuery = '';
   bool _isLoading = false;
   String? _error;
 
-  /// GETTERS (PUBLIC)
   List<ProductModel> get products => _products;
+
   Category? get selectedCategory => _selectedCategory;
+
   String get searchQuery => _searchQuery;
+
   bool get isLoading => _isLoading;
+
   String? get error => _error;
 
-  /// FETCH ALL MEDICINES
   Future<void> fetchAllMedicines() async {
     try {
       _isLoading = true;
       notifyListeners();
 
-      final res =
-      await http.get(Uri.parse('$_baseUrl/medicine_models/getAllMedicine'));
+      final res = await http.get(
+        Uri.parse('$_baseUrl/medicine/getAllMedicine'),
+      );
+
+      print(res.body);
+      print(res.request?.headers);
 
       if (res.statusCode == 200) {
         final List data = jsonDecode(res.body);
-        _products =
-            data.map((e) => ProductModel.fromJson(e)).toList();
+        _products = data.map((e) => ProductModel.fromJson(e)).toList();
       } else {
         _error = "Failed to load medicines";
       }
@@ -46,29 +49,28 @@ class ProductProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-  /// FILTERED PRODUCTS
-  /// (Category + Search)
+
   List<ProductModel> get filteredProducts {
     List<ProductModel> list = _products;
 
     if (_selectedCategory != null) {
-      list =
-          list.where((p) => p.category == _selectedCategory).toList();
+      list = list.where((p) => p.category == _selectedCategory).toList();
     }
 
     if (_searchQuery.isNotEmpty) {
       final q = _searchQuery.toLowerCase();
-      list = list.where((p) {
-        return (p.medName ?? '').toLowerCase().contains(q) ||
-            (p.medBrandName ?? '').toLowerCase().contains(q);
-      }).toList();
+      list =
+          list.where((p) {
+            return (p.medName ?? '').toLowerCase().contains(q) ||
+                (p.medBrandName ?? '').toLowerCase().contains(q);
+          }).toList();
     }
     return list;
   }
-  /// CATEGORY
+
   void selectCategory(Category category) {
     _selectedCategory = category;
-    _searchQuery = ''; // important
+    _searchQuery = '';
     notifyListeners();
   }
 
@@ -77,7 +79,6 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// SEARCH
   void searchMedicine(String query) {
     _searchQuery = query;
     notifyListeners();
@@ -88,7 +89,6 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// SINGLE PRODUCT
   ProductModel? getProductById(int id) {
     try {
       return _products.firstWhere((p) => p.medId == id);
@@ -97,7 +97,6 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  /// CATEGORY LIST (HOME SCREEN)
   List<Category> get availableCategories {
     return _products
         .where((p) => p.category != null)
@@ -106,27 +105,21 @@ class ProductProvider with ChangeNotifier {
         .toList();
   }
 
-  /// CATEGORY IMAGE (FIRST)
   String? getCategoryImage(Category category) {
     try {
-      return _products
-          .firstWhere((p) => p.category == category)
-          .medImage;
+      return _products.firstWhere((p) => p.category == category).medImage;
     } catch (_) {
       return null;
     }
   }
 
-  /// SEARCH HINTS (AUTO ROTATE)
   List<String> get searchHintSuggestions {
     final List<String> hints = [];
 
-    /// Category names
     for (final cat in Category.values) {
       hints.add(categoryValues.reverse[cat]!);
     }
 
-    /// Few medicine_models names
     for (final p in _products.take(8)) {
       if (p.medName != null && p.medName!.isNotEmpty) {
         hints.add(p.medName!);
@@ -136,7 +129,6 @@ class ProductProvider with ChangeNotifier {
     return hints;
   }
 
-  /// RESET (IMPORTANT)
   void resetFilters() {
     _selectedCategory = null;
     _searchQuery = '';
@@ -154,11 +146,13 @@ class ProductProvider with ChangeNotifier {
   double discount(ProductModel p) {
     return double.tryParse(p.medDiscountPercentage.toString()) ?? 0.0;
   }
-//viewed product
+
+  //viewed product
   static const String _viewedProductsKey = "viewed_products";
   static const int _maxViewedProducts = 10;
 
   List<int> _viewedProductIds = [];
+
   List<int> get viewedProductIds => _viewedProductIds;
 
   List<ProductModel> get viewedProducts {
@@ -180,8 +174,8 @@ class ProductProvider with ChangeNotifier {
   Future<void> addViewedProduct(int productId) async {
     final prefs = await SharedPreferences.getInstance();
 
-    _viewedProductIds.remove(productId); // remove duplicate
-    _viewedProductIds.insert(0, productId); // add latest on top
+    _viewedProductIds.remove(productId);
+    _viewedProductIds.insert(0, productId);
 
     if (_viewedProductIds.length > _maxViewedProducts) {
       _viewedProductIds = _viewedProductIds.take(_maxViewedProducts).toList();
@@ -194,5 +188,4 @@ class ProductProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
 }

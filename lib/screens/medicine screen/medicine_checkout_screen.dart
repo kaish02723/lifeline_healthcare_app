@@ -1,11 +1,15 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/color.dart';
 import '../../../config/app_theme_colors.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
+import '../../providers/medicine_provider/medicine_order_provider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
+import '../../services/medicine_order_service.dart';
 
 class MedicineCheckoutScreen extends StatefulWidget {
   const MedicineCheckoutScreen({super.key});
@@ -19,7 +23,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cart = context.watch<CartProvider>();
+    final cart = context.watch<CartDataProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final glass = theme.extension<AppThemeColors>()!;
@@ -87,10 +91,72 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        onPressed: () {
-                          if (selectedPayment == 'COD') {
-                          } else {}
+                        onPressed: () async {
+                          if (cart.items.isEmpty) return;
+
+                          final orderProvider =
+                              Provider.of<MedicineOrderProvider>(
+                                context,
+                                listen: false,
+                              );
+                          final authProvider = Provider.of<AuthProvider>(
+                            context,
+                            listen: false,
+                          );
+                          final userId = authProvider.userId;
+
+                          print("USER DATA: $userData");
+                          print("USER NAME: ${userData?.name}");
+
+                          try {
+                            final orderCode = orderProvider.generateOrderCode();
+
+                            await orderProvider.createFullOrder(
+                              order: {
+                                "order_code": orderCode,
+                                "user_id": userId,
+                                "name": userData?.name ?? "Guest",
+                                "total_amount": cart.totalAmount,
+                                "payment_status":
+                                    selectedPayment == "COD"
+                                        ? "pending"
+                                        : "paid",
+                                "order_status": "processing",
+                                "delivery_date":
+                                    DateTime.now()
+                                        .add(const Duration(days: 3))
+                                        .toIso8601String()
+                                        .split('T')
+                                        .first,
+                              },
+                              items:
+                                  cart.items.map((e) {
+                                    return {
+                                      "medicine_id": e.product.medId,
+                                      "quantity": e.quantity,
+                                      "price": e.product.medPrice,
+                                    };
+                                  }).toList(),
+                            );
+
+                            await cart.clearCart();
+
+                            await orderProvider.getMedicine();
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Order placed successfully"),
+                              ),
+                            );
+
+                            Navigator.pushReplacementNamed(context, '/orders');
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Order failed: $e")),
+                            );
+                          }
                         },
+
                         child: Text(
                           selectedPayment == 'COD'
                               ? "Place Order"

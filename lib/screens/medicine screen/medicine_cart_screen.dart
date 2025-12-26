@@ -1,21 +1,32 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../config/app_theme_colors.dart';
 import '../../../config/color.dart';
-import '../../../providers/medicine_provider/medicineCart_provider.dart';
+import '../../../providers/CartProvider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
 import 'medicine_checkout_screen.dart';
 
-class MedicineCart extends StatelessWidget {
+class MedicineCart extends StatefulWidget {
   const MedicineCart({super.key});
 
   @override
+  State<MedicineCart> createState() => _MedicineCartState();
+}
+
+class _MedicineCartState extends State<MedicineCart> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<CartDataProvider>().loadCart();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final cart = context.watch<CartProvider>();
+    final cart = context.watch<CartDataProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     var provider = Provider.of<UserProfileProvider>(context);
@@ -28,7 +39,6 @@ class MedicineCart extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
       ),
-
       bottomNavigationBar:
           cart.items.isEmpty
               ? null
@@ -47,7 +57,6 @@ class MedicineCart extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 12),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
@@ -68,8 +77,8 @@ class MedicineCart extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '₹${cart.totalAmount}  |  ',
-                              style: TextStyle(
+                              '₹${cart.totalAmount.toStringAsFixed(2)}  |  ',
+                              style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,
                               ),
@@ -88,7 +97,6 @@ class MedicineCart extends StatelessWidget {
                   ),
                 ),
               ),
-
       body:
           cart.items.isNotEmpty
               ? SingleChildScrollView(
@@ -97,95 +105,199 @@ class MedicineCart extends StatelessWidget {
                   children: [
                     const SizedBox(height: 12),
 
-                    cart.items.isNotEmpty
-                        ? _glassCard(
-                          context,
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.location_on_outlined,
-                              color:
-                                  isDark ? AppColors.iconDark : AppColors.icon,
-                            ),
-                            title: Text(
-                              "Deliver to",
-                              style: TextStyle(
-                                color:
-                                    isDark
-                                        ? AppColors.textDark
-                                        : AppColors.text,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            subtitle: Text(
-                              "${userData?.name}\nHouse 12, Delhi NCR\nPhone: **********",
-                              style: TextStyle(
-                                color:
-                                    isDark
-                                        ? AppColors.lightGreyTextDark
-                                        : AppColors.lightGreyText,
-                              ),
-                            ),
-                            trailing: TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                "EDIT",
-                                style: TextStyle(color: AppColors.secondary),
-                              ),
-                            ),
+                    // Delivery Address Section
+                    _glassCard(
+                      context,
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.location_on_outlined,
+                          color: isDark ? AppColors.iconDark : AppColors.icon,
+                        ),
+                        title: Text(
+                          "Deliver to",
+                          style: TextStyle(
+                            color: isDark ? AppColors.textDark : AppColors.text,
+                            fontWeight: FontWeight.w600,
                           ),
-                        )
-                        : SizedBox(),
+                        ),
+                        subtitle: Text(
+                          "${userData?.name}\nHouse 12, Delhi NCR\nPhone: **********",
+                          style: TextStyle(
+                            color:
+                                isDark
+                                    ? AppColors.lightGreyTextDark
+                                    : AppColors.lightGreyText,
+                          ),
+                        ),
+                        trailing: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "EDIT",
+                            style: TextStyle(color: AppColors.secondary),
+                          ),
+                        ),
+                      ),
+                    ),
 
                     const SizedBox(height: 20),
 
-                    /// 🛒 Cart Items
-                    ListView.separated(
+                    // 🛒 Cart Items
+                    ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: cart.items.length,
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemBuilder: (_, index) {
+                      itemBuilder: (context, index) {
                         final item = cart.items[index];
 
-                        return ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              item.product.medImage ?? '',
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                            ),
+                        return AnimatedContainer(
+                          // key: ValueKey(item.product.medId),
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 8,
                           ),
-                          title: Text(
-                            item.product.medName ?? '',
-                            style: TextStyle(
-                              color:
-                                  isDark ? AppColors.textDark : AppColors.text,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 12,
                           ),
-                          subtitle: Text(
-                            item.product.medBrandName ?? '',
-                            style: TextStyle(
-                              color:
-                                  isDark
-                                      ? AppColors.lightGreyTextDark
-                                      : AppColors.lightGreyText,
-                            ),
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.grey[850] : Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                "₹${item.product.medPrice}",
-                                style: TextStyle(
-                                  color: AppColors.golden,
-                                  fontWeight: FontWeight.bold,
+                              // Medicine Image
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  item.product.medImage ?? '',
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(height: 6),
-                              _qtyControl(context, cart, item),
+                              const SizedBox(width: 12),
+
+                              // Medicine Details
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.product.medName ?? '',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color:
+                                            isDark
+                                                ? Colors.white
+                                                : Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item.product.medBrandName ?? '',
+                                      style: TextStyle(
+                                        color:
+                                            isDark
+                                                ? Colors.grey[400]
+                                                : Colors.grey[700],
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "₹${item.product.medPrice}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Quantity + Remove Button
+                              Column(
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.remove_circle_outline,
+                                        ),
+                                        onPressed:
+                                            () => cart.decreaseQuantity(
+                                              item.product.medId!,
+                                            ),
+                                        color: Colors.orange,
+                                      ),
+                                      AnimatedSwitcher(
+                                        duration: const Duration(
+                                          milliseconds: 300,
+                                        ),
+                                        transitionBuilder:
+                                            (child, anim) => ScaleTransition(
+                                              scale: anim,
+                                              child: child,
+                                            ),
+                                        child: Text(
+                                          '${item.quantity}',
+                                          key: ValueKey(item.quantity),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.add_circle_outline,
+                                        ),
+                                        onPressed:
+                                            () => cart.increaseQuantity(
+                                              item.product.medId!,
+                                            ),
+                                        color: Colors.green,
+                                      ),
+                                    ],
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () async {
+                                      // Safely remove item
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) async {
+                                            await cart.decreaseQuantity(
+                                              item.product.medId!,
+                                            );
+                                            if (item.quantity == 1) {
+                                              await cart.decreaseQuantity(
+                                                item.product.medId!,
+                                              );
+                                            }
+                                          });
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                      size: 18,
+                                    ),
+                                    label: const Text(
+                                      "Remove",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         );
@@ -200,10 +312,16 @@ class MedicineCart extends StatelessWidget {
     );
   }
 
-  Widget _qtyControl(BuildContext context, CartProvider cart, item) {
+  Widget _qtyControl(
+    BuildContext context,
+    CartDataProvider cart,
+    item, {
+    required Key key,
+  }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
+      key: key,
       height: 28,
       padding: const EdgeInsets.symmetric(horizontal: 6),
       decoration: BoxDecoration(
@@ -329,7 +447,7 @@ class MedicineCart extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.pop(context); // or go to medicine list
+              Navigator.pop(context); // go back to medicine list
             },
             child: const Text(
               "Browse Medicines",

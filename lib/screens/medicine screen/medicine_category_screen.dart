@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/medicine_models/medicine_product_model.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
+import '../../models/medicine_models/medicine_product_model.dart';
 import 'medicine_cart_screen.dart';
 import 'medicine_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +33,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
   void initState() {
     super.initState();
     context.read<ProductProvider>().fetchAllMedicines();
-    _loadRecentSearches(); //load recent search
+    _loadRecentSearches();
   }
 
   void _onSearchSubmit(String value) {
@@ -64,7 +64,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
   Future<void> _saveRecentSearch(String value) async {
     final prefs = await SharedPreferences.getInstance();
 
-    recentSearches.remove(value); // duplicate hatao
+    recentSearches.remove(value);
     recentSearches.insert(0, value);
 
     if (recentSearches.length > 6) {
@@ -100,7 +100,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
             textInputAction: TextInputAction.search,
             onSubmitted: _onSearchSubmit,
             decoration: const InputDecoration(
-              hintText: "Search medicine_models..",
+              hintText: "Search medicine..",
               prefixIcon: Icon(Icons.search),
               border: InputBorder.none,
             ),
