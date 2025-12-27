@@ -311,7 +311,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                               bookTestProvider.testPhoneController.text.trim(),
                         };
 
-                        bool success = await bookTestProvider.bookTest(payload);
+                        bool success = await bookTestProvider.bookTest(payload,context);
 
                         if (success)
                           showTestSuccessDialog();

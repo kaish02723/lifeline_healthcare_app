@@ -12,16 +12,24 @@ class BookTestProvider with ChangeNotifier {
 
   List<MyTestDataModel> myLabTestList = [];
 
-  final baseUrl = 'https://labtest-and-booktest.onrender.com';
+  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
 
   //  FINAL BOOK TEST
-  Future<bool> bookTest(Map<String, dynamic> data) async {
+  Future<bool> bookTest(Map<String, dynamic> data, BuildContext context) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var user_token = authProvider.token;
     try {
       var api = await http.post(
-        Uri.parse('$baseUrl/bookings/book-test'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('$baseUrl/test/book-test'),
+        headers: {
+          "Authorization": "Bearer $user_token",
+          'Content-Type': 'application/json'
+        },
         body: jsonEncode(data),
       );
+
+      print(api.body);
+      print(api.request?.headers);
 
       if (api.statusCode == 200 || api.statusCode == 201) {
         return true;
@@ -36,15 +44,16 @@ class BookTestProvider with ChangeNotifier {
 
   Future<void> getTestStatus(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    var user_Id = authProvider.userId;
-
-    if (user_Id == null || user_Id.toString().isEmpty) return;
+    var user_token = authProvider.token;
 
     try {
       var res = await http.get(
-        Uri.parse('$baseUrl/bookings/get-test/$user_Id'),
+        Uri.parse('$baseUrl/test/get-test'),
+        headers: {
+          "Authorization": "Bearer $user_token",
+          'Content-Type': 'application/json'
+        }
       );
-
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body);
