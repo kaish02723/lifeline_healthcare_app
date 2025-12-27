@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,21 +13,17 @@ import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.d
 import 'package:lifeline_healthcare_app/screens/test/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/test/patient_my_labtest_screen.dart';
 import 'package:lifeline_healthcare_app/screens/surgery/patient_my_surgery_screen.dart';
-import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_footer.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/offer_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../providers/doctor_provider/doctor_provider.dart';
 import '../../providers/rating_provider/app_rating_review_provider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
-import '../../providers/user_detail/get_userdetail_provider.dart';
 import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
 import '../../widgets/dashboard_widgets/show_rate_us_bottom_sheet.dart';
 import '../../widgets/dashboard_widgets/top_feature_card.dart';
-import '../../widgets/dashboard_widgets/top_rating_card.dart';
 import '../medicine screen/medicine_category_screen.dart';
 import '../medicine screen/medicine_order_detail_screen.dart';
 import 'notification_screen.dart';

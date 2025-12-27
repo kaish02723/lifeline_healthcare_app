@@ -245,7 +245,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "User Name",
+                    "Patient Name",
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 6),
@@ -255,6 +255,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Enter your name',
+                      prefixIcon: Icon(Icons.person),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -267,11 +268,28 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                   TextFormField(
                     controller: bookTestProvider.testPhoneController,
                     keyboardType: TextInputType.phone,
-                    validator:
-                        (v) => v!.length != 10 ? "Enter valid number" : null,
-                    decoration: const InputDecoration(
+                    maxLength: 10,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Phone number is required*';
+                      } else if (!auth.phoneRegex.hasMatch(value)) {
+                        return 'Enter a valid 10-digit phone number';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Enter phone no',
+                      prefixIcon: SizedBox(
+                        width: 40,
+                        child: Row(
+                          spacing: 5,
+                          children: [
+                            Text('  +91', style: TextStyle(fontSize: 18)),
+                            Container(width: 1, height: 40, color: Colors.grey),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
 

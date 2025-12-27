@@ -131,6 +131,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                                       "price": e.product.medPrice,
                                     };
                                   }).toList(),
+                              context: context,
                             );
 
                             await cart.clearCart();

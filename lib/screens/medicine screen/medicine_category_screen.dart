@@ -199,6 +199,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
 
   Widget _categoryList(ProductProvider provider) {
     final categories = provider.availableCategories;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
       height: 120.h,
@@ -223,7 +224,7 @@ class _MedicineCategoryScreenState extends State<MedicineCategoryScreen> {
               width: 100.w,
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? Colors.black26 : Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(

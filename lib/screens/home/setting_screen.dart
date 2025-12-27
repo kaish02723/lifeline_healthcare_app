@@ -5,6 +5,7 @@ import 'package:lifeline_healthcare_app/config/app_theme.dart';
 import 'package:lifeline_healthcare_app/providers/theme_provider/theme_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/terms_and_policy_screen.dart';
 import 'package:provider/provider.dart';
+import '../../providers/user_detail/User_profile_provider.dart';
 import '../../providers/user_detail/auth_provider.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -110,6 +111,11 @@ class _SettingScreenState extends State<SettingScreen> {
             title: const Text("Edit Profile", style: TextStyle(fontSize: 18)),
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () {
+              final provider = Provider.of<UserProfileProvider>(
+                context,
+                listen: false,
+              );
+              provider.fillFormData();
               Navigator.pushNamed(context, "/edit-profile");
             },
           ),

@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../../../models/medicine_models/medicine_order_modal.dart';
+import '../providers/user_detail/auth_provider.dart';
 
 class MedicineOrderService {
   final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
@@ -23,10 +26,16 @@ class MedicineOrderService {
     }
   }
 
-  Future<void> createMedicineOrder(Map<String, dynamic> data) async {
+  Future<void> createMedicineOrder(BuildContext context,Map<String, dynamic> data) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final token = await authProvider.getToken();
+
     var response = await http.post(
       Uri.parse('$baseUrl/med-order/create'),
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json"
+      },
       body: jsonEncode(data),
     );
 

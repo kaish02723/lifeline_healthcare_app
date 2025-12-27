@@ -11,12 +11,13 @@ class CancelTestProvider with ChangeNotifier {
 
   Future<void> cancelLabTest(BuildContext context, int index) async {
     try {
-      final bookTestProvider = Provider.of<BookTestProvider>(context, listen: false);
+      final bookTestProvider = Provider.of<BookTestProvider>(
+        context,
+        listen: false,
+      );
       final testId = bookTestProvider.myLabTestList[index].testID;
 
-      final headers = {
-        "Content-Type": "application/json",
-      };
+      final headers = {"Content-Type": "application/json"};
 
       final cancelTestResponse = await http.put(
         Uri.parse('$url/cancel-test/$testId'),
@@ -35,22 +36,37 @@ class CancelTestProvider with ChangeNotifier {
       // print('update test status: ${updateTestStatusResponse.body}');
       // print('update test status req headers: ${updateTestStatusResponse.request?.headers}');
 
-      if (cancelTestResponse.statusCode == 200 && updateTestStatusResponse.statusCode == 200) {
+      if (cancelTestResponse.statusCode == 200 &&
+          updateTestStatusResponse.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Test Cancelled successfully')),
+          SnackBar(
+            showCloseIcon: true,
+            closeIconColor: Colors.white,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.green.shade900,
+            content: Text(
+              'Test Cancelled successfully',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         );
-        bookTestProvider.getTestStatus(context);
+        await bookTestProvider.getTestStatus(context);
+        bookTestProvider.myLabTestList.removeAt(index);
+        bookTestProvider.notifyListeners();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to cancel test: ${cancelTestResponse.body}')),
+          SnackBar(
+            showCloseIcon: true,
+            content: Text('Failed to cancel test: ${cancelTestResponse.body}'),
+          ),
         );
       }
       notifyListeners();
     } catch (e) {
       print('Error cancelling test: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error cancelling test: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error cancelling test: $e')));
     }
   }
 }

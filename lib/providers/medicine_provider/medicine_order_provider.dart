@@ -25,10 +25,11 @@ class MedicineOrderProvider with ChangeNotifier {
   Future<void> createFullOrder({
     required Map<String, dynamic> order,
     required List<Map<String, dynamic>> items,
+    required BuildContext context
   }) async {
     final data = {"order": order, "items": items};
 
-    await service.createMedicineOrder(data);
+    await service.createMedicineOrder(context, data);
   }
 
   String generateOrderCode() {
