@@ -265,21 +265,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () => _scaffoldKey.currentState!.openDrawer(),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 22,
-              backgroundImage:
-                  (userData?.picture != null && userData!.picture!.isNotEmpty)
-                      ? NetworkImage(
-                        userData.picture!.startsWith("http")
-                            ? userData.picture!
-                            : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
-                      )
-                      : null,
-              child:
-                  (userData?.picture == null || userData!.picture!.isEmpty)
-                      ? const Icon(Icons.person, color: Colors.grey)
-                      : null,
+            child: Tooltip(
+              message: 'Drawer',
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 22,
+                backgroundImage:
+                    (userData?.picture != null && userData!.picture!.isNotEmpty)
+                        ? NetworkImage(
+                          userData.picture!.startsWith("http")
+                              ? userData.picture!
+                              : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
+                        )
+                        : null,
+                child:
+                    (userData?.picture == null || userData!.picture!.isEmpty)
+                        ? const Icon(Icons.person, color: Colors.grey)
+                        : null,
+              ),
             ),
           ),
         ),
@@ -327,18 +330,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NotificationGlassScreen(),
-                ),
-              );
-            },
-            icon: const Badge(
-              label: Text('2'),
-              child: Icon(Icons.notifications, color: Colors.white),
+          Tooltip(
+            message: 'Notification',
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationGlassScreen(),
+                  ),
+                );
+              },
+              icon: const Badge(
+                label: Text('2'),
+                child: Icon(Icons.notifications, color: Colors.white),
+              ),
             ),
           ),
         ],

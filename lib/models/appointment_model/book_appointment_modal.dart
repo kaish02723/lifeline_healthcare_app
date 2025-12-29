@@ -1,57 +1,58 @@
-import 'dart:core';
-
 class BookAppointmentModal {
   int? id;
-  int? doctor_id;
-  int? user_id;
-  int? slot_id;
-  int? hospital_id;
+  int? doctorId;
+  int? userId;
+  int? slotId;
+  int? hospitalId;
   String? status;
-  String? payment_status;
-  String? created_at;
-  String? updated_at;
-  String? cancle_reason;
-  int? payment_id;
-  String? dr_name;
-  String? slot_date;
-  String? start_time;
-  String? end_time;
+  String? paymentStatus;
+  String? createdAt;
+  String? updatedAt;
+  String? cancelReason;
+  int? paymentId;
+  int? cancelledAt;
+  String? drName;
+  String? slotDate;
+  String? startTime;
+  String? endTime;
 
-  BookAppointmentModal(
+  BookAppointmentModal({
     this.id,
-    this.doctor_id,
-    this.user_id,
-    this.slot_id,
-    this.hospital_id,
+    this.doctorId,
+    this.userId,
+    this.slotId,
+    this.hospitalId,
     this.status,
-    this.payment_status,
-    this.created_at,
-    this.updated_at,
-    this.cancle_reason,
-    this.payment_id,
-    this.dr_name,
-    this.slot_date,
-    this.start_time,
-    this.end_time,
-  );
+    this.paymentStatus,
+    this.createdAt,
+    this.updatedAt,
+    this.cancelReason,
+    this.paymentId,
+    this.cancelledAt,
+    this.drName,
+    this.slotDate,
+    this.startTime,
+    this.endTime,
+  });
 
-  static BookAppointmentModal convertToModel(Map<String, dynamic> ApiData) {
+  factory BookAppointmentModal.convertToModel(Map<String, dynamic> json) {
     return BookAppointmentModal(
-      ApiData['id'],
-      ApiData['doctor_id'],
-      ApiData['user_id'],
-      ApiData['slot_id'],
-      ApiData['hospital_id'],
-      ApiData['status'],
-      ApiData['payment_status'],
-      ApiData['created_at'],
-      ApiData['updated_at'],
-      ApiData['cancle_reason'],
-      ApiData['payment_id'],
-      ApiData['dr_name'],
-      ApiData['slot_date'],
-      ApiData['start_time'],
-      ApiData['end_time'],
+      id: json['id'],
+      doctorId: json['doctor_id'],
+      userId: json['user_id'],
+      slotId: json['slot_id'],
+      hospitalId: json['hospital_id'],
+      status: json['status'] ?? '',
+      paymentStatus: json['payment_status'] ?? '',
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      cancelReason: json['cancel_reason'] ?? '',
+      paymentId: json['payment_id'],
+      cancelledAt: json['Cancelled_at'],
+      drName: json['dr_name'] ?? '',
+      slotDate: json['slot_date'],
+      startTime: json['start_time'],
+      endTime: json['end_time'],
     );
   }
 }

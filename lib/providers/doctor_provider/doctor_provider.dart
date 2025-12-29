@@ -121,4 +121,14 @@ class DoctorProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  DoctorModel? getDoctorById(int? doctorId) {
+    try {
+      return allDoctorsList.firstWhere(
+            (doc) => doc.id == doctorId,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 }
