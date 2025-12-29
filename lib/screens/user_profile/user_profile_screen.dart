@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
 import 'dart:ui';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../config/color.dart';
-import '../../providers/user_detail/get_userdetail_provider.dart';
 import 'edit_profile_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -51,7 +46,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               if (user != null) {
                 final provider = Provider.of<UserProfileProvider>(
                   context,
@@ -60,10 +55,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                 provider.fillFormData();
 
-                Navigator.push(
+                final result = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => EditProfileScreen()),
+                  MaterialPageRoute(builder: (_) => const EditProfileScreen()),
                 );
+
+                // 🔥 YAHI MAIN FIX HAI
+                if (result == true) {
+                  await provider.getProfile(context);
+                }
               }
             },
             icon: const Icon(Icons.edit, color: Colors.white),
