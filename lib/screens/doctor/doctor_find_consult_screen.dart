@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/doctors_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/doctors/doctor_model.dart';
+import '../../providers/user_detail/User_profile_provider.dart';
 
 class DoctorFindConsultScreen extends StatefulWidget {
   const DoctorFindConsultScreen({super.key});
@@ -38,7 +38,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
     final w = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final userDetailProvider = Provider.of<GetUserDetailProvider>(context);
+    final userDetailProvider = Provider.of<UserProfileProvider>(context);
     final userAddress = userDetailProvider.user?.address;
 
     return Scaffold(

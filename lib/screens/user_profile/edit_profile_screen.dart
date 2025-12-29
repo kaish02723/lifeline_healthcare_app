@@ -5,7 +5,6 @@ import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provi
 import 'package:provider/provider.dart';
 
 import '../../config/color.dart';
-import '../../providers/user_detail/get_userdetail_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -15,20 +14,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  File? imageFile;
-
-  Future pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProfileProvider>(context);
@@ -49,17 +34,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // ------------------ PROFILE IMAGE ------------------
             Center(
               child: GestureDetector(
-                onTap: pickImage,
-                child: CircleAvatar(
+                onTap: provider.pickImage,
+                child:CircleAvatar(
                   radius: 55,
                   backgroundColor: Colors.grey.shade300,
                   backgroundImage:
-                  imageFile != null
-                      ? FileImage(imageFile!)
-                      : provider.user?.picture != null
+                  provider.imageFile != null
+                      ? FileImage(provider.imageFile!)
+                      : (provider.user?.picture != null &&
+                      provider.user!.picture!.isNotEmpty)
                       ? NetworkImage(provider.user!.picture!)
                       : null,
+                  child: (provider.user?.picture == null || provider.user!.picture!.isEmpty)
+                      ? const Icon(Icons.person, size: 40)
+                      : null,
                 ),
+
               ),
             ),
 
@@ -146,31 +136,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                 ),
-                onPressed: () async {
-                  // 🔍 DEBUG LOGS (YAHI LAGANA HAI)
-                  print("SAVE CLICKED");
-                  print("NAME: ${provider.nameController.text}");
-                  print("EMAIL: ${provider.emailController.text}");
-                  // upload image first (if selected)
-                  if (imageFile != null) {
-                    await provider.uploadProfileImage(imageFile!, context);
-                  }
-                  //  update profile (WITHOUT picture)
-                  Map<String, dynamic> data = {
-                    "name": provider.nameController.text,
-                    "email": provider.emailController.text,
-                    "gender": provider.updateGender,
-                    "date_of_birth": provider.dobController.text,
-                    "address": provider.addressController.text,
-                  };
-                  await provider.updateProfile(context, data);
-                  //  go back
-                  Navigator.pop(context);
-                },
+                  onPressed: () async {
+                    await provider.updateProfile(
+                      context,
+                      imageFile: provider.imageFile,
+                    );
+                    provider.clear();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Profile updated successfully")),
+                    );
+                  },
                 child: Text("SAVE CHANGES"),
               ),
             ),
-
           ],
         ),
       ),
@@ -178,121 +156,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 }
 
-
-// class EditProfileScreen extends StatefulWidget {
-//   const EditProfileScreen({super.key});
-//
-//   @override
-//   State<EditProfileScreen> createState() => _EditProfileScreenState();
-// }
-//
-// class _EditProfileScreenState extends State<EditProfileScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final provider = context.watch<GetUserDetailProvider>();
-//     final isDark = Theme.of(context).brightness == Brightness.dark;
-//
-//     return Scaffold(
-//       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
-//
-//       appBar: AppBar(
-//         title: const Text("Edit Profile"),
-//         elevation: 0,
-//         backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
-//         foregroundColor: Colors.white,
-//       ),
-//
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           children: [
-//             _profileImageSection(isDark),
-//
-//             const SizedBox(height: 24),
-//
-//             _formCard(
-//               context,
-//               children: [
-//                 _inputField(
-//                   controller: provider.updateNameController,
-//                   label: "Name",
-//                   icon: Icons.person_outline,
-//                 ),
-//
-//                 _inputField(
-//                   controller: provider.updateEmailController,
-//                   label: "Email",
-//                   icon: Icons.email_outlined,
-//                 ),
-//
-//                 _genderDropdown(provider),
-//
-//                 _dobField(provider),
-//
-//                 _inputField(
-//                   controller: provider.updateAddressController,
-//                   label: "Address",
-//                   icon: Icons.location_on_outlined,
-//                   maxLines: 2,
-//                 ),
-//               ],
-//             ),
-//
-//             const SizedBox(height: 24),
-//
-//             SizedBox(
-//               width: double.infinity,
-//               height: 48,
-//               child: ElevatedButton(
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor:
-//                       isDark ? AppColors.secondaryDark : AppColors.primary,
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(7),
-//                   ),
-//                 ),
-//                 onPressed: () async {
-//                   String? imageUrl;
-//
-//                   if (provider.imageFile != null) {
-//                     imageUrl = await provider.uploadProfileImage(
-//                       provider.imageFile!,
-//                       context,
-//                     );
-//                   }
-//
-//                   final data = {
-//                     "name": provider.updateNameController.text,
-//                     "email": provider.updateEmailController.text,
-//                     "gender": provider.updateGender,
-//                     "date_of_birth": provider.updateDobController.text,
-//                     "address": provider.updateAddressController.text,
-//                   };
-//
-//                   if (imageUrl != null && imageUrl.isNotEmpty) {
-//                     data["picture"] = imageUrl;
-//                   }
-//
-//                   provider.updateUserProfile(context, data);
-//                 },
-//                 child: const Text(
-//                   "SAVE CHANGES",
-//                   style: TextStyle(
-//                     fontSize: 16,
-//                     fontWeight: FontWeight.bold,
-//                     color: Colors.white,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
   Widget _profileImageSection(bool isDark) {
-    return Consumer<GetUserDetailProvider>(
+    return Consumer<UserProfileProvider>(
       builder: (BuildContext context, value, Widget? child) {
         return Center(
           child: GestureDetector(
@@ -377,7 +242,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _genderDropdown(GetUserDetailProvider provider) {
+  Widget _genderDropdown(UserProfileProvider provider) {
     return DropdownButtonFormField<String>(
       value: provider.updateGender,
       decoration: InputDecoration(
@@ -397,9 +262,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _dobField(GetUserDetailProvider provider,BuildContext context) {
+  Widget _dobField(UserProfileProvider provider,BuildContext context) {
     return TextField(
-      controller: provider.updateDobController,
+      controller: provider.dobController,
       readOnly: true,
       decoration: InputDecoration(
         labelText: "Date of Birth",

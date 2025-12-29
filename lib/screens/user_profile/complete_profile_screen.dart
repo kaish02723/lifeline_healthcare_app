@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
-import 'package:lifeline_healthcare_app/providers/media_provider/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +19,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProfileProvider>(context, listen: false);
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
-    var mediaProvider = Provider.of<MediaPickerProvider>(context);
+    final profileProvider = Provider.of<UserProfileProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -74,25 +73,16 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       radius: 70,
                       backgroundColor: Colors.grey.shade100,
                       backgroundImage:
-                          mediaProvider.profileImage != null
-                              ? FileImage(
-                                File(mediaProvider.profileImage!.path),
-                              ) // LOCAL PREVIEW
-                              : mediaProvider.profileImageUrl != null
-                              ? CachedNetworkImageProvider(
-                                mediaProvider.profileImageUrl!,
-                              ) // SERVER IMAGE
-                              : null,
-                      child:
-                          mediaProvider.profileImage == null &&
-                                  mediaProvider.profileImageUrl == null
-                              ? Icon(
-                                Icons.person,
-                                size: 70,
-                                color: Colors.grey.shade400,
-                              )
-                              : null,
-                    ),
+                      provider.imageFile != null
+                          ? FileImage(provider.imageFile!)
+                          : provider.user?.picture != null
+                          ? NetworkImage(provider.user!.picture!)
+                          : null,
+                      child: provider.imageFile == null &&
+                          provider.user?.picture == null
+                          ? Icon(Icons.person, size: 70, color: Colors.grey)
+                          : null,
+                    )
                   ),
                   Positioned(
                     bottom: 0,
@@ -147,9 +137,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  mediaProvider.pickFromCamera(
-                                                    context,
-                                                  );
+                                                  profileProvider.pickCameraImage();
                                                 },
                                                 icon: const Icon(
                                                   Icons.camera_alt,
@@ -170,9 +158,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  mediaProvider.pickFromGallery(
-                                                    context,
-                                                  );
+                                                  profileProvider.pickImage();
                                                 },
                                                 icon: const Icon(
                                                   Icons.image,
@@ -204,7 +190,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
 
             /// FORM
             Form(
-              key: mediaProvider.formKey,
+              key: profileProvider.completeProfileFormKey,
               child: Column(
                 children: [
                   _buildInputField(
@@ -295,43 +281,23 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         ),
                       ),
                       onPressed: () async {
-                        if (mediaProvider.formKey.currentState!.validate()) {
-                          if (provider.dobController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Please select your Date of Birth",
-                                ),
-                              ),
-                            );
-                            return;
-                          }
-
-                          String? imageUrl;
-                          if (mediaProvider.profileImage != null) {
-                            imageUrl = await mediaProvider.uploadImage(
-                              mediaProvider.profileImage!,
-                              context,
-                            );
-                          }
-                          if (imageUrl != null) {
-                                mediaProvider.profileImageUrl = imageUrl;
-                                 mediaProvider.notifyListeners();
-                          }
-
-                          var data = {
-                            "name": provider.nameController.text.trim(),
-                            "email": provider.emailController.text.trim(),
-                            "gender": provider.genderController.text.trim(),
-                            "date_of_birth":
-                                provider.dobController.text.trim(),
-                            "address": "anywhere",
-                            "picture": imageUrl,
-                          };
-
-                          String? userId = authProvider.userId;
-                          provider.createProfile(context, data);
+                        if (!profileProvider.completeProfileFormKey.currentState!.validate()) {
+                          return;
                         }
+
+                        if (provider.dobController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please select your Date of Birth")),
+                          );
+                          return;
+                        }
+
+                        await profileProvider.createProfile(context);
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => DashboardScreen()),
+                        );
                       },
                       child: const Text(
                         "Submit",

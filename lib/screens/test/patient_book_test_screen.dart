@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_detail/auth_provider.dart';
 
@@ -29,7 +29,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
       context,
       listen: false,
     );
-    final userProvider = Provider.of<GetUserDetailProvider>(
+    final userProvider = Provider.of<UserProfileProvider>(
       context,
       listen: false,
     );
