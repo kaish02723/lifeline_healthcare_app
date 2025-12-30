@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +32,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // ------------------ PROFILE IMAGE ------------------
             Center(
               child: GestureDetector(
-                onTap: provider.pickImage,
+                onTap: (){
+                  provider.pickImage();
+                },
                 child:CircleAvatar(
                   radius: 55,
                   backgroundColor: Colors.grey.shade300,

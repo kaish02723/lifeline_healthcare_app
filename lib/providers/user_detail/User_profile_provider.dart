@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user_details/user_detail_model.dart';
@@ -162,17 +163,20 @@ class UserProfileProvider with ChangeNotifier {
 
   /// IMAGE PICK
   Future<void> pickImage() async {
-    final pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
+    var status = await Permission.storage.status;
+    if (status.isDenied) {
+      final pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
 
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-      notifyListeners();
+      if (pickedFile != null) {
+        imageFile = File(pickedFile.path);
+        notifyListeners();
+      }
     }
   }
-  //pic from camra
+  //pic from camera
   Future<void> pickCameraImage() async {
     final pickedFile = await _picker.pickImage(
       source: ImageSource.camera,
@@ -185,7 +189,7 @@ class UserProfileProvider with ChangeNotifier {
     }
   }
 
-//update profile  i marge uploadprofile & upload image
+//update profile  i marge upload profile & upload image
   /// UPLOAD IMAGE
   // Future<String?> uploadProfileImage(File file, BuildContext context) async {
   //   try {
