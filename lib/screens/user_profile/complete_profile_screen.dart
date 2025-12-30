@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
@@ -18,7 +16,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProfileProvider>(context, listen: false);
-    var authProvider = Provider.of<AuthProvider>(context, listen: false);
     final profileProvider = Provider.of<UserProfileProvider>(context);
 
     return Scaffold(
