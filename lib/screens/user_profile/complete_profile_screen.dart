@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
@@ -16,6 +18,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProfileProvider>(context, listen: false);
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
     final profileProvider = Provider.of<UserProfileProvider>(context);
 
     return Scaffold(
@@ -70,16 +73,17 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       radius: 70,
                       backgroundColor: Colors.grey.shade100,
                       backgroundImage:
-                      provider.imageFile != null
-                          ? FileImage(provider.imageFile!)
-                          : provider.user?.picture != null
-                          ? NetworkImage(provider.user!.picture!)
-                          : null,
-                      child: provider.imageFile == null &&
-                          provider.user?.picture == null
-                          ? Icon(Icons.person, size: 70, color: Colors.grey)
-                          : null,
-                    )
+                          provider.imageFile != null
+                              ? FileImage(provider.imageFile!)
+                              : provider.user?.picture != null
+                              ? NetworkImage(provider.user!.picture!)
+                              : null,
+                      child:
+                          provider.imageFile == null &&
+                                  provider.user?.picture == null
+                              ? Icon(Icons.person, size: 70, color: Colors.grey)
+                              : null,
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -134,7 +138,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                               child: IconButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  profileProvider.pickCameraImage();
+                                                  profileProvider
+                                                      .pickCameraImage();
                                                 },
                                                 icon: const Icon(
                                                   Icons.camera_alt,
@@ -279,13 +284,18 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         ),
                       ),
                       onPressed: () async {
-                        if (!profileProvider.completeProfileFormKey.currentState!.validate()) {
+                        if (!profileProvider
+                            .completeProfileFormKey
+                            .currentState!
+                            .validate()) {
                           return;
                         }
 
                         if (provider.dobController.text.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Please select your Date of Birth")),
+                            const SnackBar(
+                              content: Text("Please select your Date of Birth"),
+                            ),
                           );
                           return;
                         }

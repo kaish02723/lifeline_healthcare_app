@@ -1,34 +1,41 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/appointment_model/book_appointment_modal.dart';
 import '../../services/book_appointment_services.dart';
+import '../user_detail/auth_provider.dart';
 
 class BookAppointmentProvider with ChangeNotifier {
-  late BookAppointmentServices service;
+  BookAppointmentServices? _service;
 
   List<BookAppointmentModal> bookAppointment = [];
   bool isLoading = false;
 
-  BookAppointmentProvider(String token) {
-    service = BookAppointmentServices(token: token);
+  /// Lazy initialize service with token
+  BookAppointmentServices _getService(BuildContext context) {
+    final token = context.read<AuthProvider>().token;
+    return BookAppointmentServices(token: token!);
   }
 
-  Future<void> getBookAppointmentAll() async {
+  Future<void> getBookAppointmentAll(BuildContext context) async {
     isLoading = true;
     notifyListeners();
 
     try {
-      await service.bookAppointmentGet();
-      bookAppointment = service.getBookAppointment;
+      _service ??= _getService(context);
+
+      await _service!.bookAppointmentGet();
+      bookAppointment = _service!.getBookAppointment;
     } catch (e) {
       debugPrint("Get Appointment Error: $e");
     } finally {
-      isLoading = false; // 🔴 THIS LINE FIXES YOUR ISSUE
+      isLoading = false;
       notifyListeners();
     }
   }
 
   Future<bool> createAppointment({
+    required BuildContext context,
     required int doctorId,
     required int slotId,
     required String slotDate,
@@ -42,7 +49,9 @@ class BookAppointmentProvider with ChangeNotifier {
     bool success = false;
 
     try {
-      success = await service.bookAppointment(
+      _service ??= _getService(context);
+
+      success = await _service!.bookAppointment(
         doctorId: doctorId,
         slotId: slotId,
         slotDate: slotDate,
@@ -52,7 +61,7 @@ class BookAppointmentProvider with ChangeNotifier {
       );
 
       if (success) {
-        await getBookAppointmentAll(); // refresh list
+        await getBookAppointmentAll(context);
       }
     } catch (e) {
       debugPrint("Create Appointment Error: $e");
@@ -64,4 +73,3 @@ class BookAppointmentProvider with ChangeNotifier {
     return success;
   }
 }
-

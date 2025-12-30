@@ -15,6 +15,9 @@ class MedicineOrderService {
   Future<List<MedicineOrderModal>> getMedicineData() async {
     var response = await http.get(Uri.parse('$baseUrl/med-order'));
 
+    print(response.body);
+    print(response.request?.headers);
+
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
 

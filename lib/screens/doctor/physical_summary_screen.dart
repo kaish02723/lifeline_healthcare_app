@@ -32,7 +32,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
     final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xff121212) : const Color(0xffF5F5F5),
+      backgroundColor:
+          isDark ? const Color(0xff121212) : const Color(0xffF5F5F5),
       appBar: AppBar(
         backgroundColor: isDark ? Colors.grey[900] : Colors.white,
         title: Text(
@@ -74,9 +75,10 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.35)
-                      : Colors.grey.withOpacity(0.20),
+                  color:
+                      isDark
+                          ? Colors.black.withOpacity(0.35)
+                          : Colors.grey.withOpacity(0.20),
                   offset: const Offset(0, -2),
                   blurRadius: 8,
                 ),
@@ -98,7 +100,9 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                       style: TextStyle(
                         fontSize: 12,
                         color:
-                        isDark ? Colors.grey.shade300 : Colors.grey.shade500,
+                            isDark
+                                ? Colors.grey.shade300
+                                : Colors.grey.shade500,
                       ),
                     ),
                     const Spacer(),
@@ -107,7 +111,9 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         color:
-                        isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                            isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -116,21 +122,25 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                 _gradientButton(
                   Theme.of(context),
                   color: isDark ? Colors.white : CupertinoColors.white,
-                  title: selectedDoctor != null
-                      ? '₹499 | Pay & Consult'
-                      : 'Select a Doctor',
-                  onTap: selectedDoctor != null
-                      ? () {
-                    appointmentProvider.createAppointment(
-                      doctorId: selectedDoctor!.id ?? 0,
-                      slotId: 3, // Replace with selected slot
-                      slotDate: '', // Replace with selected date
-                      startTime: selectedDoctor!.timing?.start ?? '',
-                      endTime: selectedDoctor!.timing?.end ?? '',
-                      type: selectedDoctor!.speciality ?? '',
-                    );
-                  }
-                      : null,
+                  title:
+                      selectedDoctor != null
+                          ? '₹499 | Pay & Consult'
+                          : 'Select a Doctor',
+                  onTap:
+                      selectedDoctor != null
+                          ? () {
+                            appointmentProvider.createAppointment(
+                              doctorId: selectedDoctor!.id ?? 0,
+                              slotId: 4,
+                              // Replace with selected slot
+                              slotDate: '',
+                              // Replace with selected date
+                              startTime: selectedDoctor!.timing?.start ?? '',
+                              endTime: selectedDoctor!.timing?.end ?? '',
+                              type: selectedDoctor!.speciality ?? '', context: context,
+                            );
+                          }
+                          : null,
                 ),
               ],
             ),
@@ -157,9 +167,10 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.grey.withOpacity(0.2),
+                  color:
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: const Offset(2, 3),
                 ),
@@ -243,71 +254,79 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: doctors.map((doctor) {
-              final isSelected = selectedDoctor == doctor;
-              return GestureDetector(
-                onTap: () {
-                  setState(() => selectedDoctor = doctor);
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(right: 20),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    border: isSelected
-                        ? Border.all(color: Colors.teal, width: 2)
-                        : null,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundImage: NetworkImage(
-                          doctor.image ?? "https://via.placeholder.com/150",
-                        ),
+            children:
+                doctors.map((doctor) {
+                  final isSelected = selectedDoctor == doctor;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() => selectedDoctor = doctor);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 20),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border:
+                            isSelected
+                                ? Border.all(color: Colors.teal, width: 2)
+                                : null,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          const SizedBox(height: 20),
-                          Text(
-                            doctor.name ?? "",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: isDark ? Colors.white : Colors.black87,
+                          CircleAvatar(
+                            radius: 35,
+                            backgroundImage: NetworkImage(
+                              doctor.image ?? "https://via.placeholder.com/150",
                             ),
                           ),
-                          const SizedBox(height: 5),
-                          Text(
-                            doctor.speciality ?? "",
-                            style: TextStyle(
-                              color:
-                              isDark ? Colors.white70 : const Color(0xff555555),
-                            ),
-                          ),
-                          Text(
-                            doctor.experience ?? "",
-                            style: TextStyle(
-                              color:
-                              isDark ? Colors.white70 : const Color(0xff555555),
-                            ),
-                          ),
-                          Text(
-                            "${doctor.totalConsult ?? 0} consultations",
-                            style: TextStyle(
-                              color:
-                              isDark ? Colors.white70 : const Color(0xff555555),
-                            ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                doctor.name ?? "",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDark ? Colors.white : Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                doctor.speciality ?? "",
+                                style: TextStyle(
+                                  color:
+                                      isDark
+                                          ? Colors.white70
+                                          : const Color(0xff555555),
+                                ),
+                              ),
+                              Text(
+                                doctor.experience ?? "",
+                                style: TextStyle(
+                                  color:
+                                      isDark
+                                          ? Colors.white70
+                                          : const Color(0xff555555),
+                                ),
+                              ),
+                              Text(
+                                "${doctor.totalConsult ?? 0} consultations",
+                                style: TextStyle(
+                                  color:
+                                      isDark
+                                          ? Colors.white70
+                                          : const Color(0xff555555),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
+                    ),
+                  );
+                }).toList(),
           ),
         );
       },
@@ -332,7 +351,9 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               boxShadow: [
                 BoxShadow(
                   color:
-                  isDark ? Colors.black.withOpacity(0.3) : Colors.grey.withOpacity(0.2),
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: const Offset(2, 3),
                 ),
@@ -391,7 +412,9 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
               boxShadow: [
                 BoxShadow(
                   color:
-                  isDark ? Colors.black.withOpacity(0.3) : Colors.grey.withOpacity(0.2),
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: const Offset(2, 3),
                 ),
@@ -427,7 +450,8 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'By proceeding to avail a consultation, you agree to ',
+                        text:
+                            'By proceeding to avail a consultation, you agree to ',
                         style: TextStyle(
                           fontSize: 11,
                           color: isDark ? Colors.white70 : Colors.grey.shade600,
@@ -477,11 +501,11 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
 }
 
 Widget _gradientButton(
-    ThemeData theme, {
-      required Color color,
-      required String title,
-      required VoidCallback? onTap,
-    }) {
+  ThemeData theme, {
+  required Color color,
+  required String title,
+  required VoidCallback? onTap,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(

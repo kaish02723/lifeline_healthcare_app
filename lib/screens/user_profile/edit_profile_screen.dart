@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +32,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // ------------------ PROFILE IMAGE ------------------
             Center(
               child: GestureDetector(
-                onTap: provider.pickImage,
+                onTap: (){
+                  provider.pickImage();
+                },
                 child:CircleAvatar(
                   radius: 55,
                   backgroundColor: Colors.grey.shade300,
@@ -86,9 +86,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 border: OutlineInputBorder(),
               ),
               items:
-                  ["Male", "Female", "Other"]
-                      .map((g) => DropdownMenuItem(child: Text(g), value: g))
-                      .toList(),
+              ["Male", "Female", "Other"]
+                  .map((g) => DropdownMenuItem(child: Text(g), value: g))
+                  .toList(),
               onChanged: (value) {
                 setState(() {
                   provider.updateGender = value;
@@ -137,16 +137,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                 ),
-                  onPressed: () async {
-                    await provider.updateProfile(
-                      context,
-                      imageFile: provider.imageFile,
-                    );
-                    provider.clear();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Profile updated successfully")),
-                    );
-                  },
+                onPressed: () async {
+                  await provider.updateProfile(
+                    context,
+                    imageFile: provider.imageFile,
+                  );
+                  provider.clear();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Profile updated successfully")),
+                  );
+                },
                 child: Text("SAVE CHANGES"),
               ),
             ),
@@ -157,121 +157,121 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 }
 
-  Widget _profileImageSection(bool isDark) {
-    return Consumer<UserProfileProvider>(
-      builder: (BuildContext context, value, Widget? child) {
-        return Center(
-          child: GestureDetector(
-            onTap: value.pickImage,
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                CircleAvatar(
-                  radius: 60,
-                  backgroundColor: isDark ? AppColors.cardDark : AppColors.card,
-                  backgroundImage:
-                      value.imageFile != null ? FileImage(value.imageFile!) : null,
-                  child:
-                      value.imageFile == null
-                          ? Icon(
-                            Icons.person,
-                            size: 60,
-                            color: isDark ? AppColors.iconDark : AppColors.icon,
-                          )
-                          : null,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.camera_alt,
-                    size: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _formCard(BuildContext context, {required List<Widget> children}) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardDark : AppColors.card,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.06)),
-        ],
-      ),
-      child: Column(
-        children:
-            children
-                .map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 14),
-                    child: e,
-                  ),
+Widget _profileImageSection(bool isDark) {
+  return Consumer<UserProfileProvider>(
+    builder: (BuildContext context, value, Widget? child) {
+      return Center(
+        child: GestureDetector(
+          onTap: value.pickImage,
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              CircleAvatar(
+                radius: 60,
+                backgroundColor: isDark ? AppColors.cardDark : AppColors.card,
+                backgroundImage:
+                value.imageFile != null ? FileImage(value.imageFile!) : null,
+                child:
+                value.imageFile == null
+                    ? Icon(
+                  Icons.person,
+                  size: 60,
+                  color: isDark ? AppColors.iconDark : AppColors.icon,
                 )
-                .toList(),
-      ),
-    );
-  }
+                    : null,
+              ),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.camera_alt,
+                  size: 18,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 
-  Widget _inputField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    int maxLines = 1,
-  }) {
-    return TextField(
-      controller: controller,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
-  }
+Widget _formCard(BuildContext context, {required List<Widget> children}) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
 
-  Widget _genderDropdown(UserProfileProvider provider) {
-    return DropdownButtonFormField<String>(
-      value: provider.updateGender,
-      decoration: InputDecoration(
-        labelText: "Gender",
-        prefixIcon: const Icon(Icons.wc_outlined),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      items:
-          [
-            "Male",
-            "Female",
-            "Other",
-          ].map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
-      onChanged: (value) {
-        provider.updateGenderValue(value!);
-      },
-    );
-  }
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: isDark ? AppColors.cardDark : AppColors.card,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.06)),
+      ],
+    ),
+    child: Column(
+      children:
+      children
+          .map(
+            (e) => Padding(
+          padding: const EdgeInsets.only(bottom: 14),
+          child: e,
+        ),
+      )
+          .toList(),
+    ),
+  );
+}
 
-  Widget _dobField(UserProfileProvider provider,BuildContext context) {
-    return TextField(
-      controller: provider.dobController,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: "Date of Birth",
-        prefixIcon: const Icon(Icons.calendar_month_outlined),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      onTap: () => provider.selectDate(context),
-    );
-  }
+Widget _inputField({
+  required TextEditingController controller,
+  required String label,
+  required IconData icon,
+  int maxLines = 1,
+}) {
+  return TextField(
+    controller: controller,
+    maxLines: maxLines,
+    decoration: InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+  );
+}
+
+Widget _genderDropdown(UserProfileProvider provider) {
+  return DropdownButtonFormField<String>(
+    value: provider.updateGender,
+    decoration: InputDecoration(
+      labelText: "Gender",
+      prefixIcon: const Icon(Icons.wc_outlined),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    items:
+    [
+      "Male",
+      "Female",
+      "Other",
+    ].map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
+    onChanged: (value) {
+      provider.updateGenderValue(value!);
+    },
+  );
+}
+
+Widget _dobField(UserProfileProvider provider,BuildContext context) {
+  return TextField(
+    controller: provider.dobController,
+    readOnly: true,
+    decoration: InputDecoration(
+      labelText: "Date of Birth",
+      prefixIcon: const Icon(Icons.calendar_month_outlined),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    onTap: () => provider.selectDate(context),
+  );
+}

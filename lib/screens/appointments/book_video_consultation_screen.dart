@@ -18,7 +18,7 @@ class _BookVideoConsultationState extends State<BookVideoConsultation> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<BookAppointmentProvider>().getBookAppointmentAll();
+      context.read<BookAppointmentProvider>().getBookAppointmentAll(context);
       context.read<DoctorProvider>().getAllDoctors();
     });
   }
@@ -38,7 +38,7 @@ class _BookVideoConsultationState extends State<BookVideoConsultation> {
         // Loading state
         if (appointmentProvider.isLoading || doctorProvider.isLoading) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator(color: Colors.teal,)),
+            body: Center(child: CircularProgressIndicator(color: Colors.teal)),
           );
         }
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
+import 'package:lifeline_healthcare_app/providers/appointment_provider/book_appointment_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
-import 'package:lifeline_healthcare_app/providers/media_provider/media_picker_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicineCart_provider.dart';
 import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
@@ -30,23 +31,24 @@ void main() {
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => PopularTestProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => MediaPickerProvider()),
         ChangeNotifierProvider(create: (context) => BookTestProvider()),
-        ChangeNotifierProvider(create: (context) => SurgeryProvider(),),
-        ChangeNotifierProvider(create: (context) => DashBoardProvider(),),
-        ChangeNotifierProvider(create: (context) => DoctorProvider(),),
-        ChangeNotifierProvider(create: (context) => ProductProvider(),),
-        ChangeNotifierProvider(create: (context) => CartProvider(),),
-        ChangeNotifierProvider(create: (context) => MedicineOrderProvider(),),
         ChangeNotifierProvider(create: (context) => SurgeryProvider()),
         ChangeNotifierProvider(create: (context) => DashBoardProvider()),
         ChangeNotifierProvider(create: (context) => DoctorProvider()),
         ChangeNotifierProvider(create: (context) => ProductProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
-        ChangeNotifierProvider(create: (context) => TopRatingProvider(),),
-        ChangeNotifierProvider(create: (context) => SubmitRatingProvider(),),
-        ChangeNotifierProvider(create: (context) => UserProfileProvider(),),
-        ChangeNotifierProvider(create: (context) => CancelTestProvider(),)
+        ChangeNotifierProvider(create: (context) => MedicineOrderProvider()),
+        ChangeNotifierProvider(create: (context) => SurgeryProvider()),
+        ChangeNotifierProvider(create: (context) => DashBoardProvider()),
+        ChangeNotifierProvider(create: (context) => DoctorProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => TopRatingProvider()),
+        ChangeNotifierProvider(create: (context) => SubmitRatingProvider()),
+        ChangeNotifierProvider(create: (context) => UserProfileProvider()),
+        ChangeNotifierProvider(create: (context) => CancelTestProvider()),
+        ChangeNotifierProvider(create: (context) => CartDataProvider()),
+        ChangeNotifierProvider(create: (context) => BookAppointmentProvider(),)
       ],
       child: MyApp(),
     ),
@@ -94,7 +96,7 @@ class MyApp extends StatelessWidget {
                 '/phone_auth_screen': (context) => const PhoneAuthScreen(),
                 '/dashboard': (context) => const DashboardScreen(),
                 '/splash_screen': (context) => const SplashScreen(),
-                '/create_profile':(context)=> const CompleteProfileScreen(),
+                '/create_profile': (context) => const CompleteProfileScreen(),
               },
               home: SplashScreen(),
             );
