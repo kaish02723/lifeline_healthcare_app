@@ -157,6 +157,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                                   Navigator.pop(context);
                                                   profileProvider.pickImage();
                                                 },
+
                                                 icon: const Icon(
                                                   Icons.image,
                                                   color: Colors.teal,
