@@ -46,6 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ------------------ PROFILE IMAGE ------------------
             Center(
               child: GestureDetector(
                 onTap: pickImage,
@@ -53,17 +54,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   radius: 55,
                   backgroundColor: Colors.grey.shade300,
                   backgroundImage:
-                      imageFile != null
-                          ? FileImage(imageFile!)
-                          : provider.user?.picture != null
-                          ? NetworkImage(provider.user!.picture!)
-                          : null,
+                  imageFile != null
+                      ? FileImage(imageFile!)
+                      : provider.user?.picture != null
+                      ? NetworkImage(provider.user!.picture!)
+                      : null,
                 ),
               ),
             ),
 
             SizedBox(height: 30),
 
+            // ------------------ NAME ------------------
             TextField(
               controller: provider.nameController,
               decoration: InputDecoration(
@@ -74,6 +76,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             SizedBox(height: 15),
 
+            // ------------------ EMAIL ------------------
             TextField(
               controller: provider.emailController,
               decoration: InputDecoration(
@@ -104,6 +107,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             SizedBox(height: 15),
 
+            // ------------------ DOB ------------------
             TextField(
               controller: provider.dobController,
               readOnly: true,
@@ -119,6 +123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             SizedBox(height: 15),
 
+            // ------------------ ADDRESS ------------------
             TextField(
               controller: provider.addressController,
               maxLines: 2,
@@ -130,6 +135,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             SizedBox(height: 25),
 
+            // ------------------ SAVE BUTTON ------------------
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -141,12 +147,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 onPressed: () async {
+                  // 🔍 DEBUG LOGS (YAHI LAGANA HAI)
                   print("SAVE CLICKED");
                   print("NAME: ${provider.nameController.text}");
                   print("EMAIL: ${provider.emailController.text}");
+                  // upload image first (if selected)
                   if (imageFile != null) {
                     await provider.uploadProfileImage(imageFile!, context);
                   }
+                  //  update profile (WITHOUT picture)
                   Map<String, dynamic> data = {
                     "name": provider.nameController.text,
                     "email": provider.emailController.text,
@@ -155,17 +164,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     "address": provider.addressController.text,
                   };
                   await provider.updateProfile(context, data);
+                  //  go back
                   Navigator.pop(context);
                 },
                 child: Text("SAVE CHANGES"),
               ),
             ),
+
           ],
         ),
       ),
     );
   }
 }
+
 
 // class EditProfileScreen extends StatefulWidget {
 //   const EditProfileScreen({super.key});
@@ -279,123 +291,121 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //     );
 //   }
 
-Widget _profileImageSection(bool isDark) {
-  return Consumer<GetUserDetailProvider>(
-    builder: (BuildContext context, value, Widget? child) {
-      return Center(
-        child: GestureDetector(
-          onTap: value.pickImage,
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              CircleAvatar(
-                radius: 60,
-                backgroundColor: isDark ? AppColors.cardDark : AppColors.card,
-                backgroundImage:
-                    value.imageFile != null
-                        ? FileImage(value.imageFile!)
-                        : null,
-                child:
-                    value.imageFile == null
-                        ? Icon(
-                          Icons.person,
-                          size: 60,
-                          color: isDark ? AppColors.iconDark : AppColors.icon,
-                        )
-                        : null,
-              ),
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
+  Widget _profileImageSection(bool isDark) {
+    return Consumer<GetUserDetailProvider>(
+      builder: (BuildContext context, value, Widget? child) {
+        return Center(
+          child: GestureDetector(
+            onTap: value.pickImage,
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                CircleAvatar(
+                  radius: 60,
+                  backgroundColor: isDark ? AppColors.cardDark : AppColors.card,
+                  backgroundImage:
+                      value.imageFile != null ? FileImage(value.imageFile!) : null,
+                  child:
+                      value.imageFile == null
+                          ? Icon(
+                            Icons.person,
+                            size: 60,
+                            color: isDark ? AppColors.iconDark : AppColors.icon,
+                          )
+                          : null,
                 ),
-                child: const Icon(
-                  Icons.camera_alt,
-                  size: 18,
-                  color: Colors.white,
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    size: 18,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-Widget _formCard(BuildContext context, {required List<Widget> children}) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
+  Widget _formCard(BuildContext context, {required List<Widget> children}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: isDark ? AppColors.cardDark : AppColors.card,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.06)),
-      ],
-    ),
-    child: Column(
-      children:
-          children
-              .map(
-                (e) => Padding(
-                  padding: const EdgeInsets.only(bottom: 14),
-                  child: e,
-                ),
-              )
-              .toList(),
-    ),
-  );
-}
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : AppColors.card,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.06)),
+        ],
+      ),
+      child: Column(
+        children:
+            children
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: e,
+                  ),
+                )
+                .toList(),
+      ),
+    );
+  }
 
-Widget _inputField({
-  required TextEditingController controller,
-  required String label,
-  required IconData icon,
-  int maxLines = 1,
-}) {
-  return TextField(
-    controller: controller,
-    maxLines: maxLines,
-    decoration: InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-  );
-}
+  Widget _inputField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    int maxLines = 1,
+  }) {
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
 
-Widget _genderDropdown(GetUserDetailProvider provider) {
-  return DropdownButtonFormField<String>(
-    value: provider.updateGender,
-    decoration: InputDecoration(
-      labelText: "Gender",
-      prefixIcon: const Icon(Icons.wc_outlined),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-    items:
-        [
-          "Male",
-          "Female",
-          "Other",
-        ].map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
-    onChanged: (value) {
-      provider.updateGenderValue(value!);
-    },
-  );
-}
+  Widget _genderDropdown(GetUserDetailProvider provider) {
+    return DropdownButtonFormField<String>(
+      value: provider.updateGender,
+      decoration: InputDecoration(
+        labelText: "Gender",
+        prefixIcon: const Icon(Icons.wc_outlined),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      items:
+          [
+            "Male",
+            "Female",
+            "Other",
+          ].map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
+      onChanged: (value) {
+        provider.updateGenderValue(value!);
+      },
+    );
+  }
 
-Widget _dobField(GetUserDetailProvider provider, BuildContext context) {
-  return TextField(
-    controller: provider.updateDobController,
-    readOnly: true,
-    decoration: InputDecoration(
-      labelText: "Date of Birth",
-      prefixIcon: const Icon(Icons.calendar_month_outlined),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-    onTap: () => provider.selectDate(context),
-  );
-}
+  Widget _dobField(GetUserDetailProvider provider,BuildContext context) {
+    return TextField(
+      controller: provider.updateDobController,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: "Date of Birth",
+        prefixIcon: const Icon(Icons.calendar_month_outlined),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      onTap: () => provider.selectDate(context),
+    );
+  }

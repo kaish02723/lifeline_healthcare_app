@@ -2,122 +2,96 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart'as http;
 import 'package:lifeline_healthcare_app/models/user_details/user_detail_model.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:provider/provider.dart';
 
-class UserProfileProvider with ChangeNotifier {
-  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com/userProfile';
+class UserProfileProvider with ChangeNotifier{
+  final baseUrl='https://phone-auth-with-jwt-4.onrender.com/userProfile';
   UserDataModel? user;
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final dobController = TextEditingController();
   final addressController = TextEditingController();
-  final genderController = TextEditingController();
+  final genderController=TextEditingController();
 
   String? updateGender;
-  bool isLoading = false;
+  bool isLoading=false;
 
   //get profile
-  Future<void> getProfile(BuildContext context) async {
-    try {
-      isLoading = true;
-      notifyListeners();
-      final verified = Provider.of<AuthProvider>(context, listen: false);
-      final token = await verified.getToken();
+  Future<void>getProfile(BuildContext context)async {
+    try{
+    isLoading=true;
+    notifyListeners();
+    final verified=Provider.of<AuthProvider>(context,listen: false);
+    final token=await verified.getToken();
 
-      final response = await http.get(
-        Uri.parse("$baseUrl/get-profile"),
-        headers: {"Authorization": "Bearer $token"},
-      );
+    final response=await http.get(Uri.parse("$baseUrl/get-profile"),headers: {"Authorization":"Bearer $token"});
 
-      if (response.statusCode == 200) {
-        final decode = jsonDecode(response.body);
-        user = UserDetailModel.fromJson(decode).user;
-      }
-    } catch (error) {
-      print("get profile error : $error");
-    } finally {
-      isLoading = false;
+    if(response.statusCode==200){
+      final decode = jsonDecode(response.body);
+      user = UserDetailModel.fromJson(decode).user;
+    }
+  }catch(error){
+     print("get profile error : $error");
+  }finally{
+      isLoading=false;
       notifyListeners();
     }
   }
 
   //create profile
-  Future<void> createProfile(
-    BuildContext context,
-    Map<String, dynamic> data,
-  ) async {
-    try {
-      isLoading = true;
-      notifyListeners();
+  Future<void>createProfile(BuildContext context,Map<String,dynamic> data)async {
+    try{
+     isLoading=true;
+     notifyListeners();
 
-      final verified = Provider.of<AuthProvider>(context, listen: false);
-      final token = await verified.getToken();
+     final verified=Provider.of<AuthProvider>(context,listen: false);
+     final token=await verified.getToken();
 
-      final response = await http.post(
-        Uri.parse('$baseUrl/create-profile'),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode(data),
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        await getProfile(context);
-      }
-    } catch (error) {
+     final response =await http.post(Uri.parse('$baseUrl/create-profile'),
+         headers: {"Authorization":"Bearer $token","Content-Type":"application/json"},
+       body: jsonEncode(data)
+     );
+    if(response.statusCode == 200 || response.statusCode==201){
+      await getProfile(context);
+    }
+    }catch(error){
       print("get profile error : $error");
     }
   }
 
   //update profile
-  Future<void> updateProfile(
-    BuildContext context,
-    Map<String, dynamic> data,
-  ) async {
-    try {
-      isLoading = true;
+  Future<void>updateProfile(BuildContext context,Map<String,dynamic>data)async {
+    try{
+      isLoading=true;
       notifyListeners();
-
-      final verified = Provider.of<AuthProvider>(context, listen: false);
-      final token = await verified.getToken();
-
-      final response = await http.put(
-        Uri.parse("$baseUrl/update-profile"),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-type": "application/json",
-        },
-        body: jsonEncode(data),
+      
+      final verified=Provider.of<AuthProvider>(context,listen: false);
+      final token=await verified.getToken();
+      
+      final response=await http.put(Uri.parse("$baseUrl/update-profile"),
+        headers: {"Authorization":"Bearer $token", "Content-type":"application/json"},
+        body: jsonEncode(data)
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         await getProfile(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            backgroundColor: Colors.green.shade900,
-            behavior: SnackBarBehavior.floating,
-            content: Text(
-              'Profile updated ✔️',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
       }
-    } catch (error) {
+
+    }catch(error){
       print("get profile error : $error");
-    } finally {
-      isLoading = false;
+    }finally{
+      isLoading=false;
       notifyListeners();
     }
   }
 
+// UPLOAD IMAGE (ONLY ONE FUNCTION)
   Future<String?> uploadProfileImage(File file, BuildContext context) async {
+
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final userId = auth.userId;
     final token = await auth.getToken();
@@ -129,7 +103,9 @@ class UserProfileProvider with ChangeNotifier {
 
     request.headers['Authorization'] = 'Bearer $token';
 
-    request.files.add(await http.MultipartFile.fromPath("image", file.path));
+    request.files.add(
+      await http.MultipartFile.fromPath("image", file.path),
+    );
 
     final response = await request.send();
 
@@ -137,7 +113,7 @@ class UserProfileProvider with ChangeNotifier {
       final res = await http.Response.fromStream(response);
       final imageUrl = jsonDecode(res.body)["imageUrl"];
 
-      ///  update local user also
+      /// 🔥 update local user also
       user?.picture = imageUrl;
       notifyListeners();
 
@@ -169,7 +145,8 @@ class UserProfileProvider with ChangeNotifier {
     );
 
     if (picked != null) {
-      dobController.text = "${picked.day}/${picked.month}/${picked.year}";
+      dobController.text =
+      "${picked.day}/${picked.month}/${picked.year}";
       notifyListeners();
     }
   }

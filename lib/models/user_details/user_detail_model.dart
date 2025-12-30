@@ -50,7 +50,7 @@ class UserDataModel {
       dateOfBirth: json["date_of_birth"],
       address: json["address"],
       roleSpecificData: json["role_specific_data"],
-      picture: json["picture"],
+      picture: json['picture'],
       isProfileComplete:json["isProfileComplete"]
     );
   }

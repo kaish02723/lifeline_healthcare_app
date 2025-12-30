@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
-import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/get_userdetail_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_detail/auth_provider.dart';
@@ -30,7 +29,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
       context,
       listen: false,
     );
-    final userProvider = Provider.of<UserProfileProvider>(
+    final userProvider = Provider.of<GetUserDetailProvider>(
       context,
       listen: false,
     );
@@ -245,7 +244,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Patient Name",
+                    "User Name",
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 6),
@@ -255,7 +254,6 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Enter your name',
-                      prefixIcon: Icon(Icons.person),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -268,28 +266,11 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                   TextFormField(
                     controller: bookTestProvider.testPhoneController,
                     keyboardType: TextInputType.phone,
-                    maxLength: 10,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Phone number is required*';
-                      } else if (!auth.phoneRegex.hasMatch(value)) {
-                        return 'Enter a valid 10-digit phone number';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
+                    validator:
+                        (v) => v!.length != 10 ? "Enter valid number" : null,
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Enter phone no',
-                      prefixIcon: SizedBox(
-                        width: 40,
-                        child: Row(
-                          spacing: 5,
-                          children: [
-                            Text('  +91', style: TextStyle(fontSize: 18)),
-                            Container(width: 1, height: 40, color: Colors.grey),
-                          ],
-                        ),
-                      ),
                     ),
                   ),
 
@@ -311,7 +292,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                               bookTestProvider.testPhoneController.text.trim(),
                         };
 
-                        bool success = await bookTestProvider.bookTest(payload,context);
+                        bool success = await bookTestProvider.bookTest(payload);
 
                         if (success)
                           showTestSuccessDialog();
