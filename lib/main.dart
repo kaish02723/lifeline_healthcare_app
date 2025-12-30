@@ -48,7 +48,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => UserProfileProvider()),
         ChangeNotifierProvider(create: (context) => CancelTestProvider()),
         ChangeNotifierProvider(create: (context) => CartDataProvider()),
-        ChangeNotifierProvider(create: (context) => BookAppointmentProvider(),)
+        ChangeNotifierProvider(create: (context) => BookAppointmentProvider()),
       ],
       child: MyApp(),
     ),
