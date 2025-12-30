@@ -55,6 +55,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             SizedBox(height: 30),
 
+
             // ------------------ NAME ------------------
             TextField(
               controller: provider.nameController,
