@@ -107,9 +107,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                     ? Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 200),
-                        child: MedicalHeartECGLoader(
-                          width: double.infinity,
-                          color: Colors.grey,
+                        child: MedicalCrossLoader(
                         ),
                       ),
                     )

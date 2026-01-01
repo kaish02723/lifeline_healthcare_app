@@ -2,7 +2,7 @@ class MedicineOrderModal {
   int? orderId;
   String? orderCode;
   int? userId;
-  String? totalAmount;
+  double? totalAmount;
   String? paymentStatus;
   String? orderStatus;
   DateTime? orderedAt;
@@ -12,6 +12,9 @@ class MedicineOrderModal {
   DateTime? updatedAt;
   String? cancelReason;
   DateTime? cancelledAt;
+  String? paymentId;
+
+  List<MedicineOrderItem>? items;
 
   MedicineOrderModal({
     this.orderId,
@@ -27,6 +30,8 @@ class MedicineOrderModal {
     this.updatedAt,
     this.cancelReason,
     this.cancelledAt,
+    this.paymentId,
+    this.items,
   });
 
   factory MedicineOrderModal.fromJson(Map<String, dynamic> data) {
@@ -35,7 +40,11 @@ class MedicineOrderModal {
       orderCode: data['order_code'],
       userId: data['user_id'],
 
-      totalAmount: data['total_amount']?.toString(),
+      totalAmount:
+          data['total_amount'] != null
+              ? double.parse(data['total_amount'].toString())
+              : null,
+
       paymentStatus: data['payment_status'],
       orderStatus: data['order_status'],
 
@@ -50,9 +59,9 @@ class MedicineOrderModal {
               : null,
 
       rating:
-          data['rating'] == null
-              ? null
-              : double.parse(data['rating'].toString()),
+          data['rating'] != null
+              ? double.tryParse(data['rating'].toString())
+              : null,
 
       review: data['review'],
 
@@ -67,6 +76,48 @@ class MedicineOrderModal {
           data['cancelled_at'] != null
               ? DateTime.parse(data['cancelled_at'])
               : null,
+
+      paymentId: data['payment_id'],
+
+      items:
+          data['items'] != null
+              ? (data['items'] as List)
+                  .map((e) => MedicineOrderItem.fromJson(e))
+                  .toList()
+              : [],
+    );
+  }
+}
+
+class MedicineOrderItem {
+  int? id;
+  int? orderId;
+  int? medicineId;
+  String? name;
+  double? price;
+  int? quantity;
+  String? image;
+
+  MedicineOrderItem({
+    this.id,
+    this.orderId,
+    this.medicineId,
+    this.name,
+    this.price,
+    this.quantity,
+    this.image,
+  });
+
+  factory MedicineOrderItem.fromJson(Map<String, dynamic> json) {
+    return MedicineOrderItem(
+      id: json['id'],
+      orderId: json['order_id'],
+      medicineId: json['medicine_id'],
+      name: json['name'],
+      price:
+          json['price'] != null ? double.parse(json['price'].toString()) : null,
+      quantity: json['quantity'],
+      image: json['image'],
     );
   }
 }

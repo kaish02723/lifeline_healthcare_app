@@ -25,7 +25,7 @@ import '../../widgets/dashboard_widgets/dashboard_find_doctor_card.dart';
 import '../../widgets/dashboard_widgets/show_rate_us_bottom_sheet.dart';
 import '../../widgets/dashboard_widgets/top_feature_card.dart';
 import '../medicine screen/medicine_category_screen.dart';
-import '../medicine screen/medicine_order_detail_screen.dart';
+import '../medicine screen/my_medicine_oder.dart';
 import 'notification_screen.dart';
 
 class DashboardScreen extends StatefulWidget {

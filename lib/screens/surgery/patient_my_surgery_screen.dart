@@ -113,9 +113,8 @@ class _MySurgeryScreenState extends State<MySurgeryScreen> {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 240),
-                        child: MedicalHeartECGLoader(
-                          width: 320,
-                          color: Colors.teal.shade100,
+                        child: MedicalCrossLoader(
+
                         ),
                       ),
                     );

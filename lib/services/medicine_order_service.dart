@@ -12,8 +12,17 @@ class MedicineOrderService {
 
   List<MedicineOrderModal> getMedicineOrdersList = [];
 
-  Future<List<MedicineOrderModal>> getMedicineData() async {
-    var response = await http.get(Uri.parse('$baseUrl/med-order'));
+  Future<List<MedicineOrderModal>> getMedicineData(BuildContext context) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final token = await authProvider.getToken();
+
+    var response = await http.get(
+      Uri.parse('$baseUrl/med-order/my-orders'),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+    );
 
     print(response.body);
     print(response.request?.headers);
@@ -29,7 +38,10 @@ class MedicineOrderService {
     }
   }
 
-  Future<void> createMedicineOrder(BuildContext context,Map<String, dynamic> data) async {
+  Future<void> createMedicineOrder(
+    BuildContext context,
+    Map<String, dynamic> data,
+  ) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final token = await authProvider.getToken();
 
@@ -37,7 +49,7 @@ class MedicineOrderService {
       Uri.parse('$baseUrl/med-order/create'),
       headers: {
         "Authorization": "Bearer $token",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: jsonEncode(data),
     );
@@ -50,6 +62,34 @@ class MedicineOrderService {
       print(response.body);
     } else {
       print("Error: ${response.statusCode}");
+      print(response.body);
+    }
+  }
+
+  Future<void> cancelOrder(
+    BuildContext context,
+    int orderId,
+    Map<String, dynamic> data,
+  ) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final token = await authProvider.getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/med-order/$orderId/cancel'),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(data),
+    );
+
+    print(response.body);
+    print(response.request?.headers);
+
+    if (response.statusCode == 200) {
+      print("Order $orderId cancelled successfully");
+    } else {
+      print("Cancel failed: ${response.statusCode}");
       print(response.body);
     }
   }

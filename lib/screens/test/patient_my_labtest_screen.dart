@@ -121,9 +121,7 @@ class _MyTestScreenState extends State<MyTestScreen> {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 240),
-                        child: MedicalHeartECGLoader(
-                          width: 320,
-                          color: Colors.grey,
+                        child: MedicalCrossLoader(
                         ),
                       ),
                     );
