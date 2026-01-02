@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../models/appointment_model/book_appointment_modal.dart';
 import '../../services/book_appointment_services.dart';
 import '../user_detail/auth_provider.dart';
@@ -11,7 +10,6 @@ class BookAppointmentProvider with ChangeNotifier {
   List<BookAppointmentModal> bookAppointment = [];
   bool isLoading = false;
 
-  /// Lazy initialize service with token
   BookAppointmentServices _getService(BuildContext context) {
     final token = context.read<AuthProvider>().token;
     return BookAppointmentServices(token: token!);
@@ -23,7 +21,6 @@ class BookAppointmentProvider with ChangeNotifier {
 
     try {
       _service ??= _getService(context);
-
       await _service!.bookAppointmentGet();
       bookAppointment = _service!.getBookAppointment;
     } catch (e) {
@@ -34,7 +31,7 @@ class BookAppointmentProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> createAppointment({
+  Future<Map<String, dynamic>> createAppointment({
     required BuildContext context,
     required int doctorId,
     required int slotId,
@@ -46,12 +43,10 @@ class BookAppointmentProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    bool success = false;
-
     try {
       _service ??= _getService(context);
 
-      success = await _service!.bookAppointment(
+      final result = await _service!.bookAppointment(
         doctorId: doctorId,
         slotId: slotId,
         slotDate: slotDate,
@@ -60,16 +55,16 @@ class BookAppointmentProvider with ChangeNotifier {
         type: type,
       );
 
-      if (success) {
+      if (result["success"] == true) {
         await getBookAppointmentAll(context);
       }
+
+      return result;
     } catch (e) {
-      debugPrint("Create Appointment Error: $e");
+      return {"success": false, "message": "Something went wrong"};
     } finally {
       isLoading = false;
       notifyListeners();
     }
-
-    return success;
   }
 }

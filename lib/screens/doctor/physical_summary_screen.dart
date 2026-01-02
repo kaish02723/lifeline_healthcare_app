@@ -128,16 +128,32 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                           : 'Select a Doctor',
                   onTap:
                       selectedDoctor != null
-                          ? () {
-                            appointmentProvider.createAppointment(
+                          ? () async {
+                            final provider =
+                                context.read<BookAppointmentProvider>();
+
+                            final result = await provider.createAppointment(
+                              context: context,
                               doctorId: selectedDoctor!.id ?? 0,
                               slotId: 4,
-                              // Replace with selected slot
-                              slotDate: '',
-                              // Replace with selected date
+                              // selected slot
+                              slotDate: "2026-01-01",
+                              // selected date
                               startTime: selectedDoctor!.timing?.start ?? '',
                               endTime: selectedDoctor!.timing?.end ?? '',
-                              type: selectedDoctor!.speciality ?? '', context: context,
+                              type: selectedDoctor!.speciality ?? '',
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                showCloseIcon: true,
+                                closeIconColor: Colors.white,
+                                content: Text(result["message"]),
+                                backgroundColor:
+                                    result["success"]
+                                        ? Colors.green.shade800
+                                        : Colors.red.shade800,
+                              ),
                             );
                           }
                           : null,

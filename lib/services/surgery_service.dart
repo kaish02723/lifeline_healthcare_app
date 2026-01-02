@@ -33,9 +33,9 @@ class SurgeryService {
   }
 
   Future<BookSurgeryModel?> postSurgeryData(
-      Map<String, dynamic> data,
-      BuildContext context,
-      ) async {
+    Map<String, dynamic> data,
+    BuildContext context,
+  ) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final authToken = authProvider.token;
 
@@ -48,9 +48,6 @@ class SurgeryService {
       body: jsonEncode(data),
     );
 
-    // print("Response Body: ${response.body}");
-    // print("Headers Sent: ${response.request?.headers}");
-
     if (response.statusCode == 201) {
       var jsonBody = jsonDecode(response.body);
       return BookSurgeryModel.jsonToModal(jsonBody);
@@ -59,5 +56,4 @@ class SurgeryService {
       return null;
     }
   }
-
 }

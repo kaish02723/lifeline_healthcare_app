@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/providers/appointment_provider/book_appointment_provider.dart';
 import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
 import '../../../config/color.dart';
 
@@ -37,9 +38,7 @@ class _BookVideoConsultationState extends State<BookVideoConsultation> {
       builder: (context, appointmentProvider, doctorProvider, child) {
         // Loading state
         if (appointmentProvider.isLoading || doctorProvider.isLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator(color: Colors.teal)),
-          );
+          return const Scaffold(body: Center(child: MedicalCrossLoader()));
         }
 
         // Empty list state

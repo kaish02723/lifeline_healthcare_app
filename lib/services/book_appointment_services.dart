@@ -1,7 +1,6 @@
 import 'dart:convert';
-
-import 'package:lifeline_healthcare_app/models/appointment_model/book_appointment_modal.dart';
 import 'package:http/http.dart' as http;
+import '../models/appointment_model/book_appointment_modal.dart';
 
 class BookAppointmentServices {
   final String token;
@@ -20,27 +19,22 @@ class BookAppointmentServices {
       },
     );
 
-    print("STATUS CODE ${response.statusCode}");
-    print("RAW RESPONSE ${response.body}");
-
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-
-      getBookAppointment = data
-          .map((e) => BookAppointmentModal.convertToModel(e))
-          .toList();
+      final List data = jsonDecode(response.body);
+      getBookAppointment =
+          data.map((e) => BookAppointmentModal.convertToModel(e)).toList();
     } else {
       getBookAppointment = [];
     }
   }
 
-  Future<bool> bookAppointment({
+  Future<Map<String, dynamic>> bookAppointment({
     required int doctorId,
     required int slotId,
     required String slotDate,
     required String startTime,
     required String endTime,
-    required String type, // video / clinic
+    required String type,
   }) async {
     final body = {
       "doctor_id": doctorId,
@@ -60,13 +54,18 @@ class BookAppointmentServices {
       body: jsonEncode(body),
     );
 
-    print("POST STATUS CODE: ${response.statusCode}");
-    print("POST RESPONSE: ${response.body}");
+    final decoded = jsonDecode(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return true;
+      return {
+        "success": true,
+        "message": decoded["message"] ?? "Appointment booked successfully",
+      };
     } else {
-      return false;
+      return {
+        "success": false,
+        "message": decoded["message"] ?? "Failed to book appointment",
+      };
     }
   }
 }

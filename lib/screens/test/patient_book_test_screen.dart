@@ -244,7 +244,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "User Name",
+                    "Patient Name",
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 6),
@@ -252,6 +252,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                     controller: bookTestProvider.testNameController,
                     validator: (v) => v!.isEmpty ? "Name required" : null,
                     decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(),
                       hintText: 'Enter your name',
                     ),
@@ -266,9 +267,27 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                   TextFormField(
                     controller: bookTestProvider.testPhoneController,
                     keyboardType: TextInputType.phone,
-                    validator:
-                        (v) => v!.length != 10 ? "Enter valid number" : null,
-                    decoration: const InputDecoration(
+                    maxLength: 10,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Phone number is required*';
+                      } else if (!auth.phoneRegex.hasMatch(value)) {
+                        return 'Enter a valid 10-digit phone number';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      prefixIcon: SizedBox(
+                        width: 60,
+                        child: Row(
+                          spacing: 10,
+                          children: [
+                            SizedBox(width: 4),
+                            Text('+91', style: TextStyle(fontSize: 16)),
+                            Container(width: 1, height: 40, color: Colors.grey),
+                          ],
+                        ),
+                      ),
                       border: OutlineInputBorder(),
                       hintText: 'Enter phone no',
                     ),
@@ -292,7 +311,10 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                               bookTestProvider.testPhoneController.text.trim(),
                         };
 
-                        bool success = await bookTestProvider.bookTest(payload,context);
+                        bool success = await bookTestProvider.bookTest(
+                          payload,
+                          context,
+                        );
 
                         if (success)
                           showTestSuccessDialog();
