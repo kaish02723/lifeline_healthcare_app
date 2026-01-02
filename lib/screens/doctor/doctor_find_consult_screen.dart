@@ -163,7 +163,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: h * 0.015),
             decoration: BoxDecoration(
-              color: const Color(0xFF00796B),
+              color: Colors.grey,
               borderRadius: BorderRadius.circular(w * 0.05),
               boxShadow: [
                 BoxShadow(
@@ -177,23 +177,6 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
               child: Text(
                 "Physical Appointment",
                 style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(width: w * 0.03),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: h * 0.015),
-            decoration: BoxDecoration(
-              color: isDark ? Colors.white12 : Colors.white,
-              borderRadius: BorderRadius.circular(w * 0.05),
-              border: Border.all(color: Colors.grey.shade400),
-            ),
-            child: const Center(
-              child: Text(
-                "Video Consult",
-                style: TextStyle(color: Colors.black),
               ),
             ),
           ),
@@ -353,7 +336,9 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SlotBookingScreen(),
+                              builder:
+                                  (context) =>
+                                      SlotBookingScreen(doctor: doctor),
                             ),
                           );
                         },

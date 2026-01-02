@@ -168,39 +168,7 @@ class PhysicalAppointmentScreen extends StatelessWidget {
               const SizedBox(height: 14),
               _gridSection(_topList1, isDark),
 
-              const SizedBox(height: 16),
-
-              // // View All Specialities
-              // ClipRRect(
-              //   borderRadius: BorderRadius.circular(12),
-              //   child: BackdropFilter(
-              //     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              //     child: Container(
-              //       width: double.infinity,
-              //       padding: const EdgeInsets.symmetric(vertical: 14),
-              //       decoration: BoxDecoration(
-              //         color: isDark
-              //             ? Colors.white.withOpacity(0.05)
-              //             : Colors.white.withOpacity(0.8),
-              //         borderRadius: BorderRadius.circular(12),
-              //         border: Border.all(
-              //           color: isDark ? Colors.grey.shade800 : Colors.black87,
-              //         ),
-              //       ),
-              //       child: Center(
-              //         child: Text(
-              //           "View All Specialities",
-              //           style: TextStyle(
-              //             fontWeight: FontWeight.w600,
-              //             fontSize: 15,
-              //             color: isDark ? Colors.white : Colors.black87,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
 
               Text(
                 "Conditions that can be treated through surgeries",
@@ -289,7 +257,8 @@ Widget _gridSection(List<Map<String, dynamic>> list, bool isDark) {
                       ),
                     ],
                   ),
-                  child: ClipOval(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: CachedNetworkImage(
                       imageUrl: item['img'],
                       fit: BoxFit.contain,
@@ -341,46 +310,43 @@ final List<Map<String, dynamic>> _topList1 = [
   },
   {
     "title": "Acne",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706198.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/2590/2590696.png",
   },
-  {
-    "title": "PCOS",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706192.png",
-  },
+  {"title": "PCOS", "img": "https://via.placeholder.com/120?text=PCOS"},
   {
     "title": "Thyroid",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706193.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/10207/10207748.png",
   },
   {
     "title": "Head aches",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706171.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/4843/4843993.png",
   },
   {
     "title": "Fungal Infection",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706168.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/8711/8711576.png",
   },
   {
     "title": "Back Pain",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706186.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/4986/4986231.png",
   },
 ];
 
 final List<Map<String, dynamic>> _topList2 = [
   {
     "title": "Mental Wellness",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706180.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/3475/3475728.png",
   },
   {
     "title": "Gynae colo",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706200.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/10154/10154415.png",
   },
   {
     "title": "General physician",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706167.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
   },
   {
     "title": "Dermatology",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706162.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/3468/3468053.png",
   },
   {
     "title": "Ortho-pedic",
@@ -388,16 +354,13 @@ final List<Map<String, dynamic>> _topList2 = [
   },
   {
     "title": "Pediatrics",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706173.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/9340/9340051.png",
   },
   {
     "title": "Sexology",
-    "img": "https://cdn-icons-png.flaticon.com/512/706/706185.png",
+    "img": "https://cdn-icons-png.flaticon.com/512/11377/11377926.png",
   },
-  {
-    "title": "View All",
-    "img": "https://cdn-icons-png.flaticon.com/512/565/565547.png",
-  },
+  {"title": "View All", "img": "https://via.placeholder.com/120?text=All"},
 ];
 
 String mapTitleToSpeciality(String title) {

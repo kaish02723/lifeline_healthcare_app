@@ -741,7 +741,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required String title,
     required VoidCallback onTap,
   }) {
-    return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primary),
+      title: Text(title),
+      onTap: onTap,
+    );
   }
 
   // void languageBottomSheet() {

@@ -15,9 +15,11 @@ class PatientConsultScreen extends StatefulWidget {
 
   // Sample network icons
   static final Map<String, String> topSpecialitiesImages = {
-    "Mental\nWellness": "https://cdn-icons-png.flaticon.com/512/3475/3475728.png",
+    "Mental\nWellness":
+        "https://cdn-icons-png.flaticon.com/512/3475/3475728.png",
     "Gynae\ncolo": "https://cdn-icons-png.flaticon.com/512/10154/10154415.png",
-    "General\nphysician": "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
+    "General\nphysician":
+        "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
     "Derma\ntology": "https://cdn-icons-png.flaticon.com/512/3468/3468053.png",
     "Ortho-\npedic": "https://cdn-icons-png.flaticon.com/512/4006/4006302.png",
     "Pediat\nrics": "https://cdn-icons-png.flaticon.com/512/9340/9340051.png",
@@ -32,13 +34,15 @@ class PatientConsultScreen extends StatefulWidget {
     "PCOS": "https://via.placeholder.com/120?text=PCOS",
     "Thyroid": "https://cdn-icons-png.flaticon.com/512/10207/10207748.png",
     "Head\naches": "https://cdn-icons-png.flaticon.com/512/4843/4843993.png",
-    "Fungal\nInfection": "https://cdn-icons-png.flaticon.com/512/8711/8711576.png",
+    "Fungal\nInfection":
+        "https://cdn-icons-png.flaticon.com/512/8711/8711576.png",
     "Back Pain": "https://cdn-icons-png.flaticon.com/512/4986/4986231.png",
   };
 
   static final Map<String, String> gpImages = {
     "Fever": "https://cdn-icons-png.flaticon.com/512/6192/6192088.png",
-    "High blood\npressure": "https://cdn-icons-png.flaticon.com/512/5015/5015609.png",
+    "High blood\npressure":
+        "https://cdn-icons-png.flaticon.com/512/5015/5015609.png",
     "Dizziness": "https://cdn-icons-png.flaticon.com/512/6701/6701662.png",
     "Pneum\nonia": "https://cdn-icons-png.flaticon.com/512/7350/7350852.png",
   };
@@ -96,8 +100,8 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
         return "General Physician";
     }
   }
-  final TextEditingController _searchController = TextEditingController();
 
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +109,7 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
     final isDark = theme.brightness == Brightness.dark;
     final width = MediaQuery.of(context).size.width;
     final crossAxisCount = width >= 600 ? 4 : 3;
-    var doctorProvider=Provider.of<DoctorProvider>(context);
+    var doctorProvider = Provider.of<DoctorProvider>(context);
 
     return Scaffold(
       backgroundColor: isDark ? Color(0xff121212) : Colors.grey[100],
@@ -163,12 +167,16 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
                         width: double.infinity,
                         padding: EdgeInsets.all(14.r),
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withOpacity(0.05)
-                              : Colors.white.withOpacity(0.8),
+                          color:
+                              isDark
+                                  ? Colors.white.withOpacity(0.05)
+                                  : Colors.white.withOpacity(0.8),
                           borderRadius: BorderRadius.circular(12.r),
                           border: Border.all(
-                            color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+                            color:
+                                isDark
+                                    ? Colors.grey.shade800
+                                    : Colors.grey.shade300,
                           ),
                         ),
                         child: Column(
@@ -203,7 +211,8 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
                               child: Text(
                                 "Know More >",
                                 style: TextStyle(
-                                  color: isDark ? Colors.white54 : Colors.black54,
+                                  color:
+                                      isDark ? Colors.white54 : Colors.black54,
                                   fontSize: 11.sp,
                                 ),
                               ),
@@ -222,9 +231,10 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                       child: Container(
-                        color: isDark
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.white.withOpacity(0.8),
+                        color:
+                            isDark
+                                ? Colors.white.withOpacity(0.05)
+                                : Colors.white.withOpacity(0.8),
                         child: TextField(
                           controller: _searchController,
                           onChanged: (value) {
@@ -244,18 +254,19 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
                           decoration: InputDecoration(
                             hintText: "Search symptoms..",
                             prefixIcon: Icon(Icons.search, size: 21.sp),
-                            suffixIcon: _searchController.text.isNotEmpty
-                                ? IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () {
-                                _searchController.clear();
-                                Provider.of<DoctorProvider>(
-                                  context,
-                                  listen: false,
-                                ).searchDoctors("");
-                              },
-                            )
-                                : null,
+                            suffixIcon:
+                                _searchController.text.isNotEmpty
+                                    ? IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () {
+                                        _searchController.clear();
+                                        Provider.of<DoctorProvider>(
+                                          context,
+                                          listen: false,
+                                        ).searchDoctors("");
+                                      },
+                                    )
+                                    : null,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.r),
                               borderSide: BorderSide.none,
@@ -271,7 +282,9 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
                   sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
                   buildResponsiveGrid(
                     context: context,
-                    items: PatientConsultScreen.topSpecialitiesImages.keys.toList(),
+                    items:
+                        PatientConsultScreen.topSpecialitiesImages.keys
+                            .toList(),
                     imageMap: PatientConsultScreen.topSpecialitiesImages,
                     crossAxisCount: crossAxisCount,
                     isDark: isDark,
@@ -282,7 +295,8 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
                   sectionHeading("Common Health Issues", isDark),
                   buildResponsiveGrid(
                     context: context,
-                    items: PatientConsultScreen.commonIssuesImages.keys.toList(),
+                    items:
+                        PatientConsultScreen.commonIssuesImages.keys.toList(),
                     imageMap: PatientConsultScreen.commonIssuesImages,
                     crossAxisCount: crossAxisCount,
                     isDark: isDark,
@@ -349,12 +363,16 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
           imageUrl: imageUrl,
           isDark: isDark,
           onTap: () {
-            final provider =
-            Provider.of<DoctorProvider>(context, listen: false);
+            final provider = Provider.of<DoctorProvider>(
+              context,
+              listen: false,
+            );
 
             if (title == "View\nAll") {
               provider.filterBySpeciality("All");
-            } else if (PatientConsultScreen.commonIssuesImages.containsKey(title)) {
+            } else if (PatientConsultScreen.commonIssuesImages.containsKey(
+              title,
+            )) {
               provider.filterBySpeciality(issueToSpeciality(title));
             } else {
               provider.filterBySpeciality(specialityMapper(title));
@@ -367,7 +385,6 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
               ),
             );
           },
-
         );
       },
     );
@@ -390,9 +407,8 @@ class SquareCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double containerSize =
-    (MediaQuery.of(context).size.width /
-        (MediaQuery.of(context).size.width >= 600 ? 6.2 : 4.6))
+    final double containerSize = (MediaQuery.of(context).size.width /
+            (MediaQuery.of(context).size.width >= 600 ? 6.2 : 4.6))
         .clamp(56.0, 90.0);
 
     return GestureDetector(
@@ -408,19 +424,22 @@ class SquareCategory extends StatelessWidget {
                 height: containerSize.w,
                 padding: EdgeInsets.all(10.w),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.05)
-                      : Colors.white.withOpacity(0.8),
+                  color:
+                      isDark
+                          ? Colors.white.withOpacity(0.05)
+                          : Colors.white.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(7.r),
                   border: Border.all(
-                    color: isDark ? Colors.grey.shade800 : const Color(0xffd1d1d1),
+                    color:
+                        isDark ? Colors.grey.shade800 : const Color(0xffd1d1d1),
                     width: 0.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.black26
-                          : Colors.grey.withOpacity(0.15),
+                      color:
+                          isDark
+                              ? Colors.black26
+                              : Colors.grey.withOpacity(0.15),
                       blurRadius: 6.r,
                       offset: Offset(2, 3),
                     ),
@@ -439,8 +458,9 @@ class SquareCategory extends StatelessWidget {
                       ),
                     );
                   },
-                  errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.broken_image),
+                  errorBuilder:
+                      (context, error, stackTrace) =>
+                          const Icon(Icons.broken_image),
                 ),
               ),
             ),

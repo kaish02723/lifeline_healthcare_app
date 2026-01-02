@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:lifeline_healthcare_app/screens/appointments/slot_booking_screen.dart';
 import '../../models/doctors/doctor_model.dart';
 
 class DoctorDetailScreen extends StatelessWidget {
@@ -141,7 +142,14 @@ class DoctorDetailScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SlotBookingScreen(doctor: doctor),
+                    ),
+                  );
+                },
                 child: const Text('Book Appointment'),
               ),
             ),
