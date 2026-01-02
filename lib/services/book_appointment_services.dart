@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lifeline_healthcare_app/providers/appointment_provider/book_appointment_provider.dart';
+import 'package:provider/provider.dart';
 import '../models/appointment_model/book_appointment_modal.dart';
 
 class BookAppointmentServices {
@@ -65,6 +68,37 @@ class BookAppointmentServices {
       return {
         "success": false,
         "message": decoded["message"] ?? "Failed to book appointment",
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> cancelAppointment({
+    required int appointmentId,
+    required Map<String, dynamic> cancelReason,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/appointments/cancel/$appointmentId'),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(cancelReason),
+    );
+
+    print(response.body);
+    print(response.request?.headers);
+
+    final decoded = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return {
+        "success": true,
+        "message": decoded["message"] ?? "Appointment cancelled successfully",
+      };
+    } else {
+      return {
+        "success": false,
+        "message": decoded["message"] ?? "Failed to cancel appointment",
       };
     }
   }

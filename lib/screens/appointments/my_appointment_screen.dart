@@ -187,7 +187,10 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
                                         isCancelled
                                             ? null
                                             : () {
-                                              // TODO: Cancel appointment API
+                                              _showCancelDialog(
+                                                context: context,
+                                                appointmentId: data.id!,
+                                              );
                                             },
                                     child: const Text("Cancel"),
                                   ),
@@ -273,6 +276,84 @@ class _MyAppointmentScreenState extends State<MyAppointmentScreen> {
           Text(text),
         ],
       ),
+    );
+  }
+
+  void _showCancelDialog({
+    required BuildContext context,
+    required int appointmentId,
+  }) {
+    final TextEditingController reasonController = TextEditingController();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text("Cancel Appointment"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Please tell us the reason for cancellation",
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: reasonController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  hintText: "Enter cancel reason",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Close"),
+            ),
+            TextButton(
+              onPressed: () async {
+                final reason = {"cancel_reason": reasonController.text};
+
+                if (reason.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Please enter cancel reason"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+                Navigator.pop(ctx);
+
+                final provider = context.read<BookAppointmentProvider>();
+
+                final result = await provider.cancelAppointment(
+                  context: context,
+                  appointmentId: appointmentId,
+                  cancelReason: reason,
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(result["message"]),
+                    backgroundColor:
+                        result["success"] ? Colors.green : Colors.red,
+                  ),
+                );
+              },
+              child: Text(
+                "Confirm Cancel",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

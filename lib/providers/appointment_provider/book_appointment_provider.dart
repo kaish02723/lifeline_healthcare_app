@@ -6,7 +6,7 @@ import '../user_detail/auth_provider.dart';
 
 class BookAppointmentProvider with ChangeNotifier {
   BookAppointmentServices? _service;
-
+  final TextEditingController reasonController = TextEditingController();
   List<BookAppointmentModal> bookAppointment = [];
   bool isLoading = false;
 
@@ -61,6 +61,36 @@ class BookAppointmentProvider with ChangeNotifier {
 
       return result;
     } catch (e) {
+      return {"success": false, "message": "Something went wrong"};
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<Map<String, dynamic>> cancelAppointment({
+    required BuildContext context,
+    required int appointmentId,
+    required Map<String, dynamic> cancelReason,
+  }) async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      _service ??= _getService(context);
+
+      final result = await _service!.cancelAppointment(
+        appointmentId: appointmentId,
+        cancelReason: cancelReason,
+      );
+
+      if (result["success"] == true) {
+        await getBookAppointmentAll(context);
+      }
+
+      return result;
+    } catch (e) {
+      debugPrint("Cancel Appointment Error: $e");
       return {"success": false, "message": "Something went wrong"};
     } finally {
       isLoading = false;
