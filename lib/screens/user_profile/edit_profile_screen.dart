@@ -126,28 +126,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             SizedBox(height: 25),
 
-            // ------------------ SAVE BUTTON ------------------
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child:ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(7),
                   ),
+                  minimumSize: const Size(double.infinity, 48),
                 ),
-                onPressed: () async {
+
+                onPressed: provider.isLoading
+                    ? null
+                    : () async {
                   await provider.updateProfile(
                     context,
                     imageFile: provider.imageFile,
                   );
+
                   provider.clear();
+
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Profile updated successfully")),
+                    const SnackBar(
+                      content: Text("Profile updated successfully"),
+                    ),
                   );
                 },
-                child: Text("SAVE CHANGES"),
+
+                child: provider.isLoading
+                    ? const SizedBox(
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+                    : const Text(
+                  "SAVE CHANGES",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
               ),
             ),
           ],

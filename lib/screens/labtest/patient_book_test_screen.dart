@@ -295,65 +295,120 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
 
                   const SizedBox(height: 30),
 
-                  GestureDetector(
-                    onTap: () async {
-                      if (bookTestProvider.testFormKey.currentState!
-                          .validate()) {
-                        final payload = {
-                          "user_id": auth.userId,
-                          "user_name":
-                              bookTestProvider.testNameController.text.trim(),
-                          "test_id": widget.test.id,
-                          "test_name": widget.test.name,
-                          "category": widget.test.category,
-                          "price": widget.test.price,
-                          "phone":
-                              bookTestProvider.testPhoneController.text.trim(),
-                        };
+                  Consumer<BookTestProvider>(
+                    builder: (context, bookTestProvider, _) {
+                      return GestureDetector(
+                        onTap:
+                            bookTestProvider.isLoading
+                                ? null
+                                : () async {
+                                  if (bookTestProvider.testFormKey.currentState!
+                                      .validate()) {
+                                    final payload = {
+                                      "user_id": auth.userId,
+                                      "user_name":
+                                          bookTestProvider
+                                              .testNameController
+                                              .text
+                                              .trim(),
+                                      "test_id": widget.test.id,
+                                      "test_name": widget.test.name,
+                                      "category": widget.test.category,
+                                      "price": widget.test.price,
+                                      "phone":
+                                          bookTestProvider
+                                              .testPhoneController
+                                              .text
+                                              .trim(),
+                                    };
 
-                        bool success = await bookTestProvider.bookTest(
-                          payload,
-                          context,
-                        );
+                                    final success = await bookTestProvider
+                                        .bookTest(payload, context);
 
-                        if (success)
-                          showTestSuccessDialog();
-                        else
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Booking failed")),
-                          );
-                      }
-                    },
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        gradient: const LinearGradient(
-                          colors: [Color(0xff26A69A), Color(0xff00796B)],
+                                    if (success) {
+                                      showTestSuccessDialog();
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          showCloseIcon: true,
+                                          closeIconColor: Colors.white,
+                                          backgroundColor:
+                                              Colors.green.shade800,
+                                          behavior: SnackBarBehavior.floating,
+                                          content: Text(
+                                            "Test Booked",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          showCloseIcon: true,
+                                          closeIconColor: Colors.white,
+                                          backgroundColor: Colors.red.shade800,
+                                          behavior: SnackBarBehavior.floating,
+                                          content: Text(
+                                            "Booking failed",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            gradient: const LinearGradient(
+                              colors: [Color(0xff26A69A), Color(0xff00796B)],
+                            ),
+                          ),
+                          child: Center(
+                            child:
+                                bookTestProvider.isLoading
+                                    ? const SizedBox(
+                                      height: 22,
+                                      width: 22,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                    : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '₹${widget.test.price} | ',
+                                          style: const TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const Text(
+                                          "Pay & Book",
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '₹${widget.test.price} | ',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            "Pay & Book",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),

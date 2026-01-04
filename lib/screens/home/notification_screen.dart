@@ -56,7 +56,7 @@ class NotificationGlassScreen extends StatelessWidget {
                 isDark,
                 title: "Your Test report is ready",
                 time: "2 min ago",
-                msg: "Recently you applied for a liver test. Test is ready.",
+                msg: "Recently you applied for a liver labtest. Test is ready.",
               ),
               _glassTile(
                 isDark,

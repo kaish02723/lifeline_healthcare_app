@@ -68,13 +68,14 @@ class MedicineOrderProvider with ChangeNotifier {
 
   Future<void> cancelOrder(BuildContext context, int orderId) async {
     try {
-      final data={
-        "reason":reasonController.text
-      };
+      final data = {"reason": reasonController.text};
+
       isLoading = true;
       notifyListeners();
 
-      await service.cancelOrder(context, orderId,data);
+      await service.cancelOrder(context, orderId, data);
+
+      reasonController.clear();
 
       await getMedicine(context);
     } catch (e) {

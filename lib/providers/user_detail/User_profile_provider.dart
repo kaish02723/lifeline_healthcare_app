@@ -138,7 +138,7 @@ class UserProfileProvider with ChangeNotifier {
       if (imageFile != null) {
         request.files.add(
           await http.MultipartFile.fromPath(
-            'image', // ⚠️ SAME as multer field
+            'image',
             imageFile.path,
           ),
         );

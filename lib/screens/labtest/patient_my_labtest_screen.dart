@@ -3,8 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
-
-import 'package:lifeline_healthcare_app/screens/test/patient_lab_test_screen.dart';
+import 'package:lifeline_healthcare_app/screens/labtest/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_provider.dart';
 import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +100,7 @@ class _MyTestScreenState extends State<MyTestScreen> {
                     SizedBox(width: w * 0.03),
                     Expanded(
                       child: Text(
-                        "Your test status, bookings and prescription history.",
+                        "Your labtest status, bookings and prescription history.",
                         style: TextStyle(
                           fontSize: w * 0.035,
                           color: Theme.of(context).textTheme.bodyMedium!.color,
@@ -243,7 +242,7 @@ void showCancelDialog(
 
                       /// Subtitle
                       Text(
-                        "Please provide a reason for canceling this test.",
+                        "Please provide a reason for canceling this labtest.",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           fontSize: 14,

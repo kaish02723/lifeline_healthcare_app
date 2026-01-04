@@ -20,6 +20,7 @@ import 'package:lifeline_healthcare_app/screens/user_profile/complete_profile_sc
 import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
 import 'package:lifeline_healthcare_app/screens/splash/splash_screen.dart';
+import 'package:lifeline_healthcare_app/screens/user_profile/edit_profile_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'config/app_theme_colors.dart';
@@ -97,6 +98,7 @@ class MyApp extends StatelessWidget {
                 '/dashboard': (context) => const DashboardScreen(),
                 '/splash_screen': (context) => const SplashScreen(),
                 '/create_profile': (context) => const CompleteProfileScreen(),
+                '/edit-profile': (context) => const EditProfileScreen(),
               },
               home: SplashScreen(),
             );

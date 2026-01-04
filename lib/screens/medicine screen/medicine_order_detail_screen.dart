@@ -46,6 +46,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
           _orderSummary(isDark),
           const SizedBox(height: 24),
+          _orderTrackingTimeline(isDark),
+          const SizedBox(height: 16),
           if (_canCancelOrder()) _cancelOrderButton(context, isDark),
         ],
       ),
@@ -355,5 +357,124 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         );
       },
     );
+  }
+
+  Widget _orderTrackingTimeline(bool isDark) {
+    final status = widget.order.orderStatus;
+
+    if (status == "cancelled") {
+      return _cancelledTimeline(isDark);
+    }
+
+    // Normal flow
+    bool isProcessing = status == "processing" || status == "delivered";
+    bool isDelivered = status == "delivered";
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : AppColors.card,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _statusStep(
+            title: "Ordered",
+            date: widget.order.orderedAt?.toLocal().toString().split(" ")[0],
+            isActive: true,
+          ),
+          _line(isProcessing),
+          _statusStep(title: "Processing", isActive: isProcessing),
+          _line(isDelivered),
+          _statusStep(
+            title: "Delivered",
+            date: widget.order.deliveryDate?.toLocal().toString().split(" ")[0],
+            isActive: isDelivered,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _cancelledTimeline(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : AppColors.card,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _statusStep(
+            title: "Ordered",
+            date: widget.order.orderedAt?.toLocal().toString().split(" ")[0],
+            isActive: true,
+          ),
+          _lineCancelled(),
+          _statusStep(
+            title: "Cancelled",
+            date: widget.order.cancelledAt?.toLocal().toString().split(" ")[0],
+            isActive: true,
+            isCancelled: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statusStep({
+    required String title,
+    String? date,
+    required bool isActive,
+    bool isCancelled = false,
+  }) {
+    final color =
+        isCancelled
+            ? Colors.red
+            : isActive
+            ? Colors.green
+            : Colors.grey;
+
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 12,
+          backgroundColor: color,
+          child: Icon(
+            isCancelled ? Icons.close : Icons.check,
+            size: 14,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: color,
+          ),
+        ),
+        if (date != null) ...[
+          const SizedBox(height: 2),
+          Text(date, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        ],
+      ],
+    );
+  }
+
+  Widget _line(bool isActive) {
+    return Expanded(
+      child: Container(
+        height: 2,
+        color: isActive ? Colors.green : Colors.grey.shade300,
+      ),
+    );
+  }
+
+  Widget _lineCancelled() {
+    return Expanded(child: Container(height: 2, color: Colors.red));
   }
 }

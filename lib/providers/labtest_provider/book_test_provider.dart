@@ -9,20 +9,23 @@ class BookTestProvider with ChangeNotifier {
   final TextEditingController testNameController = TextEditingController();
   final TextEditingController testPhoneController = TextEditingController();
   final testFormKey = GlobalKey<FormState>();
-
+  bool isLoading=false;
   List<MyTestDataModel> myLabTestList = [];
 
   final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
 
-  //  FINAL BOOK TEST
   Future<bool> bookTest(Map<String, dynamic> data, BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    var user_token = authProvider.token;
+    final userToken = authProvider.token;
+
     try {
+      isLoading = true;
+      notifyListeners();
+
       var api = await http.post(
         Uri.parse('$baseUrl/test/book-test'),
         headers: {
-          "Authorization": "Bearer $user_token",
+          "Authorization": "Bearer $userToken",
           'Content-Type': 'application/json'
         },
         body: jsonEncode(data),
@@ -37,8 +40,11 @@ class BookTestProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      print("BOOK TEST ERROR: $e");
+      debugPrint("BOOK TEST ERROR: $e");
       return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -51,8 +57,8 @@ class BookTestProvider with ChangeNotifier {
         Uri.parse('$baseUrl/test/get-test'),
         headers: {
           "Authorization": "Bearer $user_token",
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       );
 
       if (res.statusCode == 200 || res.statusCode == 201) {
