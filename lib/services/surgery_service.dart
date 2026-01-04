@@ -48,6 +48,9 @@ class SurgeryService {
       body: jsonEncode(data),
     );
 
+    print(response.body);
+    print(response.request?.headers);
+
     if (response.statusCode == 201) {
       var jsonBody = jsonDecode(response.body);
       return BookSurgeryModel.jsonToModal(jsonBody);

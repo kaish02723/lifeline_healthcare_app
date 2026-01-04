@@ -10,37 +10,33 @@ class SurgeryProvider with ChangeNotifier {
   String? selectedSurgery;
   var testDescriptionController = TextEditingController();
 
-  changeSelectedSurgeryValue(String value){
-    selectedSurgery=value;
+  changeSelectedSurgeryValue(String value) {
+    selectedSurgery = value;
     notifyListeners();
   }
 
   List<BookSurgeryModel> surgeryList = [];
 
   Future<void> getSurgeryDataProvider(BuildContext context) async {
-    var authProvider=Provider.of<AuthProvider>(context,listen: false);
-    var userId=authProvider.userId;
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var userId = authProvider.userId;
 
     SurgeryService api = SurgeryService();
-    await api.getSurgeryData(userId??'');
+    await api.getSurgeryData(userId ?? '');
 
     surgeryList = api.getSurgeryList;
     notifyListeners();
   }
 
   Future<void> addSurgeryDataProvider(BuildContext context) async {
-    // var authProvider=Provider.of<AuthProvider>(context,listen: false);
-    // var user_Id=authProvider.userId;
-
     var data = {
-      // "user_Id": user_Id,
       "name": testNameController.text,
       "phone_no": testPhoneNoController.text,
       "surgery_type": selectedSurgery,
       "description": testDescriptionController.text,
     };
 
-    var result = await SurgeryService().postSurgeryData(data,context);
+    var result = await SurgeryService().postSurgeryData(data, context);
 
     if (result != null) {
       ScaffoldMessenger.of(

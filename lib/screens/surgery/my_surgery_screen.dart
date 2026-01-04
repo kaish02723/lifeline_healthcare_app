@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
+import 'package:lifeline_healthcare_app/screens/surgery/surgery_booking_screen.dart';
 import 'package:provider/provider.dart';
 import '../../providers/surgery_provider/surgery_provider.dart';
 import '../../widgets/animated_loader.dart';

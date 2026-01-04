@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../appointments/appointment_surgery_booking_screen.dart';
+import '../surgery/surgery_booking_screen.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});

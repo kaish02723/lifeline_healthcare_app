@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
-import 'package:lifeline_healthcare_app/screens/appointments/appointment_surgery_booking_screen.dart';
+import 'package:lifeline_healthcare_app/screens/surgery/surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/my_appointment_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/setting_screen.dart';
@@ -12,7 +12,7 @@ import 'package:lifeline_healthcare_app/screens/user_profile/user_profile_screen
 import 'package:lifeline_healthcare_app/screens/patient/patient_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/test/patient_lab_test_screen.dart';
 import 'package:lifeline_healthcare_app/screens/test/patient_my_labtest_screen.dart';
-import 'package:lifeline_healthcare_app/screens/surgery/patient_my_surgery_screen.dart';
+import 'package:lifeline_healthcare_app/screens/surgery/my_surgery_screen.dart';
 import 'package:lifeline_healthcare_app/screens/patient/patient_physical_screen.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_footer.dart';
 import 'package:lifeline_healthcare_app/widgets/dashboard_widgets/dashboard_service_item.dart';
