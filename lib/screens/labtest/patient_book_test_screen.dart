@@ -326,7 +326,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                                         .bookTest(payload, context);
 
                                     if (success) {
-                                      showTestSuccessDialog();
+                                      // showTestSuccessDialog();
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
@@ -343,6 +343,16 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                                             ),
                                           ),
                                         ),
+                                      );
+                                      bookTestProvider.testPhoneController
+                                          .clear();
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => DashboardScreen(),
+                                        ),
+                                        (route) => false,
                                       );
                                     } else {
                                       ScaffoldMessenger.of(
