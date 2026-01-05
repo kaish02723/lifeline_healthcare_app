@@ -31,10 +31,18 @@ class _MyTestScreenState extends State<MyTestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double h = MediaQuery
+        .of(context)
+        .size
+        .height;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xff0E0E0E) : Colors.white,
@@ -63,28 +71,28 @@ class _MyTestScreenState extends State<MyTestScreen> {
                   borderRadius: BorderRadius.circular(14),
                   gradient: LinearGradient(
                     colors:
-                        isDark
-                            ? [
-                              Colors.white.withOpacity(0.08),
-                              Colors.white.withOpacity(0.04),
-                            ]
-                            : [
-                              Colors.white.withOpacity(0.90),
-                              Colors.white.withOpacity(0.70),
-                            ],
+                    isDark
+                        ? [
+                      Colors.white.withOpacity(0.08),
+                      Colors.white.withOpacity(0.04),
+                    ]
+                        : [
+                      Colors.white.withOpacity(0.90),
+                      Colors.white.withOpacity(0.70),
+                    ],
                   ),
                   border: Border.all(
                     color:
-                        isDark
-                            ? Colors.white.withOpacity(0.12)
-                            : Colors.black12,
+                    isDark
+                        ? Colors.white.withOpacity(0.12)
+                        : Colors.black12,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color:
-                          isDark
-                              ? Colors.black.withOpacity(0.6)
-                              : Colors.black12,
+                      isDark
+                          ? Colors.black.withOpacity(0.6)
+                          : Colors.black12,
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -103,7 +111,11 @@ class _MyTestScreenState extends State<MyTestScreen> {
                         "Your labtest status, bookings and prescription history.",
                         style: TextStyle(
                           fontSize: w * 0.035,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color,
                         ),
                       ),
                     ),
@@ -116,12 +128,21 @@ class _MyTestScreenState extends State<MyTestScreen> {
               // -------------------- TEST LIST ---------------------
               Consumer<BookTestProvider>(
                 builder: (context, value, child) {
-                  if (value.myLabTestList.isEmpty) {
+                  if (value.isLoading) {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 240),
                         child: MedicalCrossLoader(
                         ),
+                      ),
+                    );
+                  }
+
+                  if (value.myLabTestList.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 240),
+                        child: Text('No test booked yet!'),
                       ),
                     );
                   }
@@ -175,12 +196,13 @@ class _MyTestScreenState extends State<MyTestScreen> {
   }
 }
 
-void showCancelDialog(
-  BuildContext context, {
+void showCancelDialog(BuildContext context, {
   required VoidCallback onConfirm,
   required VoidCallback onCancel,
 }) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final isDark = Theme
+      .of(context)
+      .brightness == Brightness.dark;
 
   showDialog(
     context: context,
@@ -198,22 +220,22 @@ void showCancelDialog(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color:
-                        isDark
-                            ? Colors.white.withOpacity(0.07)
-                            : Colors.white.withOpacity(0.65),
+                    isDark
+                        ? Colors.white.withOpacity(0.07)
+                        : Colors.white.withOpacity(0.65),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color:
-                          isDark
-                              ? Colors.white.withOpacity(0.15)
-                              : Colors.black.withOpacity(0.10),
+                      isDark
+                          ? Colors.white.withOpacity(0.15)
+                          : Colors.black.withOpacity(0.10),
                     ),
                     boxShadow: [
                       BoxShadow(
                         color:
-                            isDark
-                                ? Colors.black26
-                                : Colors.grey.withOpacity(0.2),
+                        isDark
+                            ? Colors.black26
+                            : Colors.grey.withOpacity(0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -247,9 +269,9 @@ void showCancelDialog(
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color:
-                              isDark
-                                  ? Colors.white70
-                                  : Colors.black.withOpacity(0.7),
+                          isDark
+                              ? Colors.white70
+                              : Colors.black.withOpacity(0.7),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -269,9 +291,9 @@ void showCancelDialog(
                           ),
                           filled: true,
                           fillColor:
-                              isDark
-                                  ? Colors.white.withOpacity(0.05)
-                                  : Colors.grey.withOpacity(0.15),
+                          isDark
+                              ? Colors.white.withOpacity(0.05)
+                              : Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
