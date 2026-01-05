@@ -20,12 +20,12 @@ class CancelTestProvider with ChangeNotifier {
         context,
         listen: false,
       );
-      final testId = bookTestProvider.myLabTestList[index].testID;
+      final bookingId = bookTestProvider.myLabTestList[index].bookingid;
 
       final headers = {"Content-Type": "application/json"};
 
       final cancelTestResponse = await http.put(
-        Uri.parse('$cancelReasonUrl/labtest/cancel-labtest/$testId'),
+        Uri.parse('$cancelReasonUrl/test/cancel-test/$bookingId'),
         headers: {
           "Authorization": "Bearer $user_token",
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ class CancelTestProvider with ChangeNotifier {
       print(cancelTestResponse.request?.headers);
 
       final updateTestStatusResponse = await http.put(
-        Uri.parse('$cancelStatusUrl/labtest-status/$testId'),
+        Uri.parse('$cancelStatusUrl/labtest-status/$bookingId'),
         headers: headers,
         body: jsonEncode({"status": 'cancelled'}),
       );

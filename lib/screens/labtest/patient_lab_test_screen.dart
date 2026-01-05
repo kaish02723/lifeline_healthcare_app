@@ -19,12 +19,13 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PopularTestProvider>(
-      context,
-      listen: false,
-    ).getPopularLabTest();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PopularTestProvider>(
+        context,
+        listen: false,
+      ).getPopularLabTest();
+    });
   }
-
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PopularTestProvider>(context);
@@ -254,7 +255,7 @@ class _PatientLabTestScreenState extends State<PatientLabTestScreen> {
                                                   0xff00796B,
                                                 ).withOpacity(0.9)
                                                 : Color(
-                                                  0xff00BFA5,
+                                                   0xff00796B,
                                                 ).withOpacity(0.9),
                                       ),
                                       child: Center(
