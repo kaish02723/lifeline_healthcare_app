@@ -1,9 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lifeline_healthcare_app/providers/payment_provider/payment_provider.dart';
 import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
+import 'package:lifeline_healthcare_app/services/razor/razorpay_service.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../providers/user_detail/auth_provider.dart';
 
 import '../../models/labtest_models/popular_test_model.dart';
@@ -25,18 +28,17 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
   void initState() {
     super.initState();
 
-    final bookTestProvider = Provider.of<BookTestProvider>(
-      context,
-      listen: false,
-    );
-    final userProvider = Provider.of<UserProfileProvider>(
-      context,
-      listen: false,
-    );
-    final userName = userProvider.user?.name;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bookTestProvider =
+      Provider.of<BookTestProvider>(context, listen: false);
+      final userProvider =
+      Provider.of<UserProfileProvider>(context, listen: false);
 
-    bookTestProvider.testNameController.text = userName!;
+      bookTestProvider.testNameController.text =
+          userProvider.user?.name ?? "";
+    });
   }
+
 
   void showTestSuccessDialog() {
     showDialog(
@@ -298,82 +300,49 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                   Consumer<BookTestProvider>(
                     builder: (context, bookTestProvider, _) {
                       return GestureDetector(
-                        onTap:
-                            bookTestProvider.isLoading
-                                ? null
-                                : () async {
-                                  if (bookTestProvider.testFormKey.currentState!
-                                      .validate()) {
-                                    final payload = {
-                                      "user_id": auth.userId,
-                                      "user_name":
-                                          bookTestProvider
-                                              .testNameController
-                                              .text
-                                              .trim(),
-                                      "test_id": widget.test.id,
-                                      "test_name": widget.test.name,
-                                      "category": widget.test.category,
-                                      "price": widget.test.price,
-                                      "phone":
-                                          bookTestProvider
-                                              .testPhoneController
-                                              .text
-                                              .trim(),
-                                    };
+                        onTap: bookTestProvider.isLoading
+                            ? null
+                            : () async {
 
-                                    final success = await bookTestProvider
-                                        .bookTest(payload, context);
+                          if (!bookTestProvider.testFormKey.currentState!.validate()) return;
 
-                                    if (success) {
-                                      // showTestSuccessDialog();
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          showCloseIcon: true,
-                                          closeIconColor: Colors.white,
-                                          backgroundColor:
-                                              Colors.green.shade800,
-                                          behavior: SnackBarBehavior.floating,
-                                          content: Text(
-                                            "Test Booked",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                      bookTestProvider.testPhoneController
-                                          .clear();
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => DashboardScreen(),
-                                        ),
-                                        (route) => false,
-                                      );
-                                    } else {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          showCloseIcon: true,
-                                          closeIconColor: Colors.white,
-                                          backgroundColor: Colors.red.shade800,
-                                          behavior: SnackBarBehavior.floating,
-                                          content: Text(
-                                            "Booking failed",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                },
+                          final payload = {
+                            "user_id": auth.userId,
+                            "user_name": bookTestProvider.testNameController.text.trim(),
+                            "test_id": widget.test.id,
+                            "test_name": widget.test.name,
+                            "category": widget.test.category,
+                            "price": widget.test.price,
+                            "phone": bookTestProvider.testPhoneController.text.trim(),
+                          };
+
+                          final paymentProvider =
+                          context.read<PaymentProvider>();
+
+                          await paymentProvider.startPayment(
+                            context,
+                            "labtest",
+                            widget.test.id.toString(),
+                            widget.test.price!.toInt(), // ✅ INT ONLY
+
+                            // ✅ PAYMENT SUCCESS (already verified inside provider)
+                                () async {
+                              final success =
+                              await bookTestProvider.bookTest(payload, context);
+
+                              if (success) {
+                                showTestSuccessDialog();
+                              }
+                            },
+
+                            // ❌ PAYMENT FAILED
+                                (error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(error)),
+                              );
+                            },
+                          );
+                        },
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(

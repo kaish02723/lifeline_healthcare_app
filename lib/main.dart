@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
 import 'package:lifeline_healthcare_app/providers/appointment_provider/book_appointment_provider.dart';
+import 'package:lifeline_healthcare_app/providers/payment_provider/payment_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
@@ -50,6 +51,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => CancelTestProvider()),
         ChangeNotifierProvider(create: (context) => CartDataProvider()),
         ChangeNotifierProvider(create: (context) => BookAppointmentProvider()),
+        ChangeNotifierProvider(create: (context) => PaymentProvider(),)
       ],
       child: MyApp(),
     ),
