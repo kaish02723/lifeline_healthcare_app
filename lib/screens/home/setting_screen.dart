@@ -106,19 +106,19 @@ class _SettingScreenState extends State<SettingScreen> {
             },
           ),
 
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text("Edit Profile", style: TextStyle(fontSize: 18)),
-            trailing: const Icon(Icons.navigate_next_rounded),
-            onTap: () {
-              final provider = Provider.of<UserProfileProvider>(
-                context,
-                listen: false,
-              );
-              provider.fillFormData();
-              Navigator.pushNamed(context, "/edit-profile");
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.person),
+          //   title: const Text("Edit Profile", style: TextStyle(fontSize: 18)),
+          //   trailing: const Icon(Icons.navigate_next_rounded),
+          //   onTap: () {
+          //     final provider = Provider.of<UserProfileProvider>(
+          //       context,
+          //       listen: false,
+          //     );
+          //     provider.fillFormData();
+          //     Navigator.pushNamed(context, "/edit-profile");
+          //   },
+          // ),
 
           ListTile(
             leading: const Icon(Icons.newspaper),

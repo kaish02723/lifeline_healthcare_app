@@ -7,12 +7,31 @@ import 'package:provider/provider.dart';
 
 import '../../providers/doctor_provider/doctor_provider.dart';
 
-class PhysicalAppointmentScreen extends StatelessWidget {
+class PhysicalAppointmentScreen extends StatefulWidget {
   static const Color primary = Color(0xFF00796B);
 
   const PhysicalAppointmentScreen({super.key});
 
   @override
+  State<PhysicalAppointmentScreen> createState() => _PhysicalAppointmentScreenState();
+}
+
+class _PhysicalAppointmentScreenState extends State<PhysicalAppointmentScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  @override
+  void dispose(){
+
+    _searchController.dispose();
+    super.dispose();
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      context.read<DoctorProvider>().getAllDoctors();
+    });
+  }
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -20,7 +39,7 @@ class PhysicalAppointmentScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: isDark ? Color(0xff121212) : Color(0xFFF2F2F2),
       appBar: AppBar(
-        backgroundColor: primary,
+        backgroundColor: PhysicalAppointmentScreen.primary,
         foregroundColor: Colors.white,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -133,14 +152,15 @@ class PhysicalAppointmentScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
+                            controller: _searchController,
+                            onChanged: (value) {
+                              context.read<DoctorProvider>().searchDoctors(value);
+                            },
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Search Symptoms/ Specialities",
                               hintStyle: TextStyle(
-                                color:
-                                    isDark
-                                        ? Colors.white54
-                                        : Colors.grey.shade600,
+                                color: isDark ? Colors.white54 : Colors.grey.shade600,
                               ),
                             ),
                             style: TextStyle(
@@ -148,6 +168,7 @@ class PhysicalAppointmentScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+
                       ],
                     ),
                   ),
@@ -156,41 +177,128 @@ class PhysicalAppointmentScreen extends StatelessWidget {
 
               const SizedBox(height: 22),
 
-              Text(
-                "Most searched specialities",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
+              const SizedBox(height: 22),
+
+              Consumer<DoctorProvider>(
+                builder: (context, provider, _) {
+
+                  ///  SEARCH ACTIVE → DOCTOR LIST
+                  if (provider.isSearching) {
+
+                    if (provider.filteredDoctorsList.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Center(child: Text("No doctors found")),
+                      );
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: provider.filteredDoctorsList.length,
+                      itemBuilder: (context, index) {
+                        final doctor = provider.filteredDoctorsList[index];
+
+                        return Card(
+                          child: ListTile(
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.person),
+                            ),
+                            title: Text(doctor.name ?? ""),
+                            subtitle: Text(
+                              "${doctor.speciality ?? ""}\n${doctor.hospital ?? ""}",
+                            ),
+                            isThreeLine: true,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const PhysicalSummaryScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }
+
+                  ///  NO SEARCH → GRID UI (same as before)
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Most searched specialities",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      _gridSection(_topList1, isDark),
+
+                      const SizedBox(height: 25),
+
+                      Text(
+                        "Conditions that can be treated through surgeries",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Find top surgeons near you for your surgical procedure",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? Colors.white54 : Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _gridSection(_topList2, isDark),
+                    ],
+                  );
+                },
               ),
 
-              const SizedBox(height: 14),
-              _gridSection(_topList1, isDark),
 
-              const SizedBox(height: 25),
-
-              Text(
-                "Conditions that can be treated through surgeries",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              Text(
-                "Find top surgeons near you for your surgical procedure",
-                style: TextStyle(
-                  fontSize: 13,
-                  color: isDark ? Colors.white54 : Colors.black54,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-              _gridSection(_topList2, isDark),
+              // Text(
+              //   "Most searched specialities",
+              //   style: TextStyle(
+              //     fontSize: 17,
+              //     fontWeight: FontWeight.w700,
+              //     color: isDark ? Colors.white : Colors.black87,
+              //   ),
+              // ),
+              //
+              // const SizedBox(height: 14),
+              // _gridSection(_topList1, isDark),
+              //
+              // const SizedBox(height: 25),
+              //
+              // Text(
+              //   "Conditions that can be treated through surgeries",
+              //   style: TextStyle(
+              //     fontSize: 17,
+              //     fontWeight: FontWeight.w700,
+              //     color: isDark ? Colors.white : Colors.black87,
+              //   ),
+              // ),
+              //
+              // const SizedBox(height: 6),
+              //
+              // Text(
+              //   "Find top surgeons near you for your surgical procedure",
+              //   style: TextStyle(
+              //     fontSize: 13,
+              //     color: isDark ? Colors.white54 : Colors.black54,
+              //   ),
+              // ),
+              //
+              // const SizedBox(height: 16),
+              // _gridSection(_topList2, isDark),
             ],
           ),
         ),

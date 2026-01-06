@@ -5,11 +5,15 @@ import 'package:lifeline_healthcare_app/models/doctors/doctor_model.dart';
 
 class DoctorProvider with ChangeNotifier {
   final String baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
+  bool isSearching = false;
+
+
 
   List<DoctorModel> allDoctorsList = [];
   List<DoctorModel> filteredDoctorsList = [];
 
   bool isLoading = false;
+
   String selectedSpeciality = "All";
 
   Future<void> getAllDoctors() async {
@@ -62,17 +66,32 @@ class DoctorProvider with ChangeNotifier {
   };
 
   void searchDoctors(String query) {
-    if (query.isEmpty) {
-      filteredDoctorsList = allDoctorsList;
-    } else {
-      final q = query.toLowerCase();
+    isSearching = query.isNotEmpty;
+    List<DoctorModel> baseList;
 
-      filteredDoctorsList = allDoctorsList.where((doc) {
-        return doc.name!.toLowerCase().contains(q) ||
-            doc.speciality!.toLowerCase().contains(q) ||
-            doc.hospital!.toLowerCase().contains(q);
+    if (selectedSpeciality == "All") {
+      baseList = allDoctorsList;
+    } else {
+      baseList = allDoctorsList.where((doctor) {
+        final docSpec = doctor.speciality?.toLowerCase() ?? "";
+        final aliases =
+            specialityAliasMap[selectedSpeciality]?.map((e) => e.toLowerCase()) ??
+                [];
+        return aliases.any((a) => docSpec.contains(a));
       }).toList();
     }
+
+    if (query.isEmpty) {
+      filteredDoctorsList = baseList;
+    } else {
+      final q = query.toLowerCase();
+      filteredDoctorsList = baseList.where((doc) {
+        return (doc.name ?? "").toLowerCase().contains(q) ||
+            (doc.speciality ?? "").toLowerCase().contains(q) ||
+            (doc.hospital ?? "").toLowerCase().contains(q);
+      }).toList();
+    }
+
     notifyListeners();
   }
 
@@ -131,4 +150,5 @@ class DoctorProvider with ChangeNotifier {
       return null;
     }
   }
+
 }
