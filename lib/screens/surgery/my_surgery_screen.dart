@@ -58,26 +58,29 @@ class _MySurgeryScreenState extends State<MySurgeryScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   gradient: LinearGradient(
-                    colors: isDark
-                        ? [
-                            Colors.white.withOpacity(0.08),
-                            Colors.white.withOpacity(0.04),
-                          ]
-                        : [
-                            Colors.white.withOpacity(0.90),
-                            Colors.white.withOpacity(0.70),
-                          ],
+                    colors:
+                        isDark
+                            ? [
+                              Colors.white.withOpacity(0.08),
+                              Colors.white.withOpacity(0.04),
+                            ]
+                            : [
+                              Colors.white.withOpacity(0.90),
+                              Colors.white.withOpacity(0.70),
+                            ],
                   ),
                   border: Border.all(
-                    color: isDark
-                        ? Colors.white.withOpacity(0.12)
-                        : Colors.black12,
+                    color:
+                        isDark
+                            ? Colors.white.withOpacity(0.12)
+                            : Colors.black12,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.black.withOpacity(0.6)
-                          : Colors.black12,
+                      color:
+                          isDark
+                              ? Colors.black.withOpacity(0.6)
+                              : Colors.black12,
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -109,16 +112,50 @@ class _MySurgeryScreenState extends State<MySurgeryScreen> {
               // LIST
               Consumer<SurgeryProvider>(
                 builder: (context, value, child) {
+                  /// 🔄 LOADING STATE
+                  if (value.isLoading) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 200),
+                        child: MedicalCrossLoader(),
+                      ),
+                    );
+                  }
+
+                  /// 📭 EMPTY STATE
                   if (value.surgeryList.isEmpty) {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 240),
-                        child: MedicalCrossLoader(
-
+                        padding: const EdgeInsets.only(top: 180),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.medical_information_outlined,
+                              size: 80,
+                              color: Colors.grey.withOpacity(0.6),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "No surgery booked yet",
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              "Tap + to book your first surgery",
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey),
+                            ),
+                          ],
                         ),
                       ),
                     );
                   }
+
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -132,7 +169,7 @@ class _MySurgeryScreenState extends State<MySurgeryScreen> {
                         type: item.surgery_type ?? '',
                         description: item.description ?? '',
                         status: item.status ?? '',
-                        bookedAt: item.booked_At ?? "",
+                        bookedAt: item.booked_At ?? '',
                       );
                     },
                   );
