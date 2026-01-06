@@ -68,7 +68,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Order #${widget.order.orderCode ?? ""}",
+                "#${widget.order.orderCode ?? ""}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,

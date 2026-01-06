@@ -50,6 +50,7 @@ class SurgeryService {
 
     print(response.body);
     print(response.request?.headers);
+    print(authToken);
 
     if (response.statusCode == 201) {
       var jsonBody = jsonDecode(response.body);
