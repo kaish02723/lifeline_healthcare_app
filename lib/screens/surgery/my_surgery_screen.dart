@@ -1,8 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:lifeline_healthcare_app/screens/surgery/surgery_booking_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '../../providers/surgery_provider/surgery_provider.dart';
 import '../../widgets/animated_loader.dart';
+import '../../config/color.dart';
+import 'surgery_booking_screen.dart';
 
 class MySurgeryScreen extends StatefulWidget {
   const MySurgeryScreen({super.key});
@@ -15,185 +20,259 @@ class _MySurgeryScreenState extends State<MySurgeryScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      Provider.of<SurgeryProvider>(
-        context,
-        listen: false,
-      ).getSurgeryDataProvider(context);
-    });
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    await Provider.of<SurgeryProvider>(
+      context,
+      listen: false,
+    ).getSurgeryDataProvider(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xff0E0E0E) : Colors.white,
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+
       appBar: AppBar(
-        backgroundColor: const Color(0xff00796B),
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.white),
-        ),
-        title: const Text(
-          "My Surgeries",
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
+        foregroundColor: Colors.white,
+        title: const Text("My Surgeries"),
+        leading: const BackButton(color: Colors.white),
       ),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: w * 0.04,
-            vertical: h * 0.02,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Info top box
-              Container(
-                padding: EdgeInsets.all(w * 0.05),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  gradient: LinearGradient(
-                    colors: isDark
-                        ? [
-                            Colors.white.withOpacity(0.08),
-                            Colors.white.withOpacity(0.04),
-                          ]
-                        : [
-                            Colors.white.withOpacity(0.90),
-                            Colors.white.withOpacity(0.70),
-                          ],
-                  ),
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white.withOpacity(0.12)
-                        : Colors.black12,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDark
-                          ? Colors.black.withOpacity(0.6)
-                          : Colors.black12,
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.info_outline,
-                      color: Colors.orange,
-                      size: 28,
-                    ),
-                    SizedBox(width: w * 0.03),
-                    Expanded(
-                      child: Text(
-                        "Your surgery bookings and status details.",
-                        style: TextStyle(
-                          fontSize: w * 0.035,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      body: Consumer<SurgeryProvider>(
+        builder: (context, value, _) {
+          if (value.isLoading) {
+            return const Center(child: MedicalCrossLoader());
+          }
 
-              SizedBox(height: h * 0.03),
+          if (value.surgeryList.isEmpty) {
+            return const _EmptyState();
+          }
 
-              // LIST
-              Consumer<SurgeryProvider>(
-                builder: (context, value, child) {
-                  if (value.surgeryList.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 240),
-                        child: MedicalCrossLoader(
+          return RefreshIndicator(
+            color: Colors.teal,
+            onRefresh: fetchData,
+            child: ListView.builder(
+              padding: EdgeInsets.all(w * 0.04),
+              itemCount: value.surgeryList.length,
+              itemBuilder: (context, index) {
+                final data = value.surgeryList[index];
 
-                        ),
+                return TweenAnimationBuilder(
+                  duration: const Duration(milliseconds: 500),
+                  tween: Tween<double>(begin: 0, end: 1),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(0, 30 * (1 - value)),
+                        child: child,
                       ),
                     );
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: value.surgeryList.length,
-                    itemBuilder: (context, index) {
-                      var item = value.surgeryList[index];
-
-                      return SurgeryCard(
-                        name: item.name ?? '',
-                        phone: item.phone_no ?? '',
-                        type: item.surgery_type ?? '',
-                        description: item.description ?? '',
-                        status: item.status ?? '',
-                        bookedAt: item.booked_At ?? "",
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
+                  },
+                  child: _SurgeryCard(data: data, isDark: isDark, index: index),
+                );
+              },
+            ),
+          );
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xff00796B),
+
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
         foregroundColor: Colors.white,
+        icon: const Icon(Icons.add),
+        label: const Text("Book Surgery"),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => SurgeryBookingScreen()),
+            MaterialPageRoute(builder: (_) => const SurgeryBookingScreen()),
           );
         },
-        child: Icon(Icons.add),
       ),
     );
   }
 }
 
-class SurgeryCard extends StatelessWidget {
-  final String name;
-  final String phone;
-  final String type;
-  final String description;
-  final String status;
-  final String bookedAt;
+class _SurgeryCard extends StatelessWidget {
+  final dynamic data;
+  final bool isDark;
+  final int index;
 
-  const SurgeryCard({
-    super.key,
-    required this.name,
-    required this.phone,
-    required this.type,
-    required this.description,
-    required this.status,
-    required this.bookedAt,
+  const _SurgeryCard({
+    required this.data,
+    required this.isDark,
+    required this.index,
   });
+
+  String formatDate(String date) {
+    try {
+      final d = DateTime.parse(date);
+      return DateFormat('dd MMM yyyy, hh:mm a').format(d);
+    } catch (_) {
+      return date;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 15),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Name: $name", style: const TextStyle(fontSize: 16)),
-            Text("Phone: $phone"),
-            Text("Surgery Type: $type"),
-            Text("Description: $description"),
-            Text("Status: $status"),
-            Text("Booked At: $bookedAt"),
-          ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : AppColors.card,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// HEADER
+          Row(
+            children: [
+              Icon(Icons.local_hospital, color: AppColors.primary),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  data.surgery_type ?? '',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.textDark : AppColors.text,
+                  ),
+                ),
+              ),
+              _StatusChip(status: data.status ?? ''),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+          _info("Patient", data.name),
+          _info("Phone", data.phone_no),
+          _info("Description", data.description),
+          _info("Booked", formatDate(data.booked_At ?? '')),
+
+          if ((data.status ?? '').toLowerCase() == "pending")
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  showCancelSurgeryDialog(context, index: index);
+                },
+                child: const Text(
+                  "Cancel Surgery",
+                  style: TextStyle(color: Colors.redAccent, fontSize: 13),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _info(String title, String? value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        "$title : ${value ?? ''}",
+        style: TextStyle(
+          fontSize: 14,
+          color: isDark ? Colors.white70 : Colors.grey.shade700,
         ),
+      ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  final String status;
+
+  const _StatusChip({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    Color color =
+        status.toLowerCase() == "completed"
+            ? Colors.green
+            : status.toLowerCase() == "cancelled"
+            ? Colors.red
+            : Colors.orange;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        status,
+        style: TextStyle(
+          fontSize: 12,
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+void showCancelSurgeryDialog(BuildContext context, {required int index}) {
+  final controller = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (_) {
+      return AlertDialog(
+        title: const Text("Cancel Surgery"),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(hintText: "Enter cancel reason"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("No"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () {
+              // cancel surgery
+            },
+            child: const Text("Yes, Cancel"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(Icons.local_hospital_outlined, size: 80, color: Colors.grey),
+          SizedBox(height: 16),
+          Text("No surgery booked yet"),
+          SizedBox(height: 6),
+          Text("Tap + to book surgery"),
+        ],
       ),
     );
   }

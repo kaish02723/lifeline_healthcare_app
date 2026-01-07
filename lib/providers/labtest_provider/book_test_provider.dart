@@ -31,9 +31,6 @@ class BookTestProvider with ChangeNotifier {
         body: jsonEncode(data),
       );
 
-      print(api.body);
-      print(api.request?.headers);
-
       if (api.statusCode == 200 || api.statusCode == 201) {
         return true;
       } else {
@@ -50,25 +47,34 @@ class BookTestProvider with ChangeNotifier {
 
   Future<void> getTestStatus(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    var user_token = authProvider.token;
+    var userToken = authProvider.token;
 
     try {
+      isLoading = true;
+      notifyListeners();
+
       var res = await http.get(
         Uri.parse('$baseUrl/test/get-test'),
         headers: {
-          "Authorization": "Bearer $user_token",
+          "Authorization": "Bearer $userToken",
           'Content-Type': 'application/json',
         },
       );
+
+      print(res.body);
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body);
         MyLabTestModel model = MyLabTestModel.convertToModel(body);
         myLabTestList = model.data ?? [];
-        notifyListeners();
+      } else {
+        debugPrint("GET TEST FAILED: ${res.body}");
       }
     } catch (e) {
-      print("GET TEST ERROR: $e");
+      debugPrint("GET TEST ERROR: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 }

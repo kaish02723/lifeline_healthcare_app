@@ -68,7 +68,9 @@ class CancelTestProvider with ChangeNotifier {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text('Failed to cancel labtest: ${cancelTestResponse.body}'),
+            content: Text(
+              'Failed to cancel labtest: ${cancelTestResponse.body}',
+            ),
           ),
         );
       }

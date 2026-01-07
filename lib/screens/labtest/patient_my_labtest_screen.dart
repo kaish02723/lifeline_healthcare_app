@@ -8,6 +8,7 @@ import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_p
 import 'package:lifeline_healthcare_app/widgets/animated_loader.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/color.dart';
 import '../../widgets/my_labtest_card.dart';
 
 class MyTestScreen extends StatefulWidget {
@@ -22,158 +23,279 @@ class _MyTestScreenState extends State<MyTestScreen> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<BookTestProvider>(
-        context,
-        listen: false,
-      ).getTestStatus(context);
+      Provider.of<BookTestProvider>(context, listen: false)
+          .getTestStatus(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
-
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xff0E0E0E) : Colors.white,
+      backgroundColor:
+      isDark ? AppColors.backgroundDark : AppColors.background,
+
       appBar: AppBar(
-        backgroundColor: const Color(0xff00796B),
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.white),
-        ),
-        title: const Text("My Tests", style: TextStyle(color: Colors.white)),
+        backgroundColor:
+        isDark ? AppColors.primaryDark : AppColors.primary,
+        foregroundColor: Colors.white,
+        title: const Text("My Lab Tests"),
+        leading: BackButton(color: Colors.white),
       ),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: w * 0.04,
-            vertical: h * 0.02,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // -------------------- TOP BOX ---------------------
-              Container(
-                padding: EdgeInsets.all(w * 0.05),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  gradient: LinearGradient(
-                    colors:
-                        isDark
-                            ? [
-                              Colors.white.withOpacity(0.08),
-                              Colors.white.withOpacity(0.04),
-                            ]
-                            : [
-                              Colors.white.withOpacity(0.90),
-                              Colors.white.withOpacity(0.70),
-                            ],
-                  ),
-                  border: Border.all(
-                    color:
-                        isDark
-                            ? Colors.white.withOpacity(0.12)
-                            : Colors.black12,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color:
-                          isDark
-                              ? Colors.black.withOpacity(0.6)
-                              : Colors.black12,
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.info_outline,
-                      color: Colors.orange,
-                      size: 28,
-                    ),
-                    SizedBox(width: w * 0.03),
-                    Expanded(
-                      child: Text(
-                        "Your labtest status, bookings and prescription history.",
-                        style: TextStyle(
-                          fontSize: w * 0.035,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                        ),
-                      ),
-                    ),
-                  ],
+      body: Consumer<BookTestProvider>(
+        builder: (context, value, _) {
+          if (value.isLoading) {
+            return const Center(child: MedicalCrossLoader());
+          }
+
+          if (value.myLabTestList.isEmpty) {
+            return Center(
+              child: Text(
+                "No lab tests booked yet",
+                style: TextStyle(
+                  color: isDark
+                      ? AppColors.lightGreyTextDark
+                      : AppColors.greyText,
                 ),
               ),
+            );
+          }
 
-              SizedBox(height: h * 0.03),
+          return ListView.builder(
+            padding: EdgeInsets.all(w * 0.04),
+            itemCount: value.myLabTestList.length,
+            itemBuilder: (context, index) {
+              final data = value.myLabTestList[index];
 
-              // -------------------- TEST LIST ---------------------
-              Consumer<BookTestProvider>(
-                builder: (context, value, child) {
-                  if (value.myLabTestList.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 240),
-                        child: MedicalCrossLoader(
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: value.myLabTestList.length,
-                    itemBuilder: (context, index) {
-                      var testData = value.myLabTestList[index];
-
-                      return Consumer<CancelTestProvider>(
-                        builder: (BuildContext context, value, Widget? child) {
-                          return TestCard(
-                            userName: testData.user_name.toString(),
-                            testName: testData.test_name.toString(),
-                            phone: testData.phone.toString(),
-                            category: testData.category.toString(),
-                            status: testData.status.toString(),
-                            onCancel: () {
-                              showCancelDialog(
-                                context,
-                                onConfirm: () {
-                                  value.cancelLabTest(context, index);
-                                },
-                                onCancel: () {},
-                              );
-                            },
-                          );
+              return Consumer<CancelTestProvider>(
+                builder: (context, cancelProvider, _) {
+                  return _ModernLabTestCard(
+                    isDark: isDark,
+                    userName: data.user_name.toString(),
+                    testName: data.test_name.toString(),
+                    category: data.category.toString(),
+                    phone: data.phone.toString(),
+                    status: data.status.toString(),
+                    bookedAt: data.booking_date.toString(),
+                    onCancel: () {
+                      showCancelDialog(
+                        context,
+                        onConfirm: () {
+                          cancelProvider.cancelLabTest(context, index);
                         },
+                        onCancel: () {},
                       );
                     },
                   );
                 },
-              ),
-            ],
-          ),
-        ),
+              );
+            },
+          );
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xff00796B),
+
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor:
+        isDark ? AppColors.primaryDark : AppColors.primary,
         foregroundColor: Colors.white,
+        icon: const Icon(Icons.add),
+        label: const Text("Book Test"),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PatientLabTestScreen()),
+            MaterialPageRoute(
+              builder: (_) => const PatientLabTestScreen(),
+            ),
           );
         },
-        child: Icon(Icons.add),
       ),
     );
   }
 }
+
+class _ModernLabTestCard extends StatelessWidget {
+  final bool isDark;
+  final String userName;
+  final String testName;
+  final String category;
+  final String phone;
+  final String status;
+  final String bookedAt;
+  final VoidCallback onCancel;
+
+  const _ModernLabTestCard({
+    required this.isDark,
+    required this.userName,
+    required this.testName,
+    required this.category,
+    required this.phone,
+    required this.status,
+    required this.bookedAt,
+    required this.onCancel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : AppColors.card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.08)
+              : Colors.black.withOpacity(0.06),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withOpacity(0.4)
+                : Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          /// Header
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.science_outlined,
+                  color: AppColors.primary,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  testName,
+                  style: TextStyle(
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w600,
+                    color:
+                    isDark ? AppColors.textDark : AppColors.text,
+                  ),
+                ),
+              ),
+              _StatusChip(status: status),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          /// Info rows
+          _infoRow(Icons.person_outline, userName, isDark),
+          _infoRow(Icons.category_outlined, category, isDark),
+          _infoRow(Icons.phone_outlined, phone, isDark),
+          _infoRow(
+            Icons.schedule_outlined,
+            "Booked on: ${formatBookedDate(bookedAt)}",
+            isDark,
+          ),
+
+
+          const SizedBox(height: 10),
+
+          /// Action
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: onCancel,
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.redAccent,
+              ),
+              child: const Text(
+                "Cancel Test",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoRow(IconData icon, String text, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 17,
+            color: isDark
+                ? AppColors.iconDark
+                : AppColors.icon,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark
+                    ? AppColors.lightGreyTextDark
+                    : AppColors.greyText,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  final String status;
+  const _StatusChip({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    Color color;
+
+    switch (status.toLowerCase()) {
+      case "completed":
+        color = Colors.green;
+        break;
+      case "cancelled":
+        color = Colors.red;
+        break;
+      default:
+        color = Colors.orange;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        status,
+        style: TextStyle(
+          fontSize: 12,
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
 
 void showCancelDialog(
   BuildContext context, {
@@ -348,4 +470,32 @@ void showCancelDialog(
       );
     },
   );
+}
+
+String formatBookedDate(String isoDate) {
+  try {
+    final dateTime = DateTime.parse(isoDate).toLocal();
+
+    return "${dateTime.day.toString().padLeft(2, '0')} "
+        "${_monthName(dateTime.month)} "
+        "${dateTime.year}, "
+        "${_formatTime(dateTime)}";
+  } catch (e) {
+    return isoDate; // fallback (agar parsing fail ho)
+  }
+}
+
+String _monthName(int month) {
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  return months[month - 1];
+}
+
+String _formatTime(DateTime dateTime) {
+  final hour = dateTime.hour % 12 == 0 ? 12 : dateTime.hour % 12;
+  final minute = dateTime.minute.toString().padLeft(2, '0');
+  final period = dateTime.hour >= 12 ? "PM" : "AM";
+  return "$hour:$minute $period";
 }
