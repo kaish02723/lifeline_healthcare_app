@@ -25,7 +25,7 @@ import '../../widgets/dashboard_widgets/top_feature_card.dart';
 import '../labtest/patient_lab_test_screen.dart';
 import '../labtest/patient_my_labtest_screen.dart';
 import '../medicine screen/medicine_category_screen.dart';
-import '../medicine screen/my_medicine_oder.dart';
+import '../medicine screen/my_medicine_order.dart';
 import 'notification_screen.dart';
 
 class DashboardScreen extends StatefulWidget {

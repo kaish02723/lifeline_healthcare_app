@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../providers/medicine_provider/medicineCart_provider.dart';
 import '../../../providers/medicine_provider/product_provider.dart';
 import '../../../config/app_theme_colors.dart';
+import '../../config/color.dart';
 import 'med_image-view.dart';
 import 'medicine_cart_screen.dart';
 
@@ -153,6 +154,13 @@ class _MedicineDetailsScreenState extends State<MedicineDetailsScreen> {
               width: double.infinity,
               height: 48.h,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                  isInCart
+                      ? Colors.white
+                      : AppColors.secondary,
+                  side: BorderSide(color: AppColors.secondary),
+                ),
                 onPressed: () {
                   if (isInCart) {
                     Navigator.push(
@@ -163,7 +171,12 @@ class _MedicineDetailsScreenState extends State<MedicineDetailsScreen> {
                     cart.addToCart(product);
                   }
                 },
-                child: Text(isInCart ? "Go to Cart" : "Add to Cart"),
+                child: Text(isInCart ? "Go to Cart" : "Add to Cart", style: TextStyle(
+                  color:
+                  isInCart
+                      ? AppColors.secondary
+                      : Colors.white,
+                ),),
               ),
             ),
 

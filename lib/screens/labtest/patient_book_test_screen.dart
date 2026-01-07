@@ -24,7 +24,6 @@ class BookTestFormScreen extends StatefulWidget {
 
 class _BookTestFormScreenState extends State<BookTestFormScreen> {
   @override
-  @override
   void initState() {
     super.initState();
 
@@ -324,7 +323,7 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                             "labtest",
                             widget.test.id.toString(),
                             widget.test.price!.toInt(), // ✅ INT ONLY
-
+                            "Online",
                             // ✅ PAYMENT SUCCESS (already verified inside provider)
                                 () async {
                               final success =
@@ -332,6 +331,11 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
 
                               if (success) {
                                 showTestSuccessDialog();
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  '/my-test',
+                                      (route) => false,
+                                );
                               }
                             },
 
