@@ -13,7 +13,7 @@ class SurgeryBookingScreen extends StatefulWidget {
 
 class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
   String? selectedCity;
-
+  final _formKey = GlobalKey<FormState>();
   final List<String> surgeryTypes = ["Heart", "Lungs", "Kidney", "Eyes"];
   final List<String> cities = ["Mumbai", "Delhi", "Kolkata", "Patna"];
 
@@ -138,64 +138,115 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              Text(
-                "Book an appointment with the best surgeons\nfor your health needs.",
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  height: 1.4,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Text(
+                  "Book an appointment with the best surgeons\nfor your health needs.",
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    height: 1.4,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 25),
-              _premiumTextField(theme, provider.testNameController, "Name"),
-              const SizedBox(height: 14),
-              _premiumTextField(
-                theme,
-                provider.testPhoneNoController,
-                "Phone Number",
-                keyboard: TextInputType.phone,
-              ),
-              const SizedBox(height: 14),
-              _premiumDropdown(
-                theme: theme,
-                hint: "Surgery Type",
-                value: provider.selectedSurgery,
-                items: surgeryTypes,
-                onChanged: (value) {
-                  provider.changeSelectedSurgeryValue(value!);
-                },
-              ),
-              const SizedBox(height: 14),
-              _premiumTextField(
-                theme,
-                provider.testDescriptionController,
-                "Description",
-                maxLines: 4,
-              ),
-              const SizedBox(height: 22),
-              Consumer<SurgeryProvider>(
-                builder: (BuildContext context, value, Widget? child) {
-                  return _gradientButton(
-                    theme,
-                    title: "Book Appointment",
-                    icon: Icons.phone,
-                    onTap: () {
-                      value.addSurgeryDataProvider(context);
-                    },
-                  );
-                },
-              ),
-              const SizedBox(height: 12),
-              Text(
-                "By submitting this form, you agree to LifeLine HealthCare’s T&C",
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.hintColor,
+                const SizedBox(height: 25),
+                _premiumTextField(theme, provider.testNameController, "Name"),
+                const SizedBox(height: 14),
+                _premiumTextField(
+                  maxLength: 10,
+                  theme,
+                  provider.testPhoneNoController,
+                  "Phone Number",
+                  keyboard: TextInputType.phone,
                 ),
-              ),
-            ],
+                const SizedBox(height: 14),
+                _premiumDropdown(
+                  theme: theme,
+                  hint: "Surgery Type",
+                  value: provider.selectedSurgery,
+                  items: surgeryTypes,
+                  onChanged: (value) {
+                    provider.changeSelectedSurgeryValue(value!);
+                  },
+                ),
+                const SizedBox(height: 14),
+                _premiumTextField(
+                  theme,
+                  provider.testDescriptionController,
+                  "Description",
+                ),
+                const SizedBox(height: 22),
+                Consumer<SurgeryProvider>(
+                  builder: (context, provider, child) {
+                    return GestureDetector(
+                      onTap:
+                          provider.isSubmitting
+                              ? null
+                              : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  await provider.addSurgeryDataProvider(
+                                    context,
+                                  );
+                                }
+                              },
+                      child: Container(
+                        height: 52,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xff26A69A), Color(0xff00796B)],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.15),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child:
+                              provider.isSubmitting
+                                  ? const SizedBox(
+                                    height: 22,
+                                    width: 22,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                  : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(Icons.phone, color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "Book Appointment",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "By submitting this form, you agree to LifeLine HealthCare’s T&C",
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.hintColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -207,22 +258,37 @@ class _SurgeryBookingScreenState extends State<SurgeryBookingScreen> {
     TextEditingController controller,
     String hint, {
     TextInputType keyboard = TextInputType.text,
-    int maxLines = 1,
+    int? maxLength, // ✅ nullable
   }) {
     return Container(
       decoration: _inputDecoration(theme),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         keyboardType: keyboard,
-        maxLines: maxLines,
+        maxLength: maxLength,
+        // ✅ sirf jab pass hoga tab lagega
         style: theme.textTheme.bodyMedium,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return "$hint is required";
+          }
+
+          if (hint == "Phone Number" && value.length != 10) {
+            return "Enter valid 10 digit phone number";
+          }
+
+          return null;
+        },
         decoration: InputDecoration(
+          counterText: "",
+          // 🔥 extra counter hide
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,
           ),
           border: InputBorder.none,
           hintText: hint,
+          errorStyle: const TextStyle(fontSize: 12),
           hintStyle: theme.textTheme.bodyMedium?.copyWith(
             color: theme.hintColor,
           ),

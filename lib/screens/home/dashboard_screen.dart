@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lifeline_healthcare_app/config/color.dart';
 import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
+import 'package:lifeline_healthcare_app/screens/doctor/doctor_find_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/surgery/surgery_booking_screen.dart';
 import 'package:lifeline_healthcare_app/screens/appointments/my_appointment_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/find_doctor_screen.dart';
@@ -519,9 +520,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           dashBoardProvider.updatePage(index);
                         },
                         children: [
-                          OfferBanner(
-                            image:
-                                'https://www.thehitavada.com/Encyc/2025/6/8/Renowned-Pune-Ayurvedic_202506081035455705_H@@IGHT_626_W@@IDTH_1200.jpg',
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => DoctorFindConsultScreen(),
+                                ),
+                              );
+                            },
+                            child: OfferBanner(
+                              image:
+                                  'https://www.thehitavada.com/Encyc/2025/6/8/Renowned-Pune-Ayurvedic_202506081035455705_H@@IGHT_626_W@@IDTH_1200.jpg',
+                            ),
                           ),
                           OfferBanner(
                             image:
