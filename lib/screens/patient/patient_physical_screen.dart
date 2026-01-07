@@ -121,7 +121,7 @@ class _PhysicalAppointmentScreenState extends State<PhysicalAppointmentScreen> {
     );
   }
 
-  /// 🔲 GRID SECTION
+  ///  GRID SECTION
   Widget _gridSection(List<Map<String, dynamic>> list, bool isDark) {
     return GridView.builder(
       shrinkWrap: true,
@@ -140,7 +140,7 @@ class _PhysicalAppointmentScreenState extends State<PhysicalAppointmentScreen> {
           onTap: () {
             final speciality = mapTitleToSpeciality(item['title']);
 
-            /// ✅ PROVIDER FILTER
+            ///  PROVIDER FILTER
             context.read<DoctorProvider>().filterBySpeciality(speciality);
 
             Navigator.push(
@@ -182,7 +182,7 @@ class _PhysicalAppointmentScreenState extends State<PhysicalAppointmentScreen> {
   }
 }
 
-/// 🔁 TITLE → SPECIALITY MAP
+///  TITLE → SPECIALITY MAP
 String mapTitleToSpeciality(String title) {
   switch (title.toLowerCase()) {
     case "stomach pain":

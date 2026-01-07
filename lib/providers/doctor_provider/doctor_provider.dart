@@ -14,13 +14,13 @@ class DoctorProvider with ChangeNotifier {
 
   String selectedSpeciality = "All";
 
-  // 🆕 Grid Tiles Lists (Add these)
+  //  Grid Tiles Lists (Add these)
   List<Map<String, dynamic>> _topList1 = [];
   List<Map<String, dynamic>> _topList2 = [];
   List<Map<String, dynamic>> _filteredTopList1 = [];
   List<Map<String, dynamic>> _filteredTopList2 = [];
 
-  // 🆕 Getters for Grid Lists
+  //  Getters for Grid Lists
   List<Map<String, dynamic>> get filteredTopList1 => _filteredTopList1;
   List<Map<String, dynamic>> get filteredTopList2 => _filteredTopList2;
 
@@ -28,7 +28,7 @@ class DoctorProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    // 🆕 Initialize Grid Data
+    // Initialize Grid Data
     _initializeGridData();
 
     try {
@@ -59,7 +59,7 @@ class DoctorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // 🆕 Initialize Grid Data Method
+  // Initialize Grid Data Method
   void _initializeGridData() {
     _topList1 = [
       {
@@ -128,7 +128,7 @@ class DoctorProvider with ChangeNotifier {
     _filteredTopList2 = List.from(_topList2);
   }
 
-  // 🆕 Search Grid Titles Method
+  //  Search Grid Titles Method
   void searchGridTitles(String query) {
     if (query.isEmpty) {
       _filteredTopList1 = List.from(_topList1);
