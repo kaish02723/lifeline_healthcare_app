@@ -5,8 +5,9 @@ import '../../models/doctors/doctor_model.dart';
 
 class DoctorDetailScreen extends StatelessWidget {
   final DoctorModel doctor;
+  final int doctorIndex;
 
-  const DoctorDetailScreen({super.key, required this.doctor});
+  const DoctorDetailScreen({super.key, required this.doctor,required this.doctorIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +32,12 @@ class DoctorDetailScreen extends StatelessWidget {
               context,
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: w * 0.18,
-                    backgroundImage: NetworkImage(doctor.image ?? ''),
+                  Hero(
+                    tag:'doctorTag$doctorIndex',
+                    child: CircleAvatar(
+                      radius: w * 0.18,
+                      backgroundImage: NetworkImage(doctor.image ?? ''),
+                    ),
                   ),
                   SizedBox(height: h * 0.015),
                   Text(
