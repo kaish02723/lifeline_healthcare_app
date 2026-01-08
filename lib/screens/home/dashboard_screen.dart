@@ -157,7 +157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     _drawerItem(
                       icon: Icons.credit_card,
-                      title: 'Appointments',
+                      title: ' My Appointments',
                       onTap: () {
                         HapticFeedback.selectionClick();
                         Navigator.push(

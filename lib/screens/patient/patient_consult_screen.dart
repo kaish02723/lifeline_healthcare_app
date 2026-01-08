@@ -52,6 +52,15 @@ class PatientConsultScreen extends StatefulWidget {
 }
 
 class _PatientConsultScreenState extends State<PatientConsultScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<DoctorProvider>().getAllDoctors();
+    });
+  }
+
   String specialityMapper(String title) {
     switch (title) {
       case "Mental\nWellness":
@@ -104,6 +113,7 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -259,6 +269,8 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
                                     ? IconButton(
                                       icon: const Icon(Icons.close),
                                       onPressed: () {
+                                        context.read()<DoctorProvider>().searchDoctor("");
+
                                         _searchController.clear();
                                         Provider.of<DoctorProvider>(
                                           context,
@@ -279,16 +291,103 @@ class _PatientConsultScreenState extends State<PatientConsultScreen> {
 
                   SizedBox(height: 22.h),
 
-                  sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
-                  buildResponsiveGrid(
-                    context: context,
-                    items:
-                        PatientConsultScreen.topSpecialitiesImages.keys
-                            .toList(),
-                    imageMap: PatientConsultScreen.topSpecialitiesImages,
-                    crossAxisCount: crossAxisCount,
-                    isDark: isDark,
+
+                  Consumer<DoctorProvider>(
+                    builder: (context, provider, _) {
+
+                      ///  SEARCH ACTIVE → SHOW DOCTOR LIST
+                      if (provider.isSearching) {
+
+                        if (provider.filteredDoctorsList.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.all(20.h),
+                            child: const Center(
+                              child: Text("No doctors found"),
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: provider.filteredDoctorsList.length,
+                          itemBuilder: (context, index) {
+                            final doctor = provider.filteredDoctorsList[index];
+
+                            return Card(
+                              margin: EdgeInsets.only(bottom: 10.h),
+                              child: ListTile(
+                                leading: const CircleAvatar(
+                                  child: Icon(Icons.person),
+                                ),
+                                title: Text(doctor.name ?? ""),
+                                subtitle: Text(
+                                  "${doctor.speciality ?? ""}\n${doctor.hospital ?? ""}",
+                                ),
+                                isThreeLine: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const DoctorFindConsultScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      }
+
+                      ///  NO SEARCH → SHOW NORMAL GRID UI
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
+                          buildResponsiveGrid(
+                            context: context,
+                            items: PatientConsultScreen.topSpecialitiesImages.keys.toList(),
+                            imageMap: PatientConsultScreen.topSpecialitiesImages,
+                            crossAxisCount: crossAxisCount,
+                            isDark: isDark,
+                          ),
+
+                          SizedBox(height: 24.h),
+
+                          sectionHeading("Common Health Issues", isDark),
+                          buildResponsiveGrid(
+                            context: context,
+                            items: PatientConsultScreen.commonIssuesImages.keys.toList(),
+                            imageMap: PatientConsultScreen.commonIssuesImages,
+                            crossAxisCount: crossAxisCount,
+                            isDark: isDark,
+                          ),
+
+                          SizedBox(height: 24.h),
+
+                          sectionHeading("General Physician", isDark),
+                          buildResponsiveGrid(
+                            context: context,
+                            items: PatientConsultScreen.gpImages.keys.toList(),
+                            imageMap: PatientConsultScreen.gpImages,
+                            crossAxisCount: crossAxisCount,
+                            isDark: isDark,
+                          ),
+                        ],
+                      );
+                    },
                   ),
+
+                  // sectionHeading("CHOOSE FROM TOP SPECIALITIES", isDark),
+                  // buildResponsiveGrid(
+                  //   context: context,
+                  //   items:
+                  //       PatientConsultScreen.topSpecialitiesImages.keys
+                  //           .toList(),
+                  //   imageMap: PatientConsultScreen.topSpecialitiesImages,
+                  //   crossAxisCount: crossAxisCount,
+                  //   isDark: isDark,
+                  // ),
 
                   SizedBox(height: 24.h),
 
