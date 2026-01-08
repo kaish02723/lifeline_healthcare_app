@@ -103,8 +103,6 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                             debugPrint("price      => ${e.product.medPrice}");
                             debugPrint("quantity   => ${e.quantity}");
                           }
-
-                          /// ================================
                           /// 🟢 CASE 1 : CASH ON DELIVERY
                           /// ================================
                           if (orderProvider.selectedPayment == "COD") {
@@ -145,7 +143,6 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                                       '/my-order',
                                           (route) => false,
                                     );
-
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text("Congratulations! Order placed Cash On Delivery")),);
                                   },
@@ -169,7 +166,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                               final int orderId = await orderProvider.createFullOrder(
                                 order: {
                                   "total_amount": cart.totalAmount,
-                                  "payment_status": "pending", // 🔥 important
+                                  "payment_status": "pending", //  important
                                   "order_status": "processing",
                                   "payment_method": "Online", // ✅ FIX (THIS WAS MISSING)
                                 },
@@ -209,7 +206,6 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                                     ),
                                   );
                                 },
-
                                 /// ❌ PAYMENT FAILED
                                     (error) {
                                   ScaffoldMessenger.of(context).showSnackBar(
