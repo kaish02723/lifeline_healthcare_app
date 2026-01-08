@@ -9,7 +9,13 @@ class PaymentApiService {
   String baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
 
   /// 1️⃣ CREATE ORDER (backend)
-  Future<Map<String, dynamic>> createOrder(BuildContext context,String serviceType,String serviceId,double amount)async{
+  Future<Map<String, dynamic>> createOrder(
+      BuildContext context,
+      String serviceType,
+      String serviceId,
+      double amount,
+      String payment_method,
+      )async{
 
     final authProvider=Provider.of<AuthProvider>(context,listen: false);
     final token=await authProvider.getToken();
@@ -22,13 +28,12 @@ class PaymentApiService {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode(
-        {
-          "service_type":serviceType,
-          "service_id":serviceId,
-          "amount":amount,
-        }
-      ),//serviceType,serviceId,amount
+      body: jsonEncode({
+        "service_type": serviceType,
+        "service_id": serviceId,
+        "amount": amount,
+        "payment_method": payment_method, // 🔥 FIX
+      }),
     );
     print(response.body);
     print(response.request?.headers);

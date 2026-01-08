@@ -38,14 +38,15 @@ class MedicineOrderService {
     }
   }
 
-  Future<void> createMedicineOrder(
-    BuildContext context,
-    Map<String, dynamic> data,
-  ) async {
+  Future<int> createMedicineOrder(
+      BuildContext context,
+      Map<String, dynamic> data,
+      ) async {
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final token = await authProvider.getToken();
 
-    var response = await http.post(
+    final response = await http.post(
       Uri.parse('$baseUrl/med-order/create'),
       headers: {
         "Authorization": "Bearer $token",
@@ -53,16 +54,18 @@ class MedicineOrderService {
       },
       body: jsonEncode(data),
     );
-
     print(response.body);
     print(response.request?.headers);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("Order Confirmed");
-      print(response.body);
+      final decoded = jsonDecode(response.body);
+
+      /// ✅ YAHI LINE MISSING THI
+      final int orderId = decoded['data']['order_id'];
+
+      return orderId;
     } else {
-      print("Error: ${response.statusCode}");
-      print(response.body);
+      throw Exception("Order create failed");
     }
   }
 
