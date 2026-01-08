@@ -13,6 +13,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UserProfileProvider>(context);
@@ -35,55 +36,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Column(
           children: [
 
-            /// 🔹 PROFILE IMAGE
+            ///  PROFILE IMAGE WITH HERO ANIMATION
             GestureDetector(
-              onTap: provider.pickImage,
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  CircleAvatar(
-                    radius: 58,
-                    backgroundColor:
-                    isDark ? AppColors.cardDark : AppColors.card,
-                    backgroundImage:
-                    provider.imageFile != null
-                        ? FileImage(provider.imageFile!)
-                        : (provider.user?.picture != null &&
-                        provider.user!.picture!.isNotEmpty)
-                        ? NetworkImage(provider.user!.picture!)
-                    as ImageProvider
-                        : null,
-                    child: provider.imageFile == null &&
-                        (provider.user?.picture == null ||
-                            provider.user!.picture!.isEmpty)
-                        ? Icon(
-                      Icons.person,
-                      size: 48,
-                      color: isDark
-                          ? AppColors.iconDark
-                          : AppColors.icon,
-                    )
-                        : null,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt,
-                      size: 18,
-                      color: Colors.white,
+              onTap: () {
+                // Image expand screen pe navigate karo
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => _ImageExpandScreen(
+                      imageFile: provider.imageFile,
+                      imageUrl: provider.user?.picture,
+                      onPickImage: provider.pickImage,
                     ),
                   ),
-                ],
+                );
+              },
+              child: Hero(
+                tag: 'profile_image',
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      radius: 58,
+                      backgroundColor:
+                      isDark ? AppColors.cardDark : AppColors.card,
+                      backgroundImage:
+                      provider.imageFile != null
+                          ? FileImage(provider.imageFile!)
+                          : (provider.user?.picture != null &&
+                          provider.user!.picture!.isNotEmpty)
+                          ? NetworkImage(provider.user!.picture!)
+                      as ImageProvider
+                          : null,
+                      child: provider.imageFile == null &&
+                          (provider.user?.picture == null ||
+                              provider.user!.picture!.isEmpty)
+                          ? Icon(
+                        Icons.person,
+                        size: 48,
+                        color: isDark
+                            ? AppColors.iconDark
+                            : AppColors.icon,
+                      )
+                          : null,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
             const SizedBox(height: 30),
 
-            /// 🔹 FORM CARD
+            ///  FORM CARD
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -163,7 +179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             const SizedBox(height: 28),
 
-            /// 🔹 SAVE BUTTON
+            ///  SAVE BUTTON
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -217,7 +233,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  /// 🔹 INPUT FIELD WIDGET
+  ///  INPUT FIELD WIDGET
   Widget _inputField({
     required TextEditingController controller,
     required String label,
@@ -234,6 +250,78 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           prefixIcon: Icon(icon),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// IMAGE EXPAND SCREEN (Separate widget for expanded view)
+class _ImageExpandScreen extends StatelessWidget {
+  final File? imageFile;
+  final String? imageUrl;
+  final VoidCallback onPickImage;
+
+  const _ImageExpandScreen({
+    required this.imageFile,
+    required this.imageUrl,
+    required this.onPickImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.camera_alt),
+            onPressed: () {
+              onPickImage();
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: Hero(
+          tag: 'profile_image',
+          child: Container(
+            width: double.infinity,
+            height: 400,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: isDark ? AppColors.cardDark : AppColors.card,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: imageFile != null
+                  ? Image.file(
+                imageFile!,
+                fit: BoxFit.cover,
+              )
+                  : (imageUrl != null && imageUrl!.isNotEmpty)
+                  ? Image.network(
+                imageUrl!,
+                fit: BoxFit.cover,
+              )
+                  : Icon(
+                Icons.person,
+                size: 120,
+                color: isDark ? AppColors.iconDark : AppColors.icon,
+              ),
+            ),
           ),
         ),
       ),
