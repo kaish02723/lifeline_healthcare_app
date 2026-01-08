@@ -13,15 +13,17 @@ class SurgeryService {
 
   // ApiHelperSurgery();
 
-  Future<void> getSurgeryData(BuildContext context,String user_Id) async {
+  Future<void> getSurgeryData(BuildContext context, String user_Id) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final authToken = authProvider.token;
 
-    var response = await http.get(Uri.parse("$baseUrl/surgery/my-surgery"),
+    var response = await http.get(
+      Uri.parse("$baseUrl/surgery/my-surgery"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $authToken",
-      },);
+      },
+    );
 
     // print(response.body);
     // print(response.request?.headers);

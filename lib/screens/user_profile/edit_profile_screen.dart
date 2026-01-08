@@ -19,12 +19,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-      isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
 
       appBar: AppBar(
-        backgroundColor:
-        isDark ? AppColors.primaryDark : AppColors.primary,
+        backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
         foregroundColor: Colors.white,
         title: const Text("Edit Profile"),
         elevation: 0,
@@ -34,8 +32,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
-            /// 🔹 PROFILE IMAGE
             GestureDetector(
               onTap: provider.pickImage,
               child: Stack(
@@ -44,26 +40,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   CircleAvatar(
                     radius: 58,
                     backgroundColor:
-                    isDark ? AppColors.cardDark : AppColors.card,
+                        isDark ? AppColors.cardDark : AppColors.card,
                     backgroundImage:
-                    provider.imageFile != null
-                        ? FileImage(provider.imageFile!)
-                        : (provider.user?.picture != null &&
-                        provider.user!.picture!.isNotEmpty)
-                        ? NetworkImage(provider.user!.picture!)
-                    as ImageProvider
-                        : null,
-                    child: provider.imageFile == null &&
-                        (provider.user?.picture == null ||
-                            provider.user!.picture!.isEmpty)
-                        ? Icon(
-                      Icons.person,
-                      size: 48,
-                      color: isDark
-                          ? AppColors.iconDark
-                          : AppColors.icon,
-                    )
-                        : null,
+                        provider.imageFile != null
+                            ? FileImage(provider.imageFile!)
+                            : (provider.user?.picture != null &&
+                                provider.user!.picture!.isNotEmpty)
+                            ? NetworkImage(provider.user!.picture!)
+                                as ImageProvider
+                            : null,
+                    child:
+                        provider.imageFile == null &&
+                                (provider.user?.picture == null ||
+                                    provider.user!.picture!.isEmpty)
+                            ? Icon(
+                              Icons.person,
+                              size: 48,
+                              color:
+                                  isDark ? AppColors.iconDark : AppColors.icon,
+                            )
+                            : null,
                   ),
                   Container(
                     padding: const EdgeInsets.all(6),
@@ -83,7 +79,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             const SizedBox(height: 30),
 
-            /// 🔹 FORM CARD
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -98,7 +93,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               child: Column(
                 children: [
-
                   _inputField(
                     controller: provider.nameController,
                     label: "Name",
@@ -120,14 +114,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    items: ["Male", "Female", "Other"]
-                        .map(
-                          (g) => DropdownMenuItem(
-                        value: g,
-                        child: Text(g),
-                      ),
-                    )
-                        .toList(),
+                    items:
+                        ["Male", "Female", "Other"]
+                            .map(
+                              (g) => DropdownMenuItem(value: g, child: Text(g)),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       provider.updateGender = value;
                     },
@@ -140,8 +132,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Date of Birth",
-                      prefixIcon:
-                      const Icon(Icons.calendar_month_outlined),
+                      prefixIcon: const Icon(Icons.calendar_month_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -163,52 +154,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             const SizedBox(height: 28),
 
-            /// 🔹 SAVE BUTTON
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                  isDark ? AppColors.primaryDark : AppColors.primary,
+                      isDark ? AppColors.primaryDark : AppColors.primary,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                onPressed: provider.isLoading
-                    ? null
-                    : () async {
-                  await provider.updateProfile(
-                    context,
-                    imageFile: provider.imageFile,
-                  );
+                onPressed:
+                    provider.isLoading
+                        ? null
+                        : () async {
+                          await provider.updateProfile(
+                            context,
+                            imageFile: provider.imageFile,
+                          );
 
-                  provider.clear();
+                          provider.clear();
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content:
-                      Text("Profile updated successfully"),
-                    ),
-                  );
-                },
-                child: provider.isLoading
-                    ? const SizedBox(
-                  height: 22,
-                  width: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-                    : const Text(
-                  "SAVE CHANGES",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Profile updated successfully"),
+                            ),
+                          );
+                        },
+                child:
+                    provider.isLoading
+                        ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                        : const Text(
+                          "SAVE CHANGES",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
               ),
             ),
           ],
@@ -217,7 +208,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  /// 🔹 INPUT FIELD WIDGET
   Widget _inputField({
     required TextEditingController controller,
     required String label,
@@ -232,9 +222,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
     );

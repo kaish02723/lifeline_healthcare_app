@@ -9,7 +9,7 @@ class BookTestProvider with ChangeNotifier {
   final TextEditingController testNameController = TextEditingController();
   final TextEditingController testPhoneController = TextEditingController();
   final testFormKey = GlobalKey<FormState>();
-  bool isLoading=false;
+  bool isLoading = false;
   List<MyTestDataModel> myLabTestList = [];
 
   final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
@@ -26,10 +26,13 @@ class BookTestProvider with ChangeNotifier {
         Uri.parse('$baseUrl/test/book-test'),
         headers: {
           "Authorization": "Bearer $userToken",
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: jsonEncode(data),
       );
+
+      print(api.body);
+      print(api.request?.headers);
 
       if (api.statusCode == 200 || api.statusCode == 201) {
         return true;
