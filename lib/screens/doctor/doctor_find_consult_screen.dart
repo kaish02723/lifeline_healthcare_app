@@ -113,6 +113,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                         context,
                         isDark,
                         value.filteredDoctorsList[index],
+                        index
                       );
                     },
                   );
@@ -199,7 +200,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
     );
   }
 
-  Widget _doctorCard(BuildContext context, bool isDark, DoctorModel doctor) {
+  Widget _doctorCard(BuildContext context, bool isDark, DoctorModel doctor,int index) {
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
 
@@ -208,7 +209,7 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DoctorDetailScreen(doctor: doctor),
+            builder: (context) => DoctorDetailScreen(doctor: doctor, doctorIndex: index,),
           ),
         );
       },
@@ -246,14 +247,17 @@ class _DoctorFindConsultScreenState extends State<DoctorFindConsultScreen> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(w * 0.25),
-                      child: CachedNetworkImage(
-                        width: 100.w,
-                        height: 100.w,
-                        fit: BoxFit.cover,
-                        imageUrl:
-                            doctor.image != null && doctor.image!.isNotEmpty
-                                ? doctor.image!
-                                : "https://via.placeholder.com/150",
+                      child: Hero(
+                        tag: 'doctorTag$index',
+                        child: CachedNetworkImage(
+                          width: 100.w,
+                          height: 100.w,
+                          fit: BoxFit.cover,
+                          imageUrl:
+                              doctor.image != null && doctor.image!.isNotEmpty
+                                  ? doctor.image!
+                                  : "https://via.placeholder.com/150",
+                        ),
                       ),
                     ),
                     SizedBox(width: w * 0.04),
