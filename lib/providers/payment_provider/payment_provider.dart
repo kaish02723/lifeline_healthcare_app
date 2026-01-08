@@ -15,6 +15,7 @@ class PaymentProvider with ChangeNotifier {
       String serviceType,
       String serviceId,
       int amount,
+      String payment_method,
       Function() onPaymentSuccess,
       Function(String) onPaymentError,
       ) async {
@@ -23,7 +24,15 @@ class PaymentProvider with ChangeNotifier {
     notifyListeners();
 
     final response =
-    await apiService.createOrder(context, serviceType, serviceId, amount.toDouble());
+    await apiService.createOrder(
+      context,
+      serviceType,
+      serviceId,
+      amount.toDouble(),
+      serviceType == "medicine"
+          ? (payment_method == "COD" ? "COD" : "Online")
+          : "Online",
+    );
     print("PAYMENT INIT RESPONSE => $response");
     print("response Runtimr ${response.runtimeType}");
 

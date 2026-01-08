@@ -43,7 +43,7 @@ class MedicineOrderProvider with ChangeNotifier {
   }
 
   // CREATE ORDER
-  Future<void> createFullOrder({
+  Future<int> createFullOrder({
     required Map<String, dynamic> order,
     required List<Map<String, dynamic>> items,
     required BuildContext context,
@@ -54,12 +54,12 @@ class MedicineOrderProvider with ChangeNotifier {
 
       final data = {"order": order, "items": items};
 
-      await service.createMedicineOrder(context, data);
+      /// ⬅️ service se response lo
+      final int orderId = await service.createMedicineOrder(context, data);
 
       await getMedicine(context);
-    } catch (e) {
-      debugPrint("Create Order Error: $e");
-      rethrow;
+
+      return orderId; // 🔥 IMPORTANT
     } finally {
       isCreatingOrder = false;
       notifyListeners();

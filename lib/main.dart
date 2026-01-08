@@ -17,6 +17,9 @@ import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_
 import 'package:lifeline_healthcare_app/providers/surgery_provider/surgery_provider.dart';
 import 'package:lifeline_healthcare_app/providers/theme_provider/theme_provider.dart';
 import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
+import 'package:lifeline_healthcare_app/screens/labtest/patient_my_labtest_screen.dart';
+import 'package:lifeline_healthcare_app/screens/medicine%20screen/medicine_order_detail_screen.dart';
+import 'package:lifeline_healthcare_app/screens/medicine%20screen/my_medicine_order.dart';
 import 'package:lifeline_healthcare_app/screens/user_profile/complete_profile_screen.dart';
 import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
 import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
@@ -101,6 +104,8 @@ class MyApp extends StatelessWidget {
                 '/splash_screen': (context) => const SplashScreen(),
                 '/create_profile': (context) => const CompleteProfileScreen(),
                 '/edit-profile': (context) => const EditProfileScreen(),
+                '/my-order':(context)=>const OrdersScreen(),
+                '/my-test':(context)=>const MyTestScreen()
               },
               home: SplashScreen(),
             );
