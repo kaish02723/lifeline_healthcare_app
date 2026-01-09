@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/color.dart';
@@ -13,7 +14,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UserProfileProvider>(context);
@@ -21,83 +21,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
-
       appBar: AppBar(
         backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
         foregroundColor: Colors.white,
         title: const Text("Edit Profile"),
         elevation: 0,
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
-            ///  PROFILE IMAGE WITH HERO ANIMATION
+            /// PROFILE IMAGE (ONLY PICK IMAGE)
             GestureDetector(
-              onTap: () {
-                // Image expand screen pe navigate karo
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => _ImageExpandScreen(
-                      imageFile: provider.imageFile,
-                      imageUrl: provider.user?.picture,
-                      onPickImage: provider.pickImage,
+              onTap: provider.pickImage,
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  CircleAvatar(
+                    radius: 58,
+                    backgroundColor:
+                        isDark ? AppColors.cardDark : AppColors.card,
+                    backgroundImage:
+                        provider.imageFile != null
+                            ? FileImage(provider.imageFile!)
+                            : (provider.user?.picture != null &&
+                                provider.user!.picture!.isNotEmpty)
+                            ? NetworkImage(provider.user!.picture!)
+                                as ImageProvider
+                            : null,
+                    child:
+                        provider.imageFile == null &&
+                                (provider.user?.picture == null ||
+                                    provider.user!.picture!.isEmpty)
+                            ? Icon(
+                              Icons.person,
+                              size: 48,
+                              color:
+                                  isDark ? AppColors.iconDark : AppColors.icon,
+                            )
+                            : null,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: 18,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              },
-              child: Hero(
-                tag: 'profile_image',
-                child: Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    CircleAvatar(
-                      radius: 58,
-                      backgroundColor:
-                      isDark ? AppColors.cardDark : AppColors.card,
-                      backgroundImage:
-                      provider.imageFile != null
-                          ? FileImage(provider.imageFile!)
-                          : (provider.user?.picture != null &&
-                          provider.user!.picture!.isNotEmpty)
-                          ? NetworkImage(provider.user!.picture!)
-                      as ImageProvider
-                          : null,
-                      child: provider.imageFile == null &&
-                          (provider.user?.picture == null ||
-                              provider.user!.picture!.isEmpty)
-                          ? Icon(
-                        Icons.person,
-                        size: 48,
-                        color: isDark
-                            ? AppColors.iconDark
-                            : AppColors.icon,
-                      )
-                          : null,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.camera_alt,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
             ),
 
             const SizedBox(height: 30),
 
-            ///  FORM CARD
+            /// FORM CARD
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -117,18 +99,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     label: "Name",
                     icon: Icons.person_outline,
                   ),
-
                   _inputField(
                     controller: provider.emailController,
                     label: "Email",
                     icon: Icons.email_outlined,
                   ),
-
                   DropdownButtonFormField<String>(
                     value: provider.updateGender,
                     decoration: InputDecoration(
                       labelText: "Gender",
-                      prefixIcon: const Icon(Icons.wc_outlined),
+                      prefixIcon: const Icon(Icons.person),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -143,9 +123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       provider.updateGender = value;
                     },
                   ),
-
                   const SizedBox(height: 14),
-
                   TextField(
                     controller: provider.dobController,
                     readOnly: true,
@@ -158,9 +136,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     onTap: () => provider.selectDate(context),
                   ),
-
                   const SizedBox(height: 14),
-
                   _inputField(
                     controller: provider.addressController,
                     label: "Address",
@@ -173,19 +149,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             const SizedBox(height: 28),
 
-            ///  SAVE BUTTON
+            /// SAVE BUTTON
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      isDark ? AppColors.primaryDark : AppColors.primary,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
                 onPressed:
                     provider.isLoading
                         ? null
@@ -196,13 +163,64 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           );
 
                           provider.clear();
-
+                          Navigator.pop(context, true);
+                          Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Profile updated successfully"),
+                            SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.all(16),
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              content: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.teal.shade600,
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.15),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 6),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: Colors.white,
+                                      size: 26,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        "Profile updated successfully",
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontSize: 14.5,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              duration: const Duration(seconds: 3),
                             ),
                           );
                         },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      isDark ? AppColors.primaryDark : AppColors.primary,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
                 child:
                     provider.isLoading
                         ? const SizedBox(
@@ -228,7 +246,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  ///  INPUT FIELD WIDGET
   Widget _inputField({
     required TextEditingController controller,
     required String label,
@@ -244,78 +261,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           labelText: label,
           prefixIcon: Icon(icon),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      ),
-    );
-  }
-}
-
-/// IMAGE EXPAND SCREEN (Separate widget for expanded view)
-class _ImageExpandScreen extends StatelessWidget {
-  final File? imageFile;
-  final String? imageUrl;
-  final VoidCallback onPickImage;
-
-  const _ImageExpandScreen({
-    required this.imageFile,
-    required this.imageUrl,
-    required this.onPickImage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.camera_alt),
-            onPressed: () {
-              onPickImage();
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: Hero(
-          tag: 'profile_image',
-          child: Container(
-            width: double.infinity,
-            height: 400,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: isDark ? AppColors.cardDark : AppColors.card,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: imageFile != null
-                  ? Image.file(
-                imageFile!,
-                fit: BoxFit.cover,
-              )
-                  : (imageUrl != null && imageUrl!.isNotEmpty)
-                  ? Image.network(
-                imageUrl!,
-                fit: BoxFit.cover,
-              )
-                  : Icon(
-                Icons.person,
-                size: 120,
-                color: isDark ? AppColors.iconDark : AppColors.icon,
-              ),
-            ),
-          ),
         ),
       ),
     );
