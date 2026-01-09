@@ -24,8 +24,8 @@ class TopFeatureCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: GlassCard(
-        height: h * 0.16, // responsive height
-        width: w * 0.44, // responsive width
+        height: h * 0.16,
+        width: w * 0.44,
         child: Stack(
           children: [
             Positioned(

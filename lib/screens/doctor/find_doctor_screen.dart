@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/doctor_find_consult_screen.dart';
 import 'package:lifeline_healthcare_app/screens/doctor/physical_summary_screen.dart';
+import 'package:lifeline_healthcare_app/screens/home/help_support_screen.dart';
 
 class FindDoctor extends StatefulWidget {
   const FindDoctor({super.key});
@@ -20,21 +21,27 @@ class _FindDoctorState extends State<FindDoctor> {
     return Scaffold(
       backgroundColor: isDark ? Color(0xff121212) : Color(0xFFF2F2F2),
       appBar: AppBar(
-        backgroundColor: Color(0xFF00796B),
+        backgroundColor: isDark ? Color(0xff121212) : Color(0xFFF2F2F2),
         leading: IconButton(
-          icon: Icon(CupertinoIcons.back, color: Colors.white),
+          icon: Icon(CupertinoIcons.back),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: Center(
-              child: Text(
-                "HELP",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HelpSupportScreen(),
+                    ),
+                  );
+                },
+                child: Text(
+                  "HELP",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
               ),
             ),
@@ -112,18 +119,20 @@ class _FindDoctorState extends State<FindDoctor> {
           child: Container(
             padding: EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.white.withOpacity(0.85),
+              color:
+                  isDark
+                      ? Colors.white.withOpacity(0.05)
+                      : Colors.white.withOpacity(0.85),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.grey.withOpacity(0.2),
+                  color:
+                      isDark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.grey.withOpacity(0.2),
                   blurRadius: 6,
                   offset: Offset(2, 3),
                 ),
@@ -135,9 +144,7 @@ class _FindDoctorState extends State<FindDoctor> {
                   height: 44,
                   width: 44,
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white12
-                        : Colors.white,
+                    color: isDark ? Colors.white12 : Colors.white,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: iconColor, size: 26),

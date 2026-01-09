@@ -1,248 +1,285 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../surgery/surgery_booking_screen.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
-  Widget _buildTile(IconData icon, String title, String subtitle) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 26.sp, color: Colors.grey.shade800),
-          SizedBox(height: 12.h),
-          Text(
-            title,
-            maxLines: 1, // Prevent overflow in title
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(height: 6.h),
-          Expanded( // Fix for subtitle overflow
-            child: Text(
-              subtitle,
-              maxLines: 3, // Limit lines
-              overflow: TextOverflow.ellipsis, // Add dots instead of overflow
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 11.sp,
-                height: 1.3,
+  Widget _buildTile(
+      BuildContext context,
+      IconData icon,
+      String title,
+      String subtitle,
+      ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(16.r),
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: theme.shadowColor.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                icon,
+                size: 24.sp,
+                color: colorScheme.primary,
               ),
             ),
-          ),
-        ],
+            SizedBox(height: 12.h),
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 6.h),
+            Text(
+              subtitle,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall?.copyWith(
+                height: 1.3,
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor: const Color(0xff00796B),
+        backgroundColor: colorScheme.primary,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
+          icon: Icon(Icons.arrow_back, color: colorScheme.onPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Help & Support',
-          style: TextStyle(color: Colors.white, fontSize: 17.sp),
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: colorScheme.onPrimary,
+          ),
         ),
       ),
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            /// HEADER
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: 160.h,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/help_image.png'),
-                        fit: BoxFit.cover,
-                      ),
+                  Text(
+                    "Hey 👋",
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    height: 160.h,
-                    padding: EdgeInsets.all(16.w),
-                    decoration: const BoxDecoration(
-                      color: Color(0x6200796B),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 45.h),
-                        Text(
-                          "Hey,",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          "We are here to help you",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      ],
+                  SizedBox(height: 6.h),
+                  Text(
+                    "We are here to help you anytime",
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onPrimary.withOpacity(0.8),
                     ),
                   ),
                 ],
               ),
+            ),
 
-              Padding(
-                padding: EdgeInsets.all(18.w),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 24.r,
-                      backgroundColor: Colors.orange.shade100,
-                      child: Icon(Icons.support_agent,
-                          color: Colors.orange, size: 28.sp),
+            SizedBox(height: 20.h),
+
+            /// SUPPORT INFO
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.w),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 26.r,
+                    backgroundColor:
+                    colorScheme.secondary.withOpacity(0.15),
+                    child: Icon(
+                      Icons.support_agent,
+                      color: colorScheme.secondary,
+                      size: 28.sp,
                     ),
-                    SizedBox(width: 12.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Lifeline Support",
-                          style: TextStyle(
-                              fontSize: 16.sp, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(width: 12.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Lifeline Support",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
                         ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          "Get instant support 24/7.",
-                          style: TextStyle(color: Colors.grey, fontSize: 12.sp),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              Container(
-                width: double.infinity,
-                color: Colors.grey.shade100,
-                padding: EdgeInsets.all(18.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Refund/Cancellation",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 6.h),
-                    Text(
-                      "You have 0 active refund/cancellation",
-                      style: TextStyle(color: Colors.grey, fontSize: 12.sp),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 20.h),
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 18.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("FAQs",
-                        style: TextStyle(
-                            fontSize: 16.sp, fontWeight: FontWeight.w700)),
-                    SizedBox(height: 4.h),
-                    Text(
-                      "Get answers to the most frequently asked questions.",
-                      style: TextStyle(color: Colors.grey, fontSize: 12.sp),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 18.h),
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  crossAxisSpacing: 16.w,
-                  mainAxisSpacing: 16.h,
-                  childAspectRatio: 1,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    _buildTile(Icons.video_call_outlined, "Video Consultation",
-                        "Steps for consult, Doctor or Prescription Related issues."),
-                    _buildTile(Icons.science_outlined, "Lab Test Order",
-                        "Delay in collection, Report Related, Order confirmation etc"),
-                    _buildTile(Icons.date_range_outlined, "Clinic Appointment",
-                        "Appointment cancellation, confirmation, rescheduling etc"),
-                    _buildTile(Icons.medication_liquid_outlined,
-                        "Medicines Order",
-                        "Payment, Refund, Delivery or Order status related issues"),
-                    _buildTile(Icons.card_membership_outlined,
-                        "Membership Retail",
-                        "Subscription benefits add or remove family members usage etc"),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 28.h),
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SurgeryBookingScreen(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff00796B),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
                       ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "Get instant support 24/7",
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20.h),
+
+            /// REFUND SECTION
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 18.w),
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                borderRadius: BorderRadius.circular(14.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.shadowColor.withOpacity(0.08),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Refund / Cancellation",
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
-                    child: Text(
-                      "Chat With Us",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    "You have 0 active refund or cancellation requests",
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 26.h),
+
+            /// FAQ TITLE
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "FAQs",
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "Get answers to common questions",
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 18.h),
+
+            /// GRID
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16.w,
+                mainAxisSpacing: 16.h,
+                childAspectRatio: 0.95,
+                children: [
+                  _buildTile(context, Icons.video_call_outlined,
+                      "Video Consultation", "Doctor consult & prescription help"),
+                  _buildTile(context, Icons.science_outlined, "Lab Test Order",
+                      "Sample collection & reports"),
+                  _buildTile(context, Icons.date_range_outlined,
+                      "Clinic Appointment", "Reschedule or cancel booking"),
+                  _buildTile(context, Icons.medication_outlined,
+                      "Medicine Orders", "Payment & delivery help"),
+                  _buildTile(context, Icons.card_membership_outlined,
+                      "Membership", "Subscription & family members"),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 30.h),
+
+            /// CTA BUTTON
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50.h,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                  ),
+                  child: Text(
+                    "Chat With Support",
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
+            ),
 
-              SizedBox(height: 35.h),
-            ],
-          ),
+            SizedBox(height: 40.h),
+          ],
         ),
       ),
     );
