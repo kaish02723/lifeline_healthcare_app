@@ -59,12 +59,12 @@ class _PhysicalAppointmentScreenState extends State<PhysicalAppointmentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// 🔍 SEARCH BAR
+              ///  SEARCH BAR
               _searchBar(isDark),
 
               const SizedBox(height: 22),
 
-              /// 🟢 MOST SEARCHED
+              ///  MOST SEARCHED
               const Text(
                 "Most searched specialities",
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
@@ -79,7 +79,7 @@ class _PhysicalAppointmentScreenState extends State<PhysicalAppointmentScreen> {
 
               const SizedBox(height: 26),
 
-              /// 🟢 SURGERIES
+              ///  SURGERIES
               const Text(
                 "Conditions that can be treated through surgeries",
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
@@ -99,7 +99,7 @@ class _PhysicalAppointmentScreenState extends State<PhysicalAppointmentScreen> {
     );
   }
 
-  /// 🔍 SEARCH BAR
+  ///  SEARCH BAR
   Widget _searchBar(bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
