@@ -28,7 +28,7 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
     var provider = Provider.of<UserProfileProvider>(context);
     var userData = provider.user;
     final orderProvider = Provider.of<MedicineOrderProvider>(context);
-    final razorpay=Provider.of<PaymentProvider>(context,listen: false);
+    final razorpay = Provider.of<PaymentProvider>(context, listen: false);
 
     return Stack(
       children: [
@@ -83,156 +83,234 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                             ],
                           ),
                           const SizedBox(height: 12),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                          isDark ? AppColors.primaryDark : AppColors.primary,
-                          minimumSize: const Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  isDark
+                                      ? AppColors.primaryDark
+                                      : AppColors.primary,
+                              minimumSize: const Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            onPressed:
+                                orderProvider.isCreatingOrder
+                                    ? null
+                                    : () async {
+                                      if (cart.items.isEmpty) return;
+
+                                      /// DEBUG
+                                      for (var e in cart.items) {
+                                        debugPrint("====== CART ITEM ======");
+                                        debugPrint(
+                                          "medId      => ${e.product.medId}",
+                                        );
+                                        debugPrint(
+                                          "name       => ${e.product.medName}",
+                                        );
+                                        debugPrint(
+                                          "price      => ${e.product.medPrice}",
+                                        );
+                                        debugPrint(
+                                          "quantity   => ${e.quantity}",
+                                        );
+                                      }
+
+                                      /// CASE 1 : CASH ON DELIVERY
+                                      /// ================================
+                                      if (orderProvider.selectedPayment ==
+                                          "COD") {
+                                        try {
+                                          final orderId = await orderProvider
+                                              .createFullOrder(
+                                                order: {
+                                                  "total_amount":
+                                                      cart.totalAmount,
+                                                  "payment_status":
+                                                      "pending", // COD
+                                                  "order_status": "processing",
+                                                  "delivery_date":
+                                                      DateTime.now()
+                                                          .add(
+                                                            const Duration(
+                                                              days: 3,
+                                                            ),
+                                                          )
+                                                          .toIso8601String()
+                                                          .split('T')
+                                                          .first,
+                                                },
+                                                items:
+                                                    cart.items
+                                                        .map(
+                                                          (e) => {
+                                                            "medicine_id":
+                                                                e.product.medId,
+                                                            "name":
+                                                                e
+                                                                    .product
+                                                                    .medName,
+                                                            "quantity":
+                                                                e.quantity,
+                                                            "price":
+                                                                e
+                                                                    .product
+                                                                    .medPrice,
+                                                            "image":
+                                                                e
+                                                                    .product
+                                                                    .medImage,
+                                                          },
+                                                        )
+                                                        .toList(),
+                                                context: context,
+                                              );
+                                          razorpay.startPayment(
+                                            context,
+                                            "medicine",
+                                            // service_type
+                                            orderId.toString(),
+                                            // REAL service_id
+                                            cart.totalAmount.toInt(),
+                                            "COD",
+                                            //
+                                            () async {
+                                              await cart.clearCart();
+                                              if (!mounted) return;
+
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                '/my-order',
+                                                (route) => false,
+                                              );
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    "Congratulations! Order placed Cash On Delivery",
+                                                  ),
+                                                ),
+                                              );
+                                            },
+
+                                            /// PAYMENT FAILED
+                                            (error) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(content: Text(error)),
+                                              );
+                                            },
+                                          );
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text("Order failed: $e"),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                      /// CASE 2 : ONLINE PAYMENT
+                                      else {
+                                        try {
+                                          /// STEP: Create order FIRST (payment pending)
+                                          final int
+                                          orderId = await orderProvider
+                                              .createFullOrder(
+                                                order: {
+                                                  "total_amount":
+                                                      cart.totalAmount,
+                                                  "payment_status": "pending",
+                                                  //  important
+                                                  "order_status": "processing",
+                                                  "payment_method": "Online",
+                                                  //  FIX (THIS WAS MISSING)
+                                                },
+                                                items:
+                                                    cart.items.map((e) {
+                                                      return {
+                                                        "medicine_id":
+                                                            e.product.medId,
+                                                        "name":
+                                                            e.product.medName,
+                                                        "quantity": e.quantity,
+                                                        "price":
+                                                            e.product.medPrice,
+                                                        "image":
+                                                            e.product.medImage,
+                                                      };
+                                                    }).toList(),
+                                                context: context,
+                                              );
+
+                                          ///  STEP: Start Razorpay using SAME orderId
+                                          razorpay.startPayment(
+                                            context,
+                                            "medicine",
+                                            // service_type
+                                            orderId.toString(),
+                                            //  REAL service_id
+                                            cart.totalAmount.toInt(),
+                                            "Online",
+
+                                            /// PAYMENT SUCCESS
+                                            () async {
+                                              await cart.clearCart();
+                                              if (!mounted) return;
+
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                '/my-order',
+                                                (route) => false,
+                                              );
+
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    "Payment & Order successful",
+                                                  ),
+                                                ),
+                                              );
+                                            },
+
+                                            /// PAYMENT FAILED
+                                            (error) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(content: Text(error)),
+                                              );
+                                            },
+                                          );
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text("Order failed: $e"),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    },
+                            child: Text(
+                              orderProvider.selectedPayment == 'COD'
+                                  ? "Place Order"
+                                  : "Pay & Place Order",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: AppColors.white,
+                              ),
+                            ),
                           ),
-                        ),
-                        onPressed: orderProvider.isCreatingOrder ? null : () async {
-                          if (cart.items.isEmpty) return;
 
-                          /// DEBUG
-                          for (var e in cart.items) {
-                            debugPrint("====== CART ITEM ======");
-                            debugPrint("medId      => ${e.product.medId}");
-                            debugPrint("name       => ${e.product.medName}");
-                            debugPrint("price      => ${e.product.medPrice}");
-                            debugPrint("quantity   => ${e.quantity}");
-                          }
-                          /// 🟢 CASE 1 : CASH ON DELIVERY
-                          /// ================================
-                          if (orderProvider.selectedPayment == "COD") {
-                            try {
-                              final orderId= await orderProvider.createFullOrder(
-                                order: {
-                                  "total_amount": cart.totalAmount,
-                                  "payment_status": "pending",   // COD
-                                  "order_status": "processing",
-                                  "delivery_date": DateTime.now()
-                                      .add(const Duration(days: 3))
-                                      .toIso8601String()
-                                      .split('T')
-                                      .first,
-                                },
-                                items: cart.items.map((e) => {
-                                  "medicine_id": e.product.medId,
-                                  "name": e.product.medName,
-                                  "quantity": e.quantity,
-                                  "price": e.product.medPrice,
-                                  "image": e.product.medImage,
-                                }).toList(),
-                                context: context,
-                              );
-                              razorpay.startPayment(
-                                  context,
-                                  "medicine",              // service_type
-                                  orderId.toString(),      // ✅ REAL service_id
-                                  cart.totalAmount.toInt(),
-                                  "COD",
-                                  //
-                                  ()async{
-                                    await cart.clearCart();
-                                    if (!mounted) return;
-
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      '/my-order',
-                                          (route) => false,
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Congratulations! Order placed Cash On Delivery")),);
-                                  },
-                                  /// ❌ PAYMENT FAILED
-                                    (error) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(error)),
-                                  );
-                                },
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Order failed: $e")),
-                              );
-                            }
-                          }
-                          /// CASE 2 : ONLINE PAYMENT
-                          else {
-                            try {
-                              /// 1️⃣ STEP: Create order FIRST (payment pending)
-                              final int orderId = await orderProvider.createFullOrder(
-                                order: {
-                                  "total_amount": cart.totalAmount,
-                                  "payment_status": "pending", //  important
-                                  "order_status": "processing",
-                                  "payment_method": "Online", // ✅ FIX (THIS WAS MISSING)
-                                },
-                                items: cart.items.map((e) {
-                                  return {
-                                    "medicine_id": e.product.medId,
-                                    "name": e.product.medName,
-                                    "quantity": e.quantity,
-                                    "price": e.product.medPrice,
-                                    "image": e.product.medImage,
-                                  };
-                                }).toList(),
-                                context: context,
-                              );
-
-                              /// 2️⃣ STEP: Start Razorpay using SAME orderId
-                              razorpay.startPayment(
-                                context,
-                                "medicine",              // service_type
-                                orderId.toString(),      // ✅ REAL service_id
-                                cart.totalAmount.toInt(),
-                                "Online",
-                                /// ✅ PAYMENT SUCCESS
-                                    () async {
-                                  await cart.clearCart();
-                                  if (!mounted) return;
-
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/my-order',
-                                        (route) => false,
-                                  );
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Payment & Order successful"),
-                                    ),
-                                  );
-                                },
-                                /// ❌ PAYMENT FAILED
-                                    (error) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(error)),
-                                  );
-                                },
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Order failed: $e")),
-                              );
-                            }
-                          }
-
-                        },
-                        child: Text(
-                          orderProvider.selectedPayment == 'COD'
-                              ? "Place Order"
-                              : "Pay & Place Order",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      )
-
-                      // ElevatedButton(
+                          // ElevatedButton(
                           //   style: ElevatedButton.styleFrom(
                           //     backgroundColor:
                           //         isDark
@@ -327,13 +405,13 @@ class _MedicineCheckoutScreenState extends State<MedicineCheckoutScreen> {
                           //     ),
                           //   ),
                           // ),
-
                         ],
                       ),
                     ),
                   ),
 
-          body: ListView(padding: const EdgeInsets.all(16),
+          body: ListView(
+            padding: const EdgeInsets.all(16),
             children: [
               _glassCard(
                 context,
