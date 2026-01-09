@@ -24,9 +24,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     Provider.of<AuthProvider>(context, listen: false).startTimer();
 
     // OTP change hote hi UI update ho
-    Provider.of<AuthProvider>(context, listen: false)
-        .otp
-        .addListener(() {
+    Provider.of<AuthProvider>(context, listen: false).otp.addListener(() {
       setState(() {});
     });
   }
@@ -151,21 +149,23 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 ),
                                 const SizedBox(height: 4),
                                 GestureDetector(
-                                  onTap: value == 0
-                                      ? () {
-                                    provider.resendOtp(
-                                      widget.phone,
-                                      context,
-                                    );
-                                    HapticFeedback.mediumImpact();
-                                  }
-                                      : null,
+                                  onTap:
+                                      value == 0
+                                          ? () {
+                                            provider.resendOtp(
+                                              widget.phone,
+                                              context,
+                                            );
+                                            HapticFeedback.mediumImpact();
+                                          }
+                                          : null,
                                   child: Text(
                                     "Resend OTP",
                                     style: TextStyle(
-                                      color: value == 0
-                                          ? Colors.teal.shade700
-                                          : Colors.grey,
+                                      color:
+                                          value == 0
+                                              ? Colors.teal.shade700
+                                              : Colors.grey,
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -178,64 +178,81 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                         const SizedBox(height: 30),
 
-                        // =============================== VERIFY BUTTON ===============================
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 15,
                           ),
-                          child: GestureDetector(
-                            onTap: provider.otp.text.length == 6
-                                ? () {
-                              if (provider.otpFormKey.currentState!
-                                  .validate()) {
-                                var data = {
-                                  'phone': '+91${widget.phone}',
-                                  'otp': provider.otp.text,
-                                };
-                                provider.verifyOtp(data, context);
-                                HapticFeedback.heavyImpact();
-                              }
-                            }
-                                : null, // DISABLE when less than 6 digits
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(9),
-                                gradient: LinearGradient(
-                                  colors: provider.otp.text.length == 6
-                                      ? const [
-                                    Color(0xFF009688),
-                                    Color(0xFF00796B),
-                                  ]
-                                      : [
-                                    Colors.grey,
-                                    Colors.grey,
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
-                              ),
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
+                          child: Consumer<AuthProvider>(
+                            builder: (context, auth, _) {
+                              final bool isOtpValid = auth.otp.text.length == 6;
+                              final bool isDisabled =
+                                  !isOtpValid || auth.isLoadingVerify;
 
-                                  },
-                                  child: Text(
-                                    "Verify OTP",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                              return GestureDetector(
+                                onTap:
+                                    isDisabled
+                                        ? null
+                                        : () {
+                                          if (auth.otpFormKey.currentState!
+                                              .validate()) {
+                                            final data = {
+                                              'phone': '+91${widget.phone}',
+                                              'otp': auth.otp.text,
+                                            };
+                                            auth.verifyOtp(data, context);
+                                            HapticFeedback.heavyImpact();
+                                          }
+                                        },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 250),
+                                  height: 50,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(9),
+                                    gradient: LinearGradient(
+                                      colors:
+                                          isDisabled
+                                              ? [
+                                                Colors.grey.shade400,
+                                                Colors.grey.shade500,
+                                              ]
+                                              : const [
+                                                Color(0xFF009688),
+                                                Color(0xFF00796B),
+                                              ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
                                     ),
                                   ),
+                                  child: Center(
+                                    child:
+                                        auth.isLoadingVerify
+                                            ? const SizedBox(
+                                              height: 22,
+                                              width: 22,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.5,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                      Color
+                                                    >(Colors.white),
+                                              ),
+                                            )
+                                            : Text(
+                                              "Verify OTP",
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         ),
-                        // ==========================================================================
                         const SizedBox(height: 15),
                       ],
                     ),

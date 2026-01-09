@@ -13,6 +13,9 @@ class AuthProvider with ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController otp = TextEditingController();
 
+  bool isLoading = false;
+  bool isLoadingVerify = false;
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
 
@@ -36,6 +39,7 @@ class AuthProvider with ChangeNotifier {
 
   String? userId;
   String? token;
+
   // String? phone_no;
   //
   // Future<void> savePhoneNumber(String phone) async {
@@ -82,6 +86,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> sendOtp(BuildContext context) async {
+    if (isLoading) return;
+    isLoading = true;
+    notifyListeners();
+
     try {
       final res = await http.post(
         Uri.parse('$authUrl/send-otp'),
@@ -113,6 +121,9 @@ class AuthProvider with ChangeNotifier {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -147,11 +158,12 @@ class AuthProvider with ChangeNotifier {
     Map<String, dynamic> data,
     BuildContext context,
   ) async {
+    if (isLoadingVerify) return;
+
+    isLoadingVerify = true;
+    notifyListeners();
     try {
-      var provider = Provider.of<UserProfileProvider>(
-        context,
-        listen: false,
-      );
+      var provider = Provider.of<UserProfileProvider>(context, listen: false);
 
       final response = await http.post(
         Uri.parse('$authUrl/verify-otp'),
@@ -183,10 +195,10 @@ class AuthProvider with ChangeNotifier {
 
         bool isProfileComplete =
             user != null &&
-                user.name != null &&
-                user.name!.trim().isNotEmpty &&
-                user.email != null &&
-                user.email!.trim().isNotEmpty;
+            user.name != null &&
+            user.name!.trim().isNotEmpty &&
+            user.email != null &&
+            user.email!.trim().isNotEmpty;
 
         if (!context.mounted) return;
 
@@ -209,6 +221,9 @@ class AuthProvider with ChangeNotifier {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+    } finally {
+      isLoadingVerify = false;
+      notifyListeners();
     }
   }
 
