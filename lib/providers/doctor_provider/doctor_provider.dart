@@ -64,19 +64,19 @@ class DoctorProvider with ChangeNotifier {
     _topList1 = [
       {
         'title': 'Stomach Pain',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2913/2913133.png'
+        'img': 'https://cdn-icons-png.flaticon.com/512/5730/5730077.png'
       },
       {
         'title': 'Vertigo',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2913/2913174.png'
+        'img': 'https://cdn-icons-png.flaticon.com/512/2248/2248294.png'
       },
       {
         'title': 'Acne',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2916/2916408.png'
+        'img': 'https://img.freepik.com/premium-vector/acne-skin-icon-problem-skin-dermatology_946691-311.jpg'
       },
       {
         'title': 'PCOS',
-        'img': 'https://cdn-icons-png.flaticon.com/128/3774/3774299.png'
+        'img': 'https://media.istockphoto.com/id/1326285050/vector/polycystic-ovary-syndrome-pcos-of-woman-female-reproductive-system-disease-abnormal-uterus.jpg?s=612x612&w=0&k=20&c=GPVImoSoP07FCv0cZ9_BqhNlTHgrmw5Kx_lB65OVOY4='
       },
       {
         'title': 'Thyroid',
@@ -84,11 +84,11 @@ class DoctorProvider with ChangeNotifier {
       },
       {
         'title': 'Back Pain',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2913/2913178.png'
+        'img': 'https://cdn-icons-png.flaticon.com/512/4939/4939268.png'
       },
       {
         'title': 'Mental Wellness',
-        'img': 'https://cdn-icons-png.flaticon.com/128/4543/4543893.png'
+        'img': 'https://media.istockphoto.com/id/1338729700/vector/intrinsic-motivation-gradient-linear-vector-icon.jpg?s=612x612&w=0&k=20&c=IFlMknR7mHYCBVxBqCKvLU9lohLSeIbB9WJdMCnpa3k='
       },
       {
         'title': 'General Physician',
@@ -99,27 +99,27 @@ class DoctorProvider with ChangeNotifier {
     _topList2 = [
       {
         'title': 'Head Aches',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2913/2913119.png'
+        'img': 'https://cdn-icons-png.flaticon.com/512/16779/16779695.png'
       },
       {
         'title': 'Fungal Infection',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2916/2916412.png'
+        'img': 'https://cdn-icons-png.flaticon.com/128/4223/4223545.png'
       },
       {
         'title': 'Gynae Colo',
-        'img': 'https://cdn-icons-png.flaticon.com/128/3774/3774285.png'
+        'img': 'https://cdn-icons-png.flaticon.com/128/8402/8402965.png'
       },
       {
         'title': 'Ortho-pedic',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2785/2785490.png'
+        'img': 'https://cdn-icons-png.flaticon.com/128/7350/7350861.png'
       },
       {
         'title': 'Pediatrics',
-        'img': 'https://cdn-icons-png.flaticon.com/128/2785/2785459.png'
+        'img': 'https://cdn-icons-png.flaticon.com/128/6205/6205503.png'
       },
       {
         'title': 'Sexology',
-        'img': 'https://cdn-icons-png.flaticon.com/128/3774/3774310.png'
+        'img': 'https://cdn-icons-png.flaticon.com/128/6749/6749674.png'
       },
     ];
 
