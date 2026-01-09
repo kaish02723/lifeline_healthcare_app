@@ -28,16 +28,18 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final bookTestProvider =
-      Provider.of<BookTestProvider>(context, listen: false);
-      final userProvider =
-      Provider.of<UserProfileProvider>(context, listen: false);
+      final bookTestProvider = Provider.of<BookTestProvider>(
+        context,
+        listen: false,
+      );
+      final userProvider = Provider.of<UserProfileProvider>(
+        context,
+        listen: false,
+      );
 
-      bookTestProvider.testNameController.text =
-          userProvider.user?.name ?? "";
+      bookTestProvider.testNameController.text = userProvider.user?.name ?? "";
     });
   }
-
 
   void showTestSuccessDialog() {
     showDialog(
@@ -299,55 +301,67 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                   Consumer<BookTestProvider>(
                     builder: (context, bookTestProvider, _) {
                       return GestureDetector(
-                        onTap: bookTestProvider.isLoading
-                            ? null
-                            : () async {
+                        onTap:
+                            bookTestProvider.isLoading
+                                ? null
+                                : () async {
+                                  if (!bookTestProvider
+                                      .testFormKey
+                                      .currentState!
+                                      .validate())
+                                    return;
 
-                          if (!bookTestProvider.testFormKey.currentState!.validate()) return;
+                                  final payload = {
+                                    "user_id": auth.userId,
+                                    "user_name":
+                                        bookTestProvider.testNameController.text
+                                            .trim(),
+                                    "test_id": widget.test.id,
+                                    "test_name": widget.test.name,
+                                    "category": widget.test.category,
+                                    "price": widget.test.price,
+                                    "phone":
+                                        bookTestProvider
+                                            .testPhoneController
+                                            .text
+                                            .trim(),
+                                  };
 
-                          final payload = {
-                            "user_id": auth.userId,
-                            "user_name": bookTestProvider.testNameController.text.trim(),
-                            "test_id": widget.test.id,
-                            "test_name": widget.test.name,
-                            "category": widget.test.category,
-                            "price": widget.test.price,
-                            "phone": bookTestProvider.testPhoneController.text.trim(),
-                          };
+                                  final paymentProvider =
+                                      context.read<PaymentProvider>();
 
-                          final paymentProvider =
-                          context.read<PaymentProvider>();
+                                  await paymentProvider.startPayment(
+                                    context,
+                                    "labtest",
+                                    widget.test.id.toString(),
+                                    widget.test.price!.toInt(),
+                                    //  INT ONLY
+                                    "Online",
+                                    //  PAYMENT SUCCESS (already verified inside provider)
+                                    () async {
+                                      final success = await bookTestProvider
+                                          .bookTest(payload, context);
 
-                          await paymentProvider.startPayment(
-                            context,
-                            "labtest",
-                            widget.test.id.toString(),
-                            widget.test.price!.toInt(), // ✅ INT ONLY
-                            "Online",
-                            // ✅ PAYMENT SUCCESS (already verified inside provider)
-                                () async {
-                              final success =
-                              await bookTestProvider.bookTest(payload, context);
+                                      if (success) {
+                                        showTestSuccessDialog();
+                                        Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          '/dashboard',
+                                          (route) => false,
+                                        );
+                                      }
+                                    },
 
-                              if (success) {
-                                showTestSuccessDialog();
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  '/my-test',
-                                      (route) => false,
-                                );
-                              }
-                            },
-
-                            // ❌ PAYMENT FAILED
-                                (error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(error)),
-                              );
-
-                            },
-                          );
-                        },
+                                    //  PAYMENT FAILED
+                                    (error) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(content: Text(error)),
+                                      );
+                                    },
+                                  );
+                                },
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
@@ -367,8 +381,6 @@ class _BookTestFormScreenState extends State<BookTestFormScreen> {
                                         color: Colors.white,
                                       ),
                                     )
-
-
                                     : Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
