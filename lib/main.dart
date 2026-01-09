@@ -1,105 +1,118 @@
 import 'package:flutter/material.dart';
-import 'package:lifeline_healthcare_app/splash_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
+import 'package:lifeline_healthcare_app/providers/appointment_provider/book_appointment_provider.dart';
+import 'package:lifeline_healthcare_app/providers/payment_provider/payment_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
+import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
+import 'package:lifeline_healthcare_app/providers/dashboard_provider.dart';
+import 'package:lifeline_healthcare_app/providers/doctor_provider/doctor_provider.dart';
+import 'package:lifeline_healthcare_app/providers/labtest_provider/book_test_provider.dart';
+import 'package:lifeline_healthcare_app/providers/labtest_provider/cancel_test_provider.dart';
+import 'package:lifeline_healthcare_app/providers/medicine_provider/medicineCart_provider.dart';
+import 'package:lifeline_healthcare_app/providers/medicine_provider/medicine_order_provider.dart';
+import 'package:lifeline_healthcare_app/providers/medicine_provider/product_provider.dart';
+import 'package:lifeline_healthcare_app/providers/rating_provider/app_rating_review_provider.dart';
+import 'package:lifeline_healthcare_app/providers/rating_provider/submit_rating_provider.dart';
+import 'package:lifeline_healthcare_app/providers/surgery_provider/surgery_provider.dart';
+import 'package:lifeline_healthcare_app/providers/theme_provider/theme_provider.dart';
+import 'package:lifeline_healthcare_app/providers/labtest_provider/popular_test_provider.dart';
+import 'package:lifeline_healthcare_app/screens/labtest/patient_my_labtest_screen.dart';
+import 'package:lifeline_healthcare_app/screens/medicine%20screen/medicine_order_detail_screen.dart';
+import 'package:lifeline_healthcare_app/screens/medicine%20screen/my_medicine_order.dart';
+import 'package:lifeline_healthcare_app/screens/user_profile/complete_profile_screen.dart';
+import 'package:lifeline_healthcare_app/screens/auth/phone_auth_screen.dart';
+import 'package:lifeline_healthcare_app/screens/home/dashboard_screen.dart';
+import 'package:lifeline_healthcare_app/screens/splash/splash_screen.dart';
+import 'package:lifeline_healthcare_app/screens/user_profile/edit_profile_screen.dart';
+import 'package:provider/provider.dart';
+
+import 'config/app_theme_colors.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => PopularTestProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => BookTestProvider()),
+        ChangeNotifierProvider(create: (context) => SurgeryProvider()),
+        ChangeNotifierProvider(create: (context) => DashBoardProvider()),
+        ChangeNotifierProvider(create: (context) => DoctorProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => MedicineOrderProvider()),
+        ChangeNotifierProvider(create: (context) => SurgeryProvider()),
+        ChangeNotifierProvider(create: (context) => DashBoardProvider()),
+        ChangeNotifierProvider(create: (context) => DoctorProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => TopRatingProvider()),
+        ChangeNotifierProvider(create: (context) => SubmitRatingProvider()),
+        ChangeNotifierProvider(create: (context) => UserProfileProvider()),
+        ChangeNotifierProvider(create: (context) => CancelTestProvider()),
+        ChangeNotifierProvider(create: (context) => CartDataProvider()),
+        ChangeNotifierProvider(create: (context) => BookAppointmentProvider()),
+        ChangeNotifierProvider(create: (context) => PaymentProvider(),)
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: const SplashScreen(),
-    );
-  }
-}
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      builder: (context, child) {
+        return Consumer<ThemeProvider>(
+          builder: (context, themeProvider, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Lifeline Healthcare',
+              theme: ThemeData(
+                brightness: Brightness.light,
+                extensions: [
+                  AppThemeColors(
+                    glassBackground: Colors.white.withOpacity(0.4),
+                    borderColor: Colors.white.withOpacity(0.7),
+                    cardShadow: Colors.black.withOpacity(0.05),
+                  ),
+                ],
+              ),
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+              darkTheme: ThemeData(
+                brightness: Brightness.dark,
+                extensions: [
+                  AppThemeColors(
+                    glassBackground: Colors.white.withOpacity(0.10),
+                    borderColor: Colors.white.withOpacity(0.20),
+                    cardShadow: Colors.black.withOpacity(0.50),
+                  ),
+                ],
+              ),
+              themeMode:
+                  themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
+              routes: {
+                '/phone_auth_screen': (context) => const PhoneAuthScreen(),
+                '/dashboard': (context) => const DashboardScreen(),
+                '/splash_screen': (context) => const SplashScreen(),
+                '/create_profile': (context) => const CompleteProfileScreen(),
+                '/edit-profile': (context) => const EditProfileScreen(),
+                '/my-order':(context)=>const OrdersScreen(),
+                '/my-test':(context)=>const MyTestScreen()
+              },
+              home: SplashScreen(),
+            );
+          },
+        );
+      },
+      child: const SplashScreen(),
     );
   }
 }
