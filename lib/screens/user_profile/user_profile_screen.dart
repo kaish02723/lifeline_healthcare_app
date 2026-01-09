@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/user_detail/User_profile_provider.dart';
 import 'dart:ui';
 import '../../config/color.dart';
+import '../../widgets/profile_image_view.dart';
 import 'edit_profile_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -83,23 +84,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     SizedBox(height: 20),
                     Center(
                       child: Center(
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Colors.teal.shade100,
-                          backgroundImage:
-                          (user.picture != null && user.picture!.isNotEmpty)
-                              ? NetworkImage(user.picture!)
-                              : null,
-                          child: (user.picture == null || user.picture!.isEmpty)
-                              ? const Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.grey,
-                          )
-                              : null,
+                        child: GestureDetector(
+                          onTap: () {
+                            if (user.picture != null &&
+                                user.picture!.isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => ProfileImageView(
+                                        imageUrl: user.picture!,
+                                      ),
+                                ),
+                              );
+                            }
+                          },
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.teal.shade100,
+                            backgroundImage:
+                                (user.picture != null &&
+                                        user.picture!.isNotEmpty)
+                                    ? NetworkImage(user.picture!)
+                                    : null,
+                            child:
+                                (user.picture == null || user.picture!.isEmpty)
+                                    ? const Icon(
+                                      Icons.person,
+                                      size: 60,
+                                      color: Colors.grey,
+                                    )
+                                    : null,
+                          ),
                         ),
                       ),
-
                     ),
 
                     SizedBox(height: 10),

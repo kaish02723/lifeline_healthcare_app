@@ -139,61 +139,68 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
                       const SizedBox(height: 10),
 
-                      /// ==============================
-                      /// SEND OTP BUTTON (UPDATED)
-                      /// ==============================
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 20,
-                        ),
-                        child: ValueListenableBuilder<bool>(
-                          valueListenable: provider.isPhoneValid,
-                          builder: (context, isValid, _) {
-                            return GestureDetector(
-                              onTap:
-                                  isValid
-                                      ? () {
-                                        if (provider.formKey.currentState!
-                                            .validate()) {
-                                          provider.sendOtp(context);
-                                        } else {
-                                          HapticFeedback.mediumImpact();
-                                        }
-                                      }
-                                      : null,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
-                                height: 50,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(9),
-                                  gradient: LinearGradient(
-                                    colors:
-                                        isValid
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                        child: Consumer<AuthProvider>(
+                          builder: (context, auth, _) {
+                            return ValueListenableBuilder<bool>(
+                              valueListenable: auth.isPhoneValid,
+                              builder: (context, isValid, _) {
+                                final bool isDisabled = !isValid || auth.isLoading;
+
+                                return GestureDetector(
+                                  onTap: isDisabled
+                                      ? null
+                                      : () {
+                                    if (auth.formKey.currentState!.validate()) {
+                                      auth.sendOtp(context);
+                                    } else {
+                                      HapticFeedback.mediumImpact();
+                                    }
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 250),
+                                    height: 50,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(9),
+                                      gradient: LinearGradient(
+                                        colors: isDisabled
                                             ? [
-                                              Color(0xFF00796B),
-                                              Color(0xFF26A69A),
-                                            ]
-                                            : [
-                                              Colors.grey.shade400,
-                                              Colors.grey.shade500,
-                                            ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Send OTP",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                          Colors.grey.shade400,
+                                          Colors.grey.shade500,
+                                        ]
+                                            : const [
+                                          Color(0xFF00796B),
+                                          Color(0xFF26A69A),
+                                        ],
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: auth.isLoading
+                                          ? const SizedBox(
+                                        height: 22,
+                                        width: 22,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2.5,
+                                          valueColor:
+                                          AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                          : Text(
+                                        "Send OTP",
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             );
                           },
                         ),
