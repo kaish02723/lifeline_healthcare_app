@@ -162,19 +162,52 @@ class _SurgeryCard extends StatelessWidget {
           _info("Patient", data.name),
           _info("Phone", data.phone_no),
           _info("Description", data.description),
-          _info("Booked", formatDate(data.booked_At ?? '')),
+          _info("Booked", formatDate(data.createdAt ?? '')),
 
           if ((data.status ?? '').toLowerCase() == "pending")
             Align(
               alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  showCancelSurgeryDialog(context, index: index);
-                },
-                child: const Text(
-                  "Cancel Surgery",
-                  style: TextStyle(color: Colors.redAccent, fontSize: 13),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      final provider = Provider.of<SurgeryProvider>(
+                        context,
+                        listen: false,
+                      );
+
+                      // 🔥 Prefill controllers
+                      provider.updateNameController.text = data.name ?? '';
+                      provider.updatePhoneNoController.text =
+                          data.phone_no ?? '';
+                      provider.updateSurgeryTypeController.text =
+                          data.surgery_type ?? '';
+                      provider.updateDescriptionController.text =
+                          data.description ?? '';
+
+                      showEditSurgeryBottomSheet(
+                        context,
+                        requestId: data.requestId,
+                      );
+                    },
+                    icon: const Icon(Icons.edit, size: 16),
+                    label: const Text("Edit"),
+                  ),
+
+                  TextButton(
+                    onPressed: () {
+                      showCancelSurgeryDialog(
+                        context,
+                        requestId: data.requestId,
+                      );
+                    },
+                    child: const Text(
+                      "Cancel Surgery",
+                      style: TextStyle(color: Colors.redAccent, fontSize: 13),
+                    ),
+                  ),
+                ],
               ),
             ),
         ],
@@ -228,31 +261,60 @@ class _StatusChip extends StatelessWidget {
   }
 }
 
-void showCancelSurgeryDialog(BuildContext context, {required int index}) {
-  final controller = TextEditingController();
-
+void showCancelSurgeryDialog(BuildContext context, {required int requestId}) {
   showDialog(
     context: context,
     builder: (_) {
-      return AlertDialog(
-        title: const Text("Cancel Surgery"),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(hintText: "Enter cancel reason"),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("No"),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-            onPressed: () {
-              // cancel surgery
-            },
-            child: const Text("Yes, Cancel"),
-          ),
-        ],
+      return Consumer<SurgeryProvider>(
+        builder: (context, surgeryProvider, _) {
+          return AlertDialog(
+            title: const Text("Cancel Surgery"),
+            content: TextField(
+              controller: surgeryProvider.surgeryCancelController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: "Enter cancel reason",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  surgeryProvider.surgeryCancelController.clear();
+                  Navigator.pop(context);
+                },
+                child: const Text("No"),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                ),
+                onPressed:
+                    surgeryProvider.isSubmitting
+                        ? null
+                        : () async {
+                          await surgeryProvider.cancelSurgery(
+                            requestId,
+                            context,
+                          );
+
+                          Navigator.pop(context); // ✅ close dialog
+                        },
+                child:
+                    surgeryProvider.isSubmitting
+                        ? const SizedBox(
+                          height: 18,
+                          width: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                        : const Text("Yes, Cancel"),
+              ),
+            ],
+          );
+        },
       );
     },
   );
@@ -276,4 +338,199 @@ class _EmptyState extends StatelessWidget {
       ),
     );
   }
+}
+
+void showEditSurgeryBottomSheet(
+  BuildContext context, {
+  required int requestId,
+}) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: isDark ? AppColors.cardDark : AppColors.card,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (_) {
+      return Consumer<SurgeryProvider>(
+        builder: (context, provider, _) {
+          return Padding(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      height: 4,
+                      width: 40,
+                      margin: const EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+
+                  Text(
+                    "Edit Surgery",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? AppColors.textDark : AppColors.text,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  _editField(
+                    controller: provider.updateNameController,
+                    label: "Patient Name",
+                    icon: Icons.person,
+                    isDark: isDark,
+                  ),
+
+                  _editField(
+                    controller: provider.updatePhoneNoController,
+                    label: "Phone Number",
+                    icon: Icons.phone,
+                    keyboard: TextInputType.phone,
+                    isDark: isDark,
+                  ),
+
+                  _editField(
+                    controller: provider.updateSurgeryTypeController,
+                    label: "Surgery Type",
+                    icon: Icons.local_hospital,
+                    isDark: isDark,
+                  ),
+
+                  _editField(
+                    controller: provider.updateDescriptionController,
+                    label: "Description",
+                    icon: Icons.notes,
+                    maxLines: 3,
+                    isDark: isDark,
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isDark ? AppColors.primaryDark : AppColors.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed:
+                          provider.isSubmitting
+                              ? null
+                              : () async {
+                                await provider.updateSurgery(
+                                  requestId,
+                                  context,
+                                );
+
+                                Navigator.pop(context);
+                              },
+                      child:
+                          provider.isSubmitting
+                              ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                "Update Surgery",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+Widget _editField({
+  required TextEditingController controller,
+  required String label,
+  required IconData icon,
+  required bool isDark,
+  TextInputType keyboard = TextInputType.text,
+  int maxLines = 1,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 14),
+    child: TextField(
+      controller: controller,
+      keyboardType: keyboard,
+      maxLines: maxLines,
+      cursorColor: isDark ? AppColors.colorTextDark : AppColors.colorText,
+      style: TextStyle(
+        color: isDark ? AppColors.textDark : AppColors.text,
+        fontSize: 14,
+      ),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(
+          color: isDark ? AppColors.lightGreyTextDark : AppColors.lightGreyText,
+        ),
+        floatingLabelStyle: TextStyle(
+          color: isDark ? AppColors.colorTextDark : AppColors.colorText,
+          fontWeight: FontWeight.w600,
+        ),
+        prefixIcon: Icon(
+          icon,
+          color: isDark ? AppColors.iconDark : AppColors.icon,
+        ),
+        filled: true,
+        fillColor:
+            isDark
+                ? AppColors.backgroundDark.withOpacity(0.6)
+                : AppColors.white,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color:
+                isDark
+                    ? AppColors.greyTextDark.withOpacity(0.3)
+                    : Colors.grey.shade300,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: isDark ? AppColors.primaryDark : AppColors.primary,
+            width: 1.4,
+          ),
+        ),
+      ),
+    ),
+  );
 }
