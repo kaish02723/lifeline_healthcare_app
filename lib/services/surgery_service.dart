@@ -18,19 +18,19 @@ class SurgeryService {
     final authToken = authProvider.token;
 
     var response = await http.get(
-      Uri.parse("$baseUrl/surgery/my-surgery"),
+      Uri.parse("$baseUrl/surgeryRequest/userRequests"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $authToken",
       },
     );
 
-    // print(response.body);
-    // print(response.request?.headers);
+    print(response.body);
+    print(response.request?.headers);
 
     if (response.statusCode == 200) {
       var decode = jsonDecode(response.body);
-      List<dynamic> data = decode["data"];
+      List<dynamic> data = decode["surgeryRequests"];
 
       getSurgeryList =
           data.map((e) => BookSurgeryModel.jsonToModal(e)).toList();
@@ -47,7 +47,7 @@ class SurgeryService {
     final authToken = authProvider.token;
 
     var response = await http.post(
-      Uri.parse("$baseUrl/surgery/book_surgery"),
+      Uri.parse("$baseUrl/surgeryRequest/create"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $authToken",
@@ -65,6 +65,66 @@ class SurgeryService {
     } else {
       print("Error: ${response.statusCode}");
       return null;
+    }
+  }
+
+  Future<bool> cancelSurgery(
+    int requestId,
+    Map<String, dynamic> cancelReason,
+    BuildContext context,
+  ) async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authToken = authProvider.token;
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/surgeryRequest/cancel/$requestId'),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken",
+        },
+        body: jsonEncode(cancelReason),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        debugPrint("Cancel failed: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Cancel error: $e");
+      return false;
+    }
+  }
+
+  Future<bool> updateSurgeryDetail(
+    int requestId,
+    BuildContext context,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final token = authProvider.token;
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/surgeryRequest/update/$requestId'),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        debugPrint("Update failed: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Update error: $e");
+      return false;
     }
   }
 }
