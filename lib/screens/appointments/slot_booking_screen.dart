@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../config/color.dart';
 import '../../providers/appointment_provider/book_appointment_provider.dart';
 import '../../models/doctors/doctor_model.dart';
+import '../../providers/doctor_slot_provider/doctor_slot_provider.dart';
 
 class SlotBookingScreen extends StatefulWidget {
   final DoctorModel doctor;
@@ -20,92 +21,6 @@ class _SlotBookingScreenState extends State<SlotBookingScreen> {
   String selectedEndTime = "";
   String selectedDate = "";
   String appointmentType = "Physical";
-
-  TimeOfDay _parseTime(String time) {
-    final cleaned = time.trim();
-
-    // Case 1: "09:00 AM"
-    if (cleaned.contains(' ')) {
-      final parts = cleaned.split(' ');
-      final hm = parts[0].split(':');
-
-      int hour = int.parse(hm[0]);
-      int minute = hm.length > 1 ? int.parse(hm[1]) : 0;
-
-      final period = parts[1].toUpperCase();
-
-      if (period == 'PM' && hour != 12) hour += 12;
-      if (period == 'AM' && hour == 12) hour = 0;
-
-      return TimeOfDay(hour: hour, minute: minute);
-    }
-    if (cleaned.contains(':')) {
-      final hm = cleaned.split(':');
-      return TimeOfDay(hour: int.parse(hm[0]), minute: int.parse(hm[1]));
-    }
-    return TimeOfDay(hour: int.parse(cleaned), minute: 0);
-  }
-
-  List<Map<String, dynamic>> _generateSlots() {
-    final timing = widget.doctor.timing;
-
-    if (timing == null ||
-        timing.start == null ||
-        timing.end == null ||
-        timing.start!.isEmpty ||
-        timing.end!.isEmpty) {
-      return [];
-    }
-
-    final start = _parseTime(timing.start!);
-    TimeOfDay end = _parseTime(timing.end!);
-
-    // 🔥 IMPORTANT FIX
-    if (end.hour < start.hour) {
-      end = TimeOfDay(hour: end.hour + 12, minute: end.minute);
-    }
-
-    final List<Map<String, dynamic>> result = [];
-    int slotId = 1;
-
-    TimeOfDay current = start;
-
-    while (true) {
-      final nextMinute = current.minute + 30;
-      final nextHour = current.hour + (nextMinute ~/ 60);
-      final next = TimeOfDay(hour: nextHour, minute: nextMinute % 60);
-
-      if (next.hour > end.hour ||
-          (next.hour == end.hour && next.minute > end.minute)) {
-        break;
-      }
-
-      result.add({
-        "id": slotId++,
-        "start": _formatTime(current),
-        "end": _formatTime(next),
-      });
-
-      current = next;
-    }
-
-    return result;
-  }
-
-  String _formatTime(TimeOfDay time) {
-    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final minute = time.minute.toString().padLeft(2, '0');
-    final period = time.period == DayPeriod.am ? "AM" : "PM";
-    return "$hour:$minute $period";
-  }
-
-  late List<Map<String, dynamic>> slots;
-
-  @override
-  void initState() {
-    super.initState();
-    slots = _generateSlots();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,10 +132,21 @@ class _SlotBookingScreenState extends State<SlotBookingScreen> {
           lastDate: DateTime.now().add(const Duration(days: 30)),
           initialDate: DateTime.now(),
         );
+
         if (picked != null) {
+          /// ✅ EXACT BACKEND FORMAT
+          final formattedDate =
+              "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+
           setState(() {
-            selectedDate = "${picked.year}-${picked.month}-${picked.day}";
+            selectedDate = formattedDate;
+            selectedSlotId = -1;
           });
+
+          await Provider.of<DoctorSlotProvider>(
+            context,
+            listen: false,
+          ).getGeneratedSlot(widget.doctor.id!, formattedDate);
         }
       },
       child: Container(
@@ -238,52 +164,74 @@ class _SlotBookingScreenState extends State<SlotBookingScreen> {
   }
 
   Widget _slotGrid(bool isDark) {
-    if (slots.isEmpty) {
-      return Text(
-        "No slots available",
-        style: TextStyle(
-          color: isDark ? AppColors.lightGreyTextDark : AppColors.lightGreyText,
-        ),
-      );
-    }
+    return Consumer<DoctorSlotProvider>(
+      builder: (context, provider, _) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      children:
-          slots.map((slot) {
-            final selected = selectedSlotId == slot["id"];
-
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedSlotId = slot["id"];
-                  selectedStartTime = slot["start"];
-                  selectedEndTime = slot["end"];
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 16,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color:
-                      selected
-                          ? AppColors.secondary
-                          : (isDark ? AppColors.cardDark : AppColors.white),
-                  border: Border.all(color: AppColors.secondary),
-                ),
-                child: Text(
-                  "${slot["start"]} - ${slot["end"]}",
-                  style: TextStyle(
-                    color: selected ? Colors.white : AppColors.text,
-                  ),
-                ),
+        if (provider.allGeneratedSlotList.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.cardDark : AppColors.card,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              provider.message.isNotEmpty
+                  ? provider.message
+                  : "No slots available",
+              style: TextStyle(
+                color:
+                    isDark
+                        ? AppColors.lightGreyTextDark
+                        : AppColors.lightGreyText,
               ),
-            );
-          }).toList(),
+            ),
+          );
+        }
+
+        final slots = provider.allGeneratedSlotList.first.slots ?? [];
+
+        return Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children:
+              slots.map((slot) {
+                final selected = selectedSlotId == slot.id;
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedSlotId = slot.id!;
+                      selectedStartTime = slot.start_time!;
+                      selectedEndTime = slot.end_time!;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color:
+                          selected
+                              ? AppColors.secondary
+                              : (isDark ? AppColors.cardDark : AppColors.white),
+                      border: Border.all(color: AppColors.secondary),
+                    ),
+                    child: Text(
+                      "${slot.start_time} - ${slot.end_time}",
+                      style: TextStyle(
+                        color: selected ? Colors.white : AppColors.text,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+        );
+      },
     );
   }
 
@@ -335,6 +283,15 @@ class _SlotBookingScreenState extends State<SlotBookingScreen> {
                 provider.isLoading
                     ? null
                     : () async {
+                      if (selectedDate.isEmpty || selectedSlotId == -1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please select date & slot"),
+                          ),
+                        );
+                        return;
+                      }
+
                       final result = await provider.createAppointment(
                         context: context,
                         doctorId: widget.doctor.id!,
@@ -347,8 +304,6 @@ class _SlotBookingScreenState extends State<SlotBookingScreen> {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          showCloseIcon: true,
-                          closeIconColor: Colors.white,
                           content: Text(result["message"]),
                           backgroundColor:
                               result["success"]

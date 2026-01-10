@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lifeline_healthcare_app/providers/CartProvider.dart';
 import 'package:lifeline_healthcare_app/providers/appointment_provider/book_appointment_provider.dart';
+import 'package:lifeline_healthcare_app/providers/doctor_slot_provider/doctor_slot_provider.dart';
 import 'package:lifeline_healthcare_app/providers/payment_provider/payment_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/User_profile_provider.dart';
 import 'package:lifeline_healthcare_app/providers/user_detail/auth_provider.dart';
@@ -54,7 +55,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => CancelTestProvider()),
         ChangeNotifierProvider(create: (context) => CartDataProvider()),
         ChangeNotifierProvider(create: (context) => BookAppointmentProvider()),
-        ChangeNotifierProvider(create: (context) => PaymentProvider(),)
+        ChangeNotifierProvider(create: (context) => PaymentProvider()),
+        ChangeNotifierProvider(create: (context) => DoctorSlotProvider()),
       ],
       child: MyApp(),
     ),
@@ -104,8 +106,8 @@ class MyApp extends StatelessWidget {
                 '/splash_screen': (context) => const SplashScreen(),
                 '/create_profile': (context) => const CompleteProfileScreen(),
                 '/edit-profile': (context) => const EditProfileScreen(),
-                '/my-order':(context)=>const OrdersScreen(),
-                '/my-test':(context)=>const MyTestScreen()
+                '/my-order': (context) => const OrdersScreen(),
+                '/my-test': (context) => const MyTestScreen(),
               },
               home: SplashScreen(),
             );
