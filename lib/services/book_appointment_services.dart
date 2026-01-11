@@ -34,19 +34,8 @@ class BookAppointmentServices {
   Future<Map<String, dynamic>> bookAppointment({
     required int doctorId,
     required int slotId,
-    required String slotDate,
-    required String startTime,
-    required String endTime,
-    required String type,
   }) async {
-    final body = {
-      "doctor_id": doctorId,
-      "slot_id": slotId,
-      "slot_date": slotDate,
-      "start_time": startTime,
-      "end_time": endTime,
-      "type": type,
-    };
+    final body = {"doctor_id": doctorId, "slot_id": slotId};
 
     final response = await http.post(
       Uri.parse('$baseUrl/appointments/book'),

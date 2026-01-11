@@ -254,7 +254,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xff00796B),
+        backgroundColor: isDark ? AppColors.primaryDark : AppColors.primary,
         elevation: 4,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(

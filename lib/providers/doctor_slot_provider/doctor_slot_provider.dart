@@ -7,18 +7,33 @@ class DoctorSlotProvider with ChangeNotifier {
   bool isLoading = false;
   String message = "";
 
-  SlotService service = SlotService();
+  String selectedDate = "";
 
-  Future<void> getGeneratedSlot(int doctorId, String selectedDate) async {
+  String displayDate = "";
+
+  SlotDataModel? selectedSlot;
+  String appointmentType = "Physical";
+
+  final SlotService service = SlotService();
+
+
+  Future<void> getGeneratedSlot(
+      int doctorId,
+      String apiDate, {
+        String? displayDate,
+      }) async {
     try {
       isLoading = true;
       message = "";
+
+      selectedDate = apiDate; // backend use
+      this.displayDate = displayDate ?? apiDate; // ui use
+      selectedSlot = null;
+
       notifyListeners();
 
-      final result = await service.getDoctorGeneratedSlot(
-        doctorId,
-        selectedDate,
-      );
+      final result =
+      await service.getDoctorGeneratedSlot(doctorId, apiDate);
 
       allGeneratedSlotList = result;
 
@@ -28,10 +43,22 @@ class DoctorSlotProvider with ChangeNotifier {
     } catch (e) {
       message = "Failed to load slots";
       allGeneratedSlotList = [];
-      print('Slot Error: $e');
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
+
+  void selectSlot(SlotDataModel slot) {
+    selectedSlot = slot;
+    notifyListeners();
+  }
+
+  void changeAppointmentType(String type) {
+    appointmentType = type;
+    notifyListeners();
+  }
+
+  bool get canProceed =>
+      selectedDate.isNotEmpty && selectedSlot != null;
 }
