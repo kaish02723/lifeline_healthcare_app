@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lifeline_healthcare_app/screens/doctor/pay_to_book_screen.dart';
 import 'package:provider/provider.dart';
 import '../../config/color.dart';
 import '../../providers/appointment_provider/book_appointment_provider.dart';
@@ -279,46 +280,25 @@ class _SlotBookingScreenState extends State<SlotBookingScreen> {
               backgroundColor: AppColors.primary,
               padding: const EdgeInsets.all(16),
             ),
-            onPressed:
-                provider.isLoading
-                    ? null
-                    : () async {
-                      if (selectedDate.isEmpty || selectedSlotId == -1) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please select date & slot"),
-                          ),
-                        );
-                        return;
-                      }
-
-                      final result = await provider.createAppointment(
-                        context: context,
-                        doctorId: widget.doctor.id!,
-                        slotId: selectedSlotId,
-                        slotDate: selectedDate,
-                        startTime: selectedStartTime,
-                        endTime: selectedEndTime,
-                        type: appointmentType,
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(result["message"]),
-                          backgroundColor:
-                              result["success"]
-                                  ? Colors.green.shade800
-                                  : Colors.red.shade800,
-                        ),
-                      );
-                    },
-            child:
-                provider.isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                      "Confirm Appointment",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => PayToBookScreen(
+                        doctor: widget.doctor,
+                        appointmentType: appointmentType,
+                        selectedDate: selectedDate,
+                        selectedEndTime: selectedEndTime,
+                        selectedStartTime: selectedStartTime,
+                      ),
+                ),
+              );
+            },
+            child: Text(
+              "Confirm Appointment",
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
           ),
         );
       },
