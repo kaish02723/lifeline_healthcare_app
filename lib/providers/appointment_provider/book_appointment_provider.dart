@@ -35,10 +35,6 @@ class BookAppointmentProvider with ChangeNotifier {
     required BuildContext context,
     required int doctorId,
     required int slotId,
-    required String slotDate,
-    required String startTime,
-    required String endTime,
-    required String type,
   }) async {
     isLoading = true;
     notifyListeners();
@@ -49,10 +45,6 @@ class BookAppointmentProvider with ChangeNotifier {
       final result = await _service!.bookAppointment(
         doctorId: doctorId,
         slotId: slotId,
-        slotDate: slotDate,
-        startTime: startTime,
-        endTime: endTime,
-        type: type,
       );
 
       if (result["success"] == true) {

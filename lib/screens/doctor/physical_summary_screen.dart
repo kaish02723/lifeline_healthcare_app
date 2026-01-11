@@ -136,12 +136,6 @@ class _PhysicalSummaryScreenState extends State<PhysicalSummaryScreen> {
                               context: context,
                               doctorId: selectedDoctor!.id ?? 0,
                               slotId: 4,
-                              // selected slot
-                              slotDate: "2026-01-01",
-                              // selected date
-                              startTime: selectedDoctor!.timing?.start ?? '',
-                              endTime: selectedDoctor!.timing?.end ?? '',
-                              type: selectedDoctor!.speciality ?? '',
                             );
 
                             ScaffoldMessenger.of(context).showSnackBar(
