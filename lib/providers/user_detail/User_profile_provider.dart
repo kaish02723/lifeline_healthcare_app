@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user_details/user_detail_model.dart';
@@ -78,7 +77,7 @@ class UserProfileProvider with ChangeNotifier {
       final token = await auth.getToken();
 
       final request = http.MultipartRequest(
-        "POST", // 👈 create
+        "POST", //  create
         Uri.parse('$baseUrl/create-profile'),
       );
 
@@ -163,8 +162,6 @@ class UserProfileProvider with ChangeNotifier {
 
   /// IMAGE PICK
   Future<void> pickImage() async {
-    var status = await Permission.storage.status;
-    if (status.isDenied) {
       final pickedFile = await _picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 80,
@@ -174,7 +171,6 @@ class UserProfileProvider with ChangeNotifier {
         imageFile = File(pickedFile.path);
         notifyListeners();
       }
-    }
   }
   //pic from camera
   Future<void> pickCameraImage() async {
