@@ -21,7 +21,7 @@ class AuthProvider with ChangeNotifier {
 
   final RegExp phoneRegex = RegExp(r'^[0-9]{10}$');
 
-  final String authUrl = 'https://phone-auth-with-jwt-4.onrender.com/auth';
+  final String authUrl = 'https://healthcare.edugaondev.com/auth';
 
   ValueNotifier<int> timerValue = ValueNotifier(60);
   Timer? _timer;
@@ -97,8 +97,8 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode({"phone": "+91${phoneController.text}"}),
       );
 
-      // print(res.body);
-      // print(res.request?.headers);
+      print(res.body);
+      print(res.request?.headers);
 
       final body = jsonDecode(res.body);
 
@@ -120,7 +120,7 @@ class AuthProvider with ChangeNotifier {
       // print("SEND OTP ERROR: $e");
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+      ).showSnackBar(SnackBar(content: Text("Something went wrong: $e")));
     } finally {
       isLoading = false;
       notifyListeners();

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:lifeline_healthcare_app/models/labtest_models/popular_test_model.dart';
 
 class PopularTestProvider with ChangeNotifier {
-  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
+  final baseUrl = 'https://healthcare.edugaondev.com';
 
   List<TestDataModel> originalList = [];
   List<TestDataModel> popularDataList = [];
@@ -28,6 +28,9 @@ class PopularTestProvider with ChangeNotifier {
       var response = await http.get(
         Uri.parse('$baseUrl/lab/all-popular-tests'),
       );
+
+      print(response.body);
+      print(response.request?.headers);
 
       if (response.statusCode == 200) {
         var jsonBody = jsonDecode(response.body);

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:lifeline_healthcare_app/models/doctor_slot_model/slot_model.dart';
 
 class SlotService {
-  final String baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
+  final String baseUrl = 'https://healthcare.edugaondev.com';
 
   Future<List<SlotModel>> getDoctorGeneratedSlot(
       int doctorId,

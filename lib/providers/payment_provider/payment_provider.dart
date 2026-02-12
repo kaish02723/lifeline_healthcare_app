@@ -73,7 +73,7 @@ class PaymentProvider with ChangeNotifier {
 
     razorpayService.openRazorpay(
       orderId,
-      (amount * 100).toInt(), // ✅ correct
+      (amount * 100).toInt(),
       key,
     );
   }

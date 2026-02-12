@@ -13,7 +13,7 @@ class TopRatingProvider with ChangeNotifier {
   TotalRatingAverageData? averageData;
 
   final String baseUrl =
-      'https://phone-auth-with-jwt-4.onrender.com/rating';
+      'https://healthcare.edugaondev.com/rating';
 
   Future<void> fetchTopReviews() async {
     isLoadingTopReviews = true;

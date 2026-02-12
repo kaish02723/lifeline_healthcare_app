@@ -9,7 +9,7 @@ import '../../models/user_details/user_detail_model.dart';
 import 'auth_provider.dart';
 
 class UserProfileProvider with ChangeNotifier {
-  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com/userProfile';
+  final baseUrl = 'https://healthcare.edugaondev.com/userProfile';
 
   UserDataModel? user;
 

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:lifeline_healthcare_app/models/doctors/doctor_model.dart';
 
 class DoctorProvider with ChangeNotifier {
-  final String baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
+  final String baseUrl = "https://healthcare.edugaondev.com";
   bool isSearching = false;
 
   List<DoctorModel> allDoctorsList = [];

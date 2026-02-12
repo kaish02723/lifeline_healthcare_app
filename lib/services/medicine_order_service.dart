@@ -8,7 +8,7 @@ import '../../../models/medicine_models/medicine_order_modal.dart';
 import '../providers/user_detail/auth_provider.dart';
 
 class MedicineOrderService {
-  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
+  final baseUrl = 'https://healthcare.edugaondev.com';
 
   List<MedicineOrderModal> getMedicineOrdersList = [];
 
@@ -60,7 +60,7 @@ class MedicineOrderService {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final decoded = jsonDecode(response.body);
 
-      /// ✅ YAHI LINE MISSING THI
+      ///  YAHI LINE MISSING THI
       final int orderId = decoded['data']['order_id'];
 
       return orderId;
