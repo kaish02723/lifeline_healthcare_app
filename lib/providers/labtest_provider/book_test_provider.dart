@@ -12,7 +12,7 @@ class BookTestProvider with ChangeNotifier {
   bool isLoading = false;
   List<MyTestDataModel> myLabTestList = [];
 
-  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
+  final baseUrl = 'https://healthcare.edugaondev.com';
 
   Future<bool> bookTest(Map<String, dynamic> data, BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);

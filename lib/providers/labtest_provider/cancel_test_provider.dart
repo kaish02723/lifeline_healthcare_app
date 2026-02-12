@@ -9,8 +9,8 @@ import '../user_detail/auth_provider.dart';
 
 class CancelTestProvider with ChangeNotifier {
   TextEditingController cancelReasonController = TextEditingController();
-  final cancelStatusUrl = 'https://labtest-and-booktest.onrender.com/bookings';
-  final cancelReasonUrl = 'https://phone-auth-with-jwt-4.onrender.com';
+  final cancelStatusUrl = 'https://healthcare.edugaondev.com/bookings';
+  final cancelReasonUrl = 'https://healthcare.edugaondev.com';
 
   Future<void> cancelLabTest(BuildContext context, int index) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);

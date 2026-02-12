@@ -7,7 +7,7 @@ import '../models/appointment_model/book_appointment_modal.dart';
 
 class BookAppointmentServices {
   final String token;
-  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
+  final baseUrl = 'https://healthcare.edugaondev.com';
 
   BookAppointmentServices({required this.token});
 

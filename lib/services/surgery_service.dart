@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../models/surgery/surgery_model.dart';
 
 class SurgeryService {
-  final baseUrl = 'https://phone-auth-with-jwt-4.onrender.com';
+  final baseUrl = 'https://healthcare.edugaondev.com';
   List<BookSurgeryModel> getSurgeryList = [];
 
   // ApiHelperSurgery();

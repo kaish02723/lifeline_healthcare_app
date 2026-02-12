@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/medicine_models/medicine_product_model.dart';
 
 class ProductProvider with ChangeNotifier {
-  final String _baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
+  final String _baseUrl = "https://healthcare.edugaondev.com";
 
   List<ProductModel> _products = [];
   Category? _selectedCategory;

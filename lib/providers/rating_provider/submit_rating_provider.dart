@@ -25,7 +25,7 @@ class SubmitRatingProvider with ChangeNotifier {
 
     try {
       final uri = Uri.parse(
-        "https://phone-auth-with-jwt-4.onrender.com/rating/ratenow",
+        "https://healthcare.edugaondev.com/rating/ratenow",
       );
 
       final response = await http.post(

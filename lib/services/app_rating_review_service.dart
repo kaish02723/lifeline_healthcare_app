@@ -4,7 +4,7 @@ import '../../../models/rating_model/top_rating_review_api_model.dart';
 
 class TopRatingService {
   static const String _baseUrl =
-      "http://localhost:7000/api/ratings";
+      "https://healthcare.edugaondev.com";
 
   Future<TopRatingReviewApiModel> fetchTopRatings() async {
     try {
