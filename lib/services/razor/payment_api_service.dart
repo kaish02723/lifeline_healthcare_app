@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 
 class PaymentApiService {
 
-  String baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
-
+  // String baseUrl = "https://phone-auth-with-jwt-4.onrender.com";
+  String baseUrl = "https://healthcare.edugaondev.com";
   /// 1️⃣ CREATE ORDER (backend)
   Future<Map<String, dynamic>> createOrder(
       BuildContext context,

@@ -216,7 +216,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => CompleteProfileScreen(),), (route) => false,);
+                         // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => CompleteProfileScreen(),), (route) => false,);
                         },
                         child: const Text('Skip'),
                       ),

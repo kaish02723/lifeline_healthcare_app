@@ -1,7 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Internet access for APIs -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- Network state -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <!-- Camera (if user uploads profile image using camera) -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- Storage access for image upload -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+
+    <!-- For Android < 13 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:label="Lifeline Healthcare"

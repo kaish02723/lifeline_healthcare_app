@@ -85,30 +85,37 @@ class AuthProvider with ChangeNotifier {
     _timer?.cancel();
   }
 
+
   Future<void> sendOtp(BuildContext context) async {
     if (isLoading) return;
+
     isLoading = true;
     notifyListeners();
 
     try {
+      final phone = phoneController.text.trim();
+
       final res = await http.post(
         Uri.parse('$authUrl/send-otp'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"phone": "+91${phoneController.text}"}),
+        body: jsonEncode({"phone":phone}), // 🔥 FIXED
       );
 
-      print(res.body);
-      print(res.request?.headers);
-
       final body = jsonDecode(res.body);
+      print(body);
 
       if (res.statusCode == 200 || res.statusCode == 201) {
+        if (body['type'] != null && body['type'] == 'REVIEW') {
+          print("Review OTP flow");
+        }
+
         startTimer();
         if (!context.mounted) return;
+
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OtpVerifyScreen(phone: phoneController.text),
+            builder: (_) => OtpVerifyScreen(phone: phone),
           ),
         );
       } else {
@@ -117,15 +124,60 @@ class AuthProvider with ChangeNotifier {
         );
       }
     } catch (e) {
-      // print("SEND OTP ERROR: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Something went wrong: $e")));
+      debugPrint("SEND OTP ERROR: $e");
+      print("SEND OTP ERROR: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Something went wrong")),
+      );
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
+
+  // Future<void> sendOtp(BuildContext context) async {
+  //   if (isLoading) return;
+  //   isLoading = true;
+  //   notifyListeners();
+  //
+  //   try {
+  //     final res = await http.post(
+  //       Uri.parse('$authUrl/send-otp'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({"phone": "91${phoneController.text.trim()}"}),
+  //     );
+  //
+  //     print(res.body);
+  //     print(res.request?.headers);
+  //
+  //     final body = jsonDecode(res.body);
+  //
+  //     if (res.statusCode == 200 || res.statusCode == 201) {
+  //       print("Data User: ${res.body}");
+  //       print(res.request?.headers);
+  //       startTimer();
+  //       if (!context.mounted) return;
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => OtpVerifyScreen(phone: phoneController.text),
+  //         ),
+  //       );
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text(body["error"] ?? "Failed to send OTP")),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     // print("SEND OTP ERROR: $e");
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text("Something went wrong: $e")));
+  //   } finally {
+  //     isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
 
   Future<void> resendOtp(String phone, BuildContext context) async {
     try {
@@ -155,13 +207,14 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> verifyOtp(
-    Map<String, dynamic> data,
-    BuildContext context,
-  ) async {
+      Map<String, dynamic> data,
+      BuildContext context,
+      ) async {
     if (isLoadingVerify) return;
 
     isLoadingVerify = true;
     notifyListeners();
+
     try {
       var provider = Provider.of<UserProfileProvider>(context, listen: false);
 
@@ -171,62 +224,57 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode(data),
       );
 
-      // print(response.body);
-      // print(response.request?.headers);
-
       final body = jsonDecode(response.body);
-
-      // print("VERIFY RESPONSE: $body");
 
       if (response.statusCode == 200 &&
           body["message"] == "OTP verified successfully") {
-        String id = body["user"]["id"].toString();
-        // String phone=body['user']['phone'].toString();
-        String jwt = body["token"];
 
-        // await savePhoneNumber(phone);
+        String id = body["user"]["id"].toString();
+        String jwt = body["accessToken"]; // ✅ FIX
+
         await saveToken(jwt);
         await saveUserId(id);
 
         otp.clear();
 
         await provider.getProfile(context);
+
         var user = provider.user;
 
         bool isProfileComplete =
             user != null &&
-            user.name != null &&
-            user.name!.trim().isNotEmpty &&
-            user.email != null &&
-            user.email!.trim().isNotEmpty;
+                user.name != null &&
+                user.name!.trim().isNotEmpty &&
+                user.email != null &&
+                user.email!.trim().isNotEmpty;
 
         if (!context.mounted) return;
 
         if (isProfileComplete) {
           Navigator.pushReplacementNamed(context, '/dashboard');
         } else {
-          Navigator.pushReplacementNamed(context, '/create_profile');
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => CompleteProfileScreen()),
+            MaterialPageRoute(
+              builder: (context) => CompleteProfileScreen(),
+            ),
           );
         }
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Invalid OTP")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(body["message"] ?? "Invalid OTP")),
+        );
       }
     } catch (e) {
-      // print("VERIFY OTP ERROR: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+      print("VERIFY OTP ERROR: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Something went wrong")),
+      );
     } finally {
       isLoadingVerify = false;
       notifyListeners();
     }
   }
-
   Future<bool> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 

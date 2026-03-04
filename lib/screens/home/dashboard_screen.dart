@@ -39,28 +39,31 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String selectedLanguage = "English";
-
   @override
   void initState() {
     super.initState();
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   languageBottomSheet();
-    // });
-    Provider.of<UserProfileProvider>(
-      context,
-      listen: false,
-    ).getProfile(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
 
-    var rating = Provider.of<TopRatingProvider>(context, listen: false);
-    rating.fetchTopReviews();
-    rating.fetchAverageRating();
-    startOfferAutoScroll(context);
+      Provider.of<UserProfileProvider>(
+        context,
+        listen: false,
+      ).getProfile(context);
+
+      var rating = Provider.of<TopRatingProvider>(context, listen: false);
+
+      rating.fetchTopReviews();
+      rating.fetchAverageRating();
+
+      startOfferAutoScroll(context);
+
+    });
   }
 
   @override
   void dispose() {
-    Provider.of<DashBoardProvider>(context).offerController.dispose();
+    final dashProvider = context.read<DashBoardProvider>();
+    dashProvider.offerController.dispose();
     super.dispose();
   }
 
@@ -99,14 +102,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       CircleAvatar(
                         backgroundColor: AppColors.primary.withOpacity(0.15),
                         backgroundImage:
-                            (userData?.picture != null &&
-                                    userData!.picture!.isNotEmpty)
-                                ? NetworkImage(
-                                  userData.picture!.startsWith("http")
-                                      ? userData.picture!
-                                      : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
-                                )
-                                : null,
+                        (userData?.picture != null && userData!.picture!.isNotEmpty)
+                            ? NetworkImage(userData.picture!)
+                            : null,
+                        // backgroundImage:
+                        //     (userData?.picture != null &&
+                        //             userData!.picture!.isNotEmpty)
+                        //         ? NetworkImage(
+                        //           userData.picture!.startsWith("http")
+                        //               ? userData.picture!
+                        //               : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
+                        //         )
+                        //         : null,
                         child:
                             (userData?.picture == null ||
                                     userData!.picture!.isEmpty)
@@ -269,14 +276,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: CircleAvatar(
               backgroundColor: Colors.white,
               radius: 22,
-              backgroundImage:
-                  (userData?.picture != null && userData!.picture!.isNotEmpty)
-                      ? NetworkImage(
-                        userData.picture!.startsWith("http")
-                            ? userData.picture!
-                            : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
-                      )
-                      : null,
+              backgroundImage: (userData?.picture?.isNotEmpty ?? false)
+                  ? NetworkImage(userData!.picture!)
+                  : null,
+              // backgroundImage:
+              //     (userData?.picture != null && userData!.picture!.isNotEmpty)
+              //         ? NetworkImage(
+              //           userData.picture!.startsWith("http")
+              //               ? userData.picture!
+              //               : "https://phone-auth-with-jwt-4.onrender.com${userData.picture!}",
+              //         )
+              //         : null,
               child:
                   (userData?.picture == null || userData!.picture!.isEmpty)
                       ? const Icon(Icons.person, color: Colors.grey)
@@ -537,7 +547,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           OfferBanner(
                             image:
-                                'https://medinova-pharmaceuticals.com/wp-content/uploads/2024/05/3.jpg',
+                                'https://img.freepik.com/free-vector/flat-design-healthcare-service-sale-banner_23-2150766982.jpg?semt=ais_rp_progressive&w=740&q=80',
                           ),
                           OfferBanner(
                             image:
